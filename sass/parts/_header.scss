@@ -67,11 +67,23 @@ header .main {
   letter-spacing: -0.5px;
 }
 
+#dark-mode-toggle {
+  position: relative; /* Ensures that the pseudo-element is positioned relative to this element */
+}
+
 #dark-mode-toggle>img {
-  display: none;
-  width: 15px;
-  height: 15px;
+  display: block; /* Change to block to make it visible, adjust as necessary */
+  width: 30px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
   border: unset;
+  border-radius: 50%; /* Makes the image circular */
+  box-shadow: 0 0 5px 2px #0f0; /* Soft green glow */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for glow and transformation effects */
+}
+
+#dark-mode-toggle:hover>img {
+  box-shadow: 0 0 8px 3px #0f0; /* Brighter green glow on hover */
+  transform: scale(1.1); /* Optionally scale up the image on hover */
 }
 
 h1,
