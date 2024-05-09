@@ -1,6 +1,6 @@
 base_url = "https://altunenes.github.io/"
 title = "altunenes"
-description = "This is an example description"
+description = "personal blog"
 build_search_index = false
 generate_feed = true
 compile_sass = true
