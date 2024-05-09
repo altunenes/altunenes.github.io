@@ -3,7 +3,7 @@ title = "Gaussian Splats with Simple Linear Iterative Clustering"
 date = "2024-04-19"
 
 [taxonomies]
-tags=["blog"]
+tags=["image","shader","Machine Learning","Pixels"]
 +++
 
 #### <span style="color:orange;"> Gaussian Splats Using Superpixels</span>
