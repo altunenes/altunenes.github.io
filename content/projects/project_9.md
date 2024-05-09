@@ -2,9 +2,12 @@
 title = "galaxy"
 description = "A spiral Galaxy coded in Rust"
 weight = 1
+date = "2024-01-01"
 
 [extra]
 local_image = "images/galaxy.png"
+tags=["art","algorithm","rust","galaxy"]
+
 +++
 
 <div align="center">

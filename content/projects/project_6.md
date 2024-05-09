@@ -2,11 +2,13 @@
 title = "Sin(h) Fractal"
 description = "a fractal I coded in Rust & GLSL " 
 weight = 1
+date = "2024-01-01"
 
 [extra]
 local_image = "images/sinh.png"
 
-
+[taxonomies]
+tags=["fractal","algorithm","rust","demo","art"]
 +++
 <div align="center">
 <blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">a fractal for Friday 🙂<br><br>code:<a href="https://t.co/4CJXHETGTV">https://t.co/4CJXHETGTV</a><a href="https://twitter.com/hashtag/creativecoding?src=hash&amp;ref_src=twsrc%5Etfw">#creativecoding</a> <a href="https://t.co/ShndIIQJmT">pic.twitter.com/ShndIIQJmT</a></p>&mdash; enes altun (@emportent) <a href="https://twitter.com/emportent/status/1710363437597950429?ref_src=twsrc%5Etfw">October 6, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

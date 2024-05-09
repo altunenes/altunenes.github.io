@@ -2,9 +2,12 @@
 title = "The Enigma"
 description = "Leviant's Optical Illusion"
 weight = 17
+date = "2024-01-01"
 
 [extra]
 local_image = "images/enigma.png"
+tags=["illusion","perception","rust","vision","demo"]
+
 +++
 
 

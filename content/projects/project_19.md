@@ -2,9 +2,12 @@
 title = "Mandelbrot with WGPU"
 description = "Very expensive, in terms of computational, but very fast with Rust & WGSL"
 weight = 19
+date = "2024-01-01"
 
 [extra]
 local_image = "images/mandelbrot.png"
+tags=["mandelbrot","art","rust","WGPU","fractal","algorithm"]
+
 +++
 
 <div align="center">

@@ -2,10 +2,12 @@
 title = "Gabor Patch Demo"
 description = "Animated Gabor Patch" 
 weight = 1
+date = "2024-01-01"
 
 [extra]
 local_image = "images/gabor.png"
-
+[taxonomies]
+tags=["gabor","algorithm","rust","demo","vision","perception"]
 
 +++
 <div align="center">

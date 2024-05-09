@@ -2,9 +2,12 @@
 title = "Pinna illusion"
 description = "The circles appear to spiral and intersect, but are in fact an orderly set of concentric circles."
 weight = 18
+date = "2024-01-01"
 
 [extra]
 local_image = "images/pinna.png"
+tags=["illusion","perception","rust","vision","demo"]
+
 +++
 
 
