@@ -1,6 +1,7 @@
 +++
 title = "Gabor Patches on the Texture!"
 date = "2023-10-16"
+[taxonomies]
 tags=["image","shader","gabor","face","vision"]
 +++
 
@@ -16,7 +17,7 @@ Below is a video featuring the outcome of my experiment. Take a close look and t
 
 If you've been following my previous posts, you're already familiar with the concept of Gabor patches and how they're a fantastic tool for understanding various aspects of visual perception. What's particularly intriguing is how these patches can alter our perception of orientation.
 
-Remember the code snippet I shared about tweaking the "theta" value in the Gabor function? By adjusting theta, we can manipulate the Gabor patches' orientation, making them appear more horizontal or vertical. This is super cool because, as per the fascinating findings of [Dakin and Watt (2009)](https://pubmed.ncbi.nlm.nih.gov/19757911/) and others(there are a lot of papers about that issue), our perception of faces is significantly influenced by horizontal information compared to vertical. Some call this as [radial bias](https://royalsocietypublishing.org/doi/10.1098/rspb.2023.1118#:~:text=The%20radial%20bias%20may%20modulate,the%20individual%20differences%20we%20observe.)
+findings of [Dakin and Watt (2009)](https://pubmed.ncbi.nlm.nih.gov/19757911/) and others(there are a lot of papers about that issue), our perception of faces is significantly influenced by horizontal information compared to vertical. Some call this as [radial bias](https://royalsocietypublishing.org/doi/10.1098/rspb.2023.1118#:~:text=The%20radial%20bias%20may%20modulate,the%20individual%20differences%20we%20observe.)
 
 Building on this intriguing concept, Dakin and Watt's study delves even deeper into our visual system's preference for horizontal features in faces. They introduced the idea of facial 'bar codes,' unique clusters of horizontal lines, akin to commercial bar codes, that our brains use for quick and efficient face recognition. This theory elegantly explains why we're so adept at recognizing faces under various conditions and why certain transformations, like inverting a face, make recognition remarkably challenging. It's a compelling reminder of how our visual system has fine-tuned itself over millennia, optimizing certain perceptual shortcuts for survival.
 

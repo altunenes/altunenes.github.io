@@ -25,11 +25,13 @@ menu = [
     { name = "/projects", url = "/projects", weight = 2 },
     { name = "/about", url = "/about", weight = 3 },
     { name = "/tags", url = "/tags", weight = 4 },
+    { name = "/CV", url = "/CV", weight = 5 },
+
 ]
 
 socials = [
-    { name = "twitter", url = "https://twitter.com/not_matthias", icon = "twitter" },
-    { name = "github", url = "https://github.com/not-matthias/", icon = "github" },
+    { name = "twitter", url = "https://twitter.com/emportent", icon = "twitter" },
+    { name = "github", url = "https://github.com/altunenes", icon = "github" },
 ]
 
 custom_css = []
