@@ -68,22 +68,22 @@ header .main {
 }
 
 #dark-mode-toggle {
-  position: relative; /* Ensures that the pseudo-element is positioned relative to this element */
+  position: relative;
 }
 
 #dark-mode-toggle>img {
-  display: block; /* Change to block to make it visible, adjust as necessary */
-  width: 30px; /* Adjust size as needed */
-  height: 30px; /* Adjust size as needed */
+  display: block;
+  width: 30px; 
+  height: 30px; 
   border: unset;
-  border-radius: 50%; /* Makes the image circular */
-  box-shadow: 0 0 5px 2px #0f0; /* Soft green glow */
-  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for glow and transformation effects */
+  border-radius: 50%; 
+  box-shadow: 0 0 5px 2px #0f0; 
+  transition: box-shadow 0.3s ease, transform 0.3s ease; 
 }
 
 #dark-mode-toggle:hover>img {
-  box-shadow: 0 0 8px 3px #0f0; /* Brighter green glow on hover */
-  transform: scale(1.1); /* Optionally scale up the image on hover */
+  box-shadow: 0 0 8px 3px #0f0; 
+  transform: scale(1.1); 
 }
 
 h1,
