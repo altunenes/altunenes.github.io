@@ -22,7 +22,7 @@ comment = false
 
 menu = [
     { name = "/posts", url = "/posts", weight = 1 },
-    { name = "/projects", url = "/projects", weight = 2 },
+    { name = "/projects&Demos", url = "/projects", weight = 2 },
     { name = "/about", url = "/about", weight = 3 },
     { name = "/tags", url = "/tags", weight = 4 },
     { name = "/CV", url = "/CV", weight = 5 },
@@ -32,6 +32,15 @@ menu = [
 socials = [
     { name = "twitter", url = "https://twitter.com/emportent", icon = "twitter" },
     { name = "github", url = "https://github.com/altunenes", icon = "github" },
+    { name = "scholar", url = "https://scholar.google.com/citations?user=_OtEw5oAAAAJ&hl", icon = "googlescholar" },
+    { name = "linkedin", url = "https://www.linkedin.com/in/enes-altun-0a3076167", icon = "linkedin" },
+    { name = "instagram", url = "https://www.instagram.com/altunanes/", icon = "instagram" },
+    { name = "orcid", url = "https://orcid.org/0000-0002-6478-6909", icon = "orcid" },
+    { name = "kaggle", url = "https://www.kaggle.com/enesaltun", icon = "kaggle" },
+    { name = "shadertoy", url = "https://www.shadertoy.com/user/altunenes", icon = "shadertoy" },
+    { name = "stackoverflow", url = "https://stackoverflow.com/users/14492150/altune", icon = "stackoverflow" },
+    { name = "bluesky", url = "https://bsky.app/profile/altunenes.bsky.social", icon = "bluesky" }
+    
 ]
 
 custom_css = []

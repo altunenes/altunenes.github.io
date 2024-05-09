@@ -1,11 +1,10 @@
 +++
-title = "Apollo"
-description = "Modern and minimalistic blog theme."
+title = "Rusty Art"
+description = "Creative Coding And Optical illusions With Rust and WGSL"
 weight = 1
 
 [extra]
-local_image = "/projects/project-1.jpg"
-link_to = "https://github.com/not-matthias/apollo"
+local_image = "images/mandel.png"
+link_to = "https://github.com/altunenes/rusty_art"
 +++
 
-Example project page
