@@ -8,7 +8,7 @@ local_image = "images/pinna.png"
 +++
 
 
- Download the demo:
+ Download the demo app, It has parameters that you can change in real time. 
 
  Software Version | Operating System | Download Link                                                                                     |
 |------------------|------------------|----------------------------------------------------------------------------------------------------|

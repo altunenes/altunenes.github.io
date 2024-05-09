@@ -35,8 +35,27 @@
 
 .card-image {
     width: 100%;
-    height: auto; 
-    aspect-ratio: 3 / 2; 
+    height: auto;
+    aspect-ratio: 3 / 2;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card-image:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 0 8px 3px #ff1493; 
+}
+
+.card {
+    min-height: 100px;
+    background: var(--bg-2);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out; 
+}
+
+.card:hover {
+    box-shadow: 0 0 8px 3px #ff1493; 
 }
 
 .card-image-placeholder {
