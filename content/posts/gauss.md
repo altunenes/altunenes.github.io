@@ -24,7 +24,9 @@ The final touch was alignment. Using PCA (Principal Component Analysis), I thoug
 
 And the all this process took 15 seconds in the Google-Colab, yes without GPU. Here is te output for the 512x512 Lena image:
 
+<div align="center">
 <iframe width="640" height="280" frameborder="0" src="https://www.shadertoy.com/embed/4cVGWt?gui=true&t=10&paused=true&muted=false" allowfullscreen></iframe>
+</div>
 
 *click to "play" button to see animation*
 
