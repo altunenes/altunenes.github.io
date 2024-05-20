@@ -28,7 +28,7 @@ tags=["mandelbulb","art","fractal"]
 </div>
 <div align="center">
 
- Download the demo app, It has parameters that you can change in real time. 
+ Download the demo app, It has parameters that you can change in real time.
 </div>
 
  Software Version | Operating System | Download Link                                                                                     |
