@@ -5,7 +5,7 @@ weight = 27
 date = "2024-01-01"
 
 [extra]
-local_image = "images/colorill.png"
+local_image = "images/coloill.png"
 [taxonomies]
 tags=["illusion","perception","demo"]
 +++
