@@ -71,19 +71,22 @@ header .main {
   position: relative;
 }
 
-#dark-mode-toggle>img {
-  display: block;
-  width: 30px; 
-  height: 30px; 
-  border: unset;
-  border-radius: 50%; 
-  box-shadow: 0 0 5px 2px #0f0; 
-  transition: box-shadow 0.3s ease, transform 0.3s ease; 
+#dark-mode-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.7em;
 }
 
-#dark-mode-toggle:hover>img {
-  box-shadow: 0 0 8px 3px #0f0; 
-  transform: scale(1.1); 
+#dark-mode-toggle img {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+#dark-mode-toggle:hover img {
+  transform: scale(1.1);
 }
 
 h1,
