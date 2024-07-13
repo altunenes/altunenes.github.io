@@ -1,12 +1,15 @@
 base_url = "https://altunenes.github.io/"
 title = "altunenes"
 description = "personal blog"
+compile_sass = true
 build_search_index = false
 generate_feeds = true
-compile_sass = true
 minify_html = true
-taxonomies = [{ name = "tags" }]
-theme = "apollo"
+
+taxonomies = [
+    {name = "tags", feed = true},
+]
+
 [markdown]
 highlight_code = true
 highlight_theme = "ayu-dark"

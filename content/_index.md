@@ -1,4 +1,5 @@
 +++
-[extra]
-section_path = "posts/_index.md"
+title = "Home"
 +++
+
+Welcome to my website!
