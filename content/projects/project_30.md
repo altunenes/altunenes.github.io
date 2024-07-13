@@ -1,7 +1,7 @@
 +++
 title = "Asahi illusion"
 description = "A live/interactive GLSL demo representing the Asahi illusion"
-weight = 29
+weight = 30
 date = "2024-01-01"
 
 [extra]
