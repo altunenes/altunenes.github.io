@@ -1,8 +1,27 @@
 {% import "macros/macros.html" as post_macros %}
 
 <!DOCTYPE html>
-<html lang="en" class="light">
-{% include "partials/header.html" %}
+<html lang="en">
+<head>
+    {% include "partials/header.html" %}
+    <script>
+        // Function to set the theme
+        function setTheme(theme) {
+            document.documentElement.className = theme;
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get the saved theme
+        function getSavedTheme() {
+            return localStorage.getItem('theme') || 'light';
+        }
+
+        // Set the theme on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTheme(getSavedTheme());
+        });
+    </script>
+</head>
 <body>
     <div class="content">
         {% include "partials/nav.html" %}
