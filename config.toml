@@ -33,7 +33,7 @@ menu = [
 ]
 
 socials = [
-    { name = "twitter", url = "https://twitter.com/emportent", icon = "twitter" },
+    { name = "x", url = "https://twitter.com/emportent", icon = "x" },
     { name = "github", url = "https://github.com/altunenes", icon = "github" },
     { name = "scholar", url = "https://scholar.google.com/citations?user=_OtEw5oAAAAJ&hl", icon = "googlescholar" },
     { name = "linkedin", url = "https://www.linkedin.com/in/enes-altun-0a3076167", icon = "linkedin" },
