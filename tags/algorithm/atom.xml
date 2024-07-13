@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - algorithm</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/algorithm/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-01T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/algorithm/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Sin(h) Fractal</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-6/"/>
+        <id>https://altunenes.github.io/projects/project-6/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-6/">&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;a fractal for Friday 🙂&lt;br&gt;&lt;br&gt;code:&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&lt;&#x2F;a&gt;&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;hashtag&#x2F;creativecoding?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#creativecoding&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;ShndIIQJmT&quot;&gt;pic.twitter.com&#x2F;ShndIIQJmT&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1710363437597950429?ref_src=twsrc%5Etfw&quot;&gt;October 6, 2023&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;sinh fractal, isnpired by the &lt;a href=&quot;https:&#x2F;&#x2F;paulbourke.net&#x2F;fractals&#x2F;sinh&#x2F;&quot;&gt;Paull Bourke&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;live &lt;a href=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;view&#x2F;dt2cWR&quot;&gt;GLSL&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;dt2cWR?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;or download my Rust program for better performance&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Sinh&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Gabor Patch Demo</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-7/"/>
+        <id>https://altunenes.github.io/projects/project-7/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-7/">&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;cs3BWM?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Use your mouse to change oriantations.&lt;&#x2F;p&gt;
+&lt;p&gt;or download my Rust program for better performance.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Gabor&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+</feed>
