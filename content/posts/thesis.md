@@ -115,4 +115,4 @@ Friendship in the lab is the best thing ever. I'm so lucky to have you guys!
 
 ### Paper Link
 
-You can read the more boring parts on [here](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4452728)
+You can read the more boring parts on [here](https://www.tandfonline.com/doi/full/10.1080/13506285.2024.2415721#abstract)
