@@ -78,7 +78,7 @@ I discovered quite a bit through my research, but I've focused on reporting the 
 
 - **Species Differences in Higher Frequencies**: Interestingly, faces of other species didn't differ from human faces in the low spatial frequency domain. However, we do perceive them differently in the high spatial frequency (HSF) or broadband, especially in the P100 ERP. This difference becomes even more distinct in the N170 and N250 ERPs.
 
-My thesis is still under review, but I've conducted many detailed analyses and learned a lot. You can find the pre-print version of my thesis [here](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4330815).
+My thesis is still under review, but I've conducted many detailed analyses and learned a lot. You can find the published version of my thesis [here](https://www.tandfonline.com/doi/full/10.1080/13506285.2024.2415721#abstract).
 
 > **Note**: Due to the length of the paper, I didn't include the N250 results in the pre-print version. Rest assured, they are thoroughly reported in my full thesis.
 
