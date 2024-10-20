@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - emotions</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/emotions/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-09-30T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/emotions/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Using Euclidian Distance for Emotion Similarities in VAD space</title>
+        <published>2023-09-30T00:00:00+00:00</published>
+        <updated>2023-09-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/vad/"/>
+        <id>https://altunenes.github.io/posts/vad/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/vad/">&lt;h2 id=&quot;is-the-vad-model-a-good-metric-for-emotion-recognition-in-vision-algorithms&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Is the VAD Model a Good Metric for Emotion Recognition in Vision Algorithms? &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Emotion recognition, particularly in the realm of vision, is a challenging task. Traditional methods often rely on labeling facial expressions with discrete emotion labels. However, human emotions are complex and multi-dimensional, and a simple label might not capture the full spectrum of an individual&#x27;s emotional state. Enter the Valence-Arousal-Dominance (VAD) model, a promising approach that offers a more nuanced representation of emotions.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-vad-model-in-a-nutshell&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The VAD Model in a Nutshell&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The VAD model is built on three independent dimensions:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Valence (Pleasure)&lt;&#x2F;strong&gt;: Ranges from unhappiness to happiness.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Arousal (Affective Activation)&lt;&#x2F;strong&gt;: Varies between sleep and excitement.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Dominance (Level of Control)&lt;&#x2F;strong&gt;: Spans from submissive to dominant.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Each emotion, such as anger or happiness, is represented as a point in this three-dimensional space. For instance, anger might be represented by a negative valence (unhappiness), high arousal (excitement), and a moderate level of dominance.&lt;&#x2F;p&gt;
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img src=&quot;&#x2F;images&#x2F;vad.png&quot; alt=&quot;VAD Model&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;
+&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;why-vad-over-traditional-labeling&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Why VAD Over Traditional Labeling?&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Traditional emotion recognition methods label an emotion based on the most dominant facial expression. However, emotions are rarely so black and white. A person might be feeling a mix of sadness and surprise, or anger with a hint of fear. The VAD model, by representing emotions in a continuous space, can capture these nuances.&lt;&#x2F;p&gt;
+&lt;p&gt;Moreover, by using the VAD model, we can calculate the Euclidean distance between the predicted emotion and the ground truth. This provides a quantitative measure of how accurate the prediction is, rather than a simple right or wrong label. But of course, most of times we are just using these models so my blogppost not focusing on these &quot;ground truth&quot; scores.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;emotion-similarities-and-dissimilarities&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Emotion Similarities and Dissimilarities&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;An interesting application of the VAD model is the ability to measure the similarity between different emotions. Using the formula:&lt;&#x2F;p&gt;
+&lt;p&gt;$$\text{distance} = \sqrt{(v_1 - v_2)^2 + (a_1 - a_2)^2 + (d_1 - d_2)^2}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where $$v$$, $$a$$, and $$d$$ represent valence, arousal, and dominance respectively, we can determine the distances between emotions in the VAD space. For instance, sadness and fear are found to be the most similar emotions, while happiness and fear are the least similar. This kind of analysis provides a deeper understanding of human emotions and their inter-relationships.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;distances-between-emotions&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Distances Between Emotions&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Using the VAD model, we can determine the &quot;distance&quot; between different emotions. For example:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Distance between Angry and Happy is: 1.21&lt;&#x2F;li&gt;
+&lt;li&gt;Distance between Angry and Sad is: 0.81&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;These distances provide insights into how similar or dissimilar two emotions are in the VAD space. A smaller distance indicates that the two emotions are more similar in terms of valence, arousal, and dominance, while a larger distance suggests greater dissimilarity.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Conclusion&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The VAD model offers a multi-dimensional perspective on emotions, allowing for a more nuanced understanding than traditional labeling methods. By evaluating emotions in the VAD space, we can quantitatively measure the similarities and differences between emotions, which is crucial for vision algorithms. In the realm of vision and emotion processing, understanding these subtle differences can lead to more accurate and holistic emotion recognition.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;references&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;References&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Sampaio, E. V. B., Lévêque, L., da Silva, M. P., &amp;amp; Le Callet, P. (2022). &lt;em&gt;Are Facial Expression Recognition Algorithms Reliable in the Context of Interactive Media? A New Metric to Analyse Their Performance&lt;&#x2F;em&gt;. EmotionIMX: Considering Emotions in Multimedia Experience (ACM IMX 2022 Workshop), Aveiro, Portugal. &lt;a href=&quot;https:&#x2F;&#x2F;hal.science&#x2F;hal-03789571&#x2F;document&quot;&gt;HAL-03789571f&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+        
+    </entry>
+</feed>

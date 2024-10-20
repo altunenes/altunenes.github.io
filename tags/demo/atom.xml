@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - demo</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/demo/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-01T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/demo/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Munker Illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-21/"/>
+        <id>https://altunenes.github.io/projects/project-21/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-21/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;munker.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;ellipse colors are identical :) &lt;br&gt;code 🦀&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;MWz7xIfgIe&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;MWz7xIfgIe&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;lG1p2PVt4z&quot;&gt;pic.twitter.com&#x2F;lG1p2PVt4z&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1700190012925510033?ref_src=twsrc%5Etfw&quot;&gt;September 8, 2023&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time. Decrease numbers of the ellipses for the performance.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;munkerclock&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Cafe-Wall Illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-22/"/>
+        <id>https://altunenes.github.io/projects/project-22/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-22/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;cafewall.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;cafe_wall&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>lilac chaser illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-23/"/>
+        <id>https://altunenes.github.io/projects/project-23/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-23/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;lilac.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;lilac&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Hypnotic Circles</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-24/"/>
+        <id>https://altunenes.github.io/projects/project-24/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-24/">&lt;p&gt;Click the buttons to increase or decrease the numbers of the lines, its fully interactive!&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe src=&quot;https:&#x2F;&#x2F;altunenes.github.io&#x2F;sorceress&#x2F;circle.html&quot; width=&quot;800&quot; height=&quot;600&quot; style=&quot;border:none;&quot;&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;I inspired this effect from a video by brusspup. However, when I search for the video I found the illusion was actually created by Arthur Shapiro and Alex Rose-Henig unfortunately I couldn&#x27;t find the original paper. Circles within a larger black circle (actually I coded it into a rectangle). The inner circles in turn seem to form a circular shape that&#x27;s rolling around the inside of the larger circle. But, believe it or not, the direction that each circle is linear, not circular.&lt;&#x2F;p&gt;
+&lt;p&gt;To me, after 5 circles the illusion is starting. Increasing or decreasing the radius of the circles or animation speed didn&#x27;t affect my perception. However, you can try it and see what happens.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Reverse Phi Motion Effect</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-26/"/>
+        <id>https://altunenes.github.io/projects/project-26/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-26/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;pdiamond.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;pdiamond&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;pdiamond-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;pdiamond-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;pdiamond-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Color Illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-27/"/>
+        <id>https://altunenes.github.io/projects/project-27/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-27/">&lt;p&gt;Scroll down to change the colors, I added buttons for you to customize (I was a bit lazy to customize the design)&lt;&#x2F;p&gt;
+&lt;p&gt;Stare at the middle, and the white squares appear coloured.Stare at the middle for a while, and the white squares appear coloured.
+It&#x27;s a kind of a &quot;lilac&quot; illusion.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe src=&quot;https:&#x2F;&#x2F;openprocessing.org&#x2F;sketch&#x2F;1791145&#x2F;embed&#x2F;&quot; width=&quot;600&quot; height=&quot;700&quot;&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;The animation is inspired by a tweet by &lt;a href=&quot;https:&#x2F;&#x2F;x.com&#x2F;DrGBuckingham&#x2F;status&#x2F;1611642179616743424&quot;&gt;twitter&#x2F;Gavin Buckingham&lt;&#x2F;a&gt;, in which he shared an intriguing variation of the Lilac Chaser illusion. The animation is interactive, as the user can adjust the speed, colors of the rotating square, as well as the colors of the square patterns using sliders and color pickers.&lt;&#x2F;p&gt;
+&lt;p&gt;Additionally, The code uses the p5.js library to create the animation and allows the user to customize their viewing experience by adjusting various parameters. The code generates squares on the canvas and uses a loop to update the positions of the squares, creating the illusion of rotation. You can adjust the speed of the animation with a built-in frame rate, choose colors for the rotation square and background.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>&#x27;Illusory Movement of Dotted Lines&#x27; but my own Gabor Version</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-28/"/>
+        <id>https://altunenes.github.io/projects/project-28/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-28/">&lt;p&gt;Track the red ball as it moves, and notice how the gabors seem to shift.&lt;&#x2F;p&gt;
+&lt;p&gt;After coding the original effect by following the &lt;a href=&quot;https:&#x2F;&#x2F;journals.sagepub.com&#x2F;doi&#x2F;10.1068&#x2F;p6383&quot;&gt;paper&lt;&#x2F;a&gt;  and &lt;a href=&quot;https:&#x2F;&#x2F;michaelbach.de&#x2F;ot&#x2F;mot-dottedLines&#x2F;index.html&quot;&gt;Michael Bach&#x27;s version&lt;&#x2F;a&gt;, I thought that the effect could be strengthened using gabors because effect doesn&#x27;t work very well on me :-)&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;McKSRK?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;but after that, Interestingly, I have discovered a reverse effect when I animate the phase offset. Follow the red dot again, you&#x27;ll notice that the phase movement stops at some point.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;XcGXzc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;here is the original effect also:&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;XcKXRV?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Galton Board</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-29/"/>
+        <id>https://altunenes.github.io/projects/project-29/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-29/">&lt;p&gt;There is more than enough about Galton Board, but the code&#x2F;interactive version is almost like an oasis in the desert! So in my spare time I sat down and created something like this:&lt;&#x2F;p&gt;
+&lt;p&gt;Note: The “Matter” physics engine is really cool!  :-)&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe src=&quot;https:&#x2F;&#x2F;openprocessing.org&#x2F;sketch&#x2F;2291810&#x2F;embed&#x2F;&quot; width=&quot;800&quot; height=&quot;700&quot;&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;To change the initial randomness, you can play with the following functions and observe :-)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;JavaScript&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-JavaScript &quot;&gt;&lt;code class=&quot;language-JavaScript&quot; data-lang=&quot;JavaScript&quot;&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;addPrt&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;height &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(rws &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;7&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;rndX &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;width &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    prts&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;Prt(rndX&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;01 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;height))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    pc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;addPrts&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;spcY&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;maxPc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span&gt;i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;rndX &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;width &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;        prts&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;Prt(rndX&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;01 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;height))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;        pc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Asahi illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-30/"/>
+        <id>https://altunenes.github.io/projects/project-30/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-30/">&lt;p&gt;Read my story on &lt;a href=&quot;https:&#x2F;&#x2F;altunenes.github.io&#x2F;posts&#x2F;asahi&#x2F;&quot;&gt;here&lt;&#x2F;a&gt; about this illusion.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;MX23Wz?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;To change the colors, you can play with the following functions and observe :-)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;GLSL&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-GLSL &quot;&gt;&lt;code class=&quot;language-GLSL&quot; data-lang=&quot;GLSL&quot;&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;vec3&lt;&#x2F;span&gt;&lt;span&gt; color &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; colorDirection &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0 
+&lt;&#x2F;span&gt;&lt;span&gt;                 ? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07178;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;vec3&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;vec3&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; r &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(size &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;                 : &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07178;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;vec3&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;vec3&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0.0&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; r &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(size &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;1.0&lt;&#x2F;span&gt;&lt;span&gt;))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;return vec4&lt;&#x2F;span&gt;&lt;span&gt;(color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; petalMask)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff3333;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Sin(h) Fractal</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-6/"/>
+        <id>https://altunenes.github.io/projects/project-6/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-6/">&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;a fractal for Friday 🙂&lt;br&gt;&lt;br&gt;code:&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&lt;&#x2F;a&gt;&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;hashtag&#x2F;creativecoding?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#creativecoding&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;ShndIIQJmT&quot;&gt;pic.twitter.com&#x2F;ShndIIQJmT&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1710363437597950429?ref_src=twsrc%5Etfw&quot;&gt;October 6, 2023&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;sinh fractal, isnpired by the &lt;a href=&quot;https:&#x2F;&#x2F;paulbourke.net&#x2F;fractals&#x2F;sinh&#x2F;&quot;&gt;Paull Bourke&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;live &lt;a href=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;view&#x2F;dt2cWR&quot;&gt;GLSL&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;dt2cWR?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;or download my Rust program for better performance&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Sinh&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Gabor Patch Demo</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-7/"/>
+        <id>https://altunenes.github.io/projects/project-7/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-7/">&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;cs3BWM?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Use your mouse to change oriantations.&lt;&#x2F;p&gt;
+&lt;p&gt;or download my Rust program for better performance.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Gabor&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;gaborwgpu-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+</feed>

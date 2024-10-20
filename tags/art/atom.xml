@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - art</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/art/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-01T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/art/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Munker Illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-21/"/>
+        <id>https://altunenes.github.io/projects/project-21/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-21/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;munker.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;ellipse colors are identical :) &lt;br&gt;code 🦀&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;MWz7xIfgIe&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;MWz7xIfgIe&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;lG1p2PVt4z&quot;&gt;pic.twitter.com&#x2F;lG1p2PVt4z&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1700190012925510033?ref_src=twsrc%5Etfw&quot;&gt;September 8, 2023&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time. Decrease numbers of the ellipses for the performance.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;munkerclock&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;munkerclock-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Cafe-Wall Illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-22/"/>
+        <id>https://altunenes.github.io/projects/project-22/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-22/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;cafewall.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;cafe_wall&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;cafe_wall-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>lilac chaser illusion</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-23/"/>
+        <id>https://altunenes.github.io/projects/project-23/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-23/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;lilac.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;lilac&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;lilac-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Mandelbulb</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-25/"/>
+        <id>https://altunenes.github.io/projects/project-25/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-25/">&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;mandelbulb.png&quot; alt=&quot;hans&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Screen Capture of the demo&lt;&#x2F;em&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;One of the first Mandelbulbs I coded in &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;hashtag&#x2F;rustlang?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#rustlang&lt;&#x2F;a&gt; 🦀 &lt;br&gt;&lt;br&gt;code (with the messy &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;hashtag&#x2F;egui?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#egui&lt;&#x2F;a&gt; parameters :-) )&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;Gf3nfjnW51&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;Gf3nfjnW51&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;BAWuv8dfA7&quot;&gt;pic.twitter.com&#x2F;BAWuv8dfA7&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1789071683745141132?ref_src=twsrc%5Etfw&quot;&gt;May 10, 2024&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;p&gt;Download the demo app, It has parameters that you can change in real time.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;mandelbulb&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;mandelbulb-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;mandelbulb-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;mandelbulb-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Sin(h) Fractal</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-6/"/>
+        <id>https://altunenes.github.io/projects/project-6/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-6/">&lt;div align=&quot;center&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot; data-media-max-width=&quot;560&quot;&gt;&lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;a fractal for Friday 🙂&lt;br&gt;&lt;br&gt;code:&lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&quot;&gt;https:&#x2F;&#x2F;t.co&#x2F;4CJXHETGTV&lt;&#x2F;a&gt;&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;hashtag&#x2F;creativecoding?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#creativecoding&lt;&#x2F;a&gt; &lt;a href=&quot;https:&#x2F;&#x2F;t.co&#x2F;ShndIIQJmT&quot;&gt;pic.twitter.com&#x2F;ShndIIQJmT&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;&amp;mdash; enes altun (@emportent) &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;emportent&#x2F;status&#x2F;1710363437597950429?ref_src=twsrc%5Etfw&quot;&gt;October 6, 2023&lt;&#x2F;a&gt;&lt;&#x2F;blockquote&gt; &lt;script async src=&quot;https:&#x2F;&#x2F;platform.twitter.com&#x2F;widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;&#x2F;script&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;sinh fractal, isnpired by the &lt;a href=&quot;https:&#x2F;&#x2F;paulbourke.net&#x2F;fractals&#x2F;sinh&#x2F;&quot;&gt;Paull Bourke&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;live &lt;a href=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;view&#x2F;dt2cWR&quot;&gt;GLSL&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;dt2cWR?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;or download my Rust program for better performance&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Sinh&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;sinh-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+</feed>
