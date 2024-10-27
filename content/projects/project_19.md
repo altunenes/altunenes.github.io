@@ -26,6 +26,9 @@ tags=["mandelbrot","art","rust","WGPU","fractal","algorithm"]
 
  Download the demo app, It has parameters that you can change in real time. Be careful when you change the AA (Anti-Aliasing) and iterations! 
 
+also you can check another WGSL version with Orbit Traps!
+https://compute.toys/view/1489
+
  Software Version | Operating System | Download Link                                                                                     |
 |------------------|------------------|----------------------------------------------------------------------------------------------------|
 | **Mandelbrot**        | macOS            | [Download](https://github.com/altunenes/rusty_art/releases/download/v1.0.4/expmandelbrotgpu-macos-latest.zip) |
