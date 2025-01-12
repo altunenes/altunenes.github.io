@@ -1,9 +1,11 @@
 +++
-title = "3D Neuron Shader"
-description = "A 3D neuron Shader I coded using Smooth Minimum Function and Ray Marching."
+title = "butter2d"
+description = "A Rusty desktop app for Butterworth filter for spatial frequencies on images"
 weight = 1
 
 [extra]
-local_image = "images/neuron.png"
-link_to = "https://www.shadertoy.com/view/Xc3XDs"
+# You can also crop the image in the url by adjusting w=/h=
+local_image = "images/butter2d.png"
+link_to = "https://github.com/altunenes/butter2d"
 +++
+

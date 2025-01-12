@@ -1,6 +1,6 @@
 +++
 title = "Rusty Art"
-description = "Creative Coding And Optical illusions With Rust and WGSL"
+description = "Creative Coding And Visual illusions With Rust and WGSL"
 weight = 1
 
 [extra]
