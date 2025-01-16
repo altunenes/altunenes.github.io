@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - mathematics</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/mathematics/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-11-11T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/mathematics/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Polygons: SDF</title>
+        <published>2024-11-11T00:00:00+00:00</published>
+        <updated>2024-11-11T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-32/"/>
+        <id>https://altunenes.github.io/projects/project-32/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-32/">&lt;p&gt;The foundation of this artwork lies in the Signed Distance Function (SDF) technique, where we calculate the minimum distance from any point to a regular polygon&#x27;s edges. We achieve this by constructing each polygon from a set of vertices placed at equal angular intervals (2π&#x2F;n, where n is the vertex count), and then computing the perpendicular distance to each edge. The resulting distance field creates a smooth boundary that defines our shape, with positive values outside and negative values inside the shape.
+The lighting system is built upon this distance field, using a combination of vertex-based point lights and environmental illumination. Each vertex acts as a light source, with intensity falling off based on distance, while rim lighting is calculated using the dot product between the view direction and surface normal. We enhance depth perception through ambient occlusion, where deeper layers receive less ambient light, and add iridescence by modulating light based on the viewing angle and surface distance.&lt;&#x2F;p&gt;
+&lt;p&gt;Download the app by searching &quot;sdrect&quot;:&lt;&#x2F;p&gt;
+&lt;p&gt;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;blob&#x2F;master&#x2F;shaders&#x2F;sdrect.wgsl&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
