@@ -1,6 +1,6 @@
 +++
 title = "Scramblery"
-description = "Image Scramble Tool: Web & Python API"
+description = "Image/Video Scramble App Written in Rust & Tauri powered by Gstreamer"
 weight = 1
 
 [extra]
