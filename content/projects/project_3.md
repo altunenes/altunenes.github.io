@@ -1,6 +1,6 @@
 +++
 title = "Scramblery"
-description = "Image/Video Scramble App Written in Rust & Tauri powered by Gstreamer"
+description = "Desktop app for image and video scrambling with various methods including Fourier phase scramble: Entire image/video or just detected facial area."
 weight = 1
 
 [extra]
