@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - ADHD</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/adhd/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-16T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/adhd/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Rust: The best Language for Programmers with ADHD</title>
+        <published>2025-01-16T00:00:00+00:00</published>
+        <updated>2025-01-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/rust/"/>
+        <id>https://altunenes.github.io/posts/rust/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/rust/">&lt;h2 id=&quot;my-story-with-different-programming-languages&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;My Story with Different Programming Languages&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;ve worked with many programming languages over the years. In C, I often made mistakes with memory. I would forget to free memory or use pointers wrongly. In TypeScript, even though it helped me with types, I still made mistakes when I lost focus.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-rust-helps-me-code-better&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;How Rust Helps Me Code Better&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;When I started using Rust, it felt like having a helpful friend always sitting by my side who stopped me from making mistakes.
+The Rust compiler is like a friend who checks your work. It tells you exactly what&#x27;s wrong and how to fix it. This is perfect when your mind sometimes skips important details.&lt;&#x2F;p&gt;
+&lt;p&gt;People with ADHD often have a &lt;strong&gt;&quot;now or never&quot;&lt;&#x2F;strong&gt; brain - we either hyperfocus or struggle to focus at all. This makes it easy to skip important details when coding. I used to write code quickly when I was in the flow, but would forget about error handling or memory management.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-compiler-watches-out-for-you&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Compiler Watches Out for You&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#39bae6;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;from(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;Enes&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; greeting &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; name moves here
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07178;&quot;&gt;println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;Hello, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; name)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; Error: name is not valid anymore!
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Think about how our ADHD brain works: we often have multiple thoughts racing through our mind, like browser tabs open in the background. In other languages, this can lead to:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Forgetting we already used a variable&lt;&#x2F;li&gt;
+&lt;li&gt;Not remembering if we freed memory&lt;&#x2F;li&gt;
+&lt;li&gt;Missing important error checks because we got distracted&lt;&#x2F;li&gt;
+&lt;li&gt;Accidentally using null values because we forgot to initialize something&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;But Rust&#x27;s compiler is like having a supportive friend who:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Catches our mistakes before they become problems&lt;&#x2F;li&gt;
+&lt;li&gt;Gives us clear, step-by-step instructions to fix issues&lt;&#x2F;li&gt;
+&lt;li&gt;Forces us to slow down and think about data ownership&lt;&#x2F;li&gt;
+&lt;li&gt;Provides immediate feedback, which is crucial for ADHD minds&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;But more importantly, Rust forces us to write &lt;strong&gt;type-safe code&lt;&#x2F;strong&gt;. This is a game-changer for the ADHD brain. Let me show you what I mean:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; In other languages, we might write code like this: (at least I did :D)
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; let result = someFunction();  &#x2F;&#x2F; What type is result? Who knows! :(
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; In Rust, we must be clear about our types:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#59c2ff;&quot;&gt;TaskStatus &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    InProgress&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Done(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#39bae6;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Failed(Error)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;process_task&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; Task) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; TaskStatus {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; Rust won&amp;#39;t let us forget to handle all possible cases
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;match&lt;&#x2F;span&gt;&lt;span&gt; task&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;status {
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;InProgress &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Done(message) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Failed(error) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This type safety is like having &lt;strong&gt;guard rails for our racing thoughts&lt;&#x2F;strong&gt;. When our mind wants to skip ahead, Rust gently pulls us back. It turns our ADHD tendency to miss edge cases into a structured process of handling each possibility.&lt;&#x2F;p&gt;
+&lt;p&gt;So the beauty of Rust isn&#x27;t just that it catches our mistakes - it teaches us to think in a more organized way. Each variable must have a clear type. Each function must specify what it returns. Each error must be handled. For the ADHD brain that often struggles with organization, this external structure becomes a &lt;strong&gt;powerful tool&lt;&#x2F;strong&gt; for writing better code.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-hard-parts&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Hard Parts&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s be honest - Rust isn&#x27;t always easy, especially for brains that want everything to happen right now:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Takes Time to Learn&lt;&#x2F;strong&gt;: Learning about ownership and borrowing can be tough at first. When your mind races ahead, wanting to build cool things, it&#x27;s frustrating to deal with these new concepts.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Sometimes Too Strict&lt;&#x2F;strong&gt;: The compiler can make simple tasks feel complicated. You might think &quot;I just want to share this data between two functions, why is it so hard?!&quot;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Lots of Documentation&lt;&#x2F;strong&gt;: You need to read docs often, which can break your focus. For ADHD folks who might struggle with context switching, having to pause and read documentation can feel like slamming the brakes on your thought process. Also, creates in Rust are not mature as in other languages. They always change and you need to update your codebase frequently and read the documentation (and in most cases they dont have documatation but just code examples :D)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Fighting with the Borrow Checker&lt;&#x2F;strong&gt;: Sometimes you just want to write code quickly, and the borrow checker feels like that friend who keeps interrupting your story to correct small details.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;yes, it&#x27;s annoying to put on every time, but it saves us from bigger problems later.&lt;&#x2F;p&gt;
+&lt;p&gt;Remember: &lt;strong&gt;&quot;This five-minute battle with the compiler now might save me five hours of debugging later.&quot;&lt;&#x2F;strong&gt; :-)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Leonardo Da Vinci ADHD?</title>
+        <published>2021-02-03T00:00:00+00:00</published>
+        <updated>2021-02-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/adhd/"/>
+        <id>https://altunenes.github.io/posts/adhd/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/adhd/">&lt;h3 id=&quot;revisiting-genius-was-leonardo-da-vinci-s-creative-spark-fueled-by-adhd&quot;&gt;Revisiting Genius: Was Leonardo da Vinci&#x27;s Creative Spark Fueled by ADHD?&lt;&#x2F;h3&gt;
+&lt;p&gt;In the realm of art and science, few names shine as brightly as Leonardo da Vinci. A polymath of the highest order, his contributions to various fields continue to inspire awe and admiration. However, a recent article by Marco Catani and Paolo Mazzarello published in the journal BRAIN offers a fascinating new perspective on da Vinci&#x27;s life and work. The authors propose that da Vinci may have had Attention Deficit Hyperactivity Disorder (ADHD), a condition that could explain his well-documented struggles with procrastination and task completion.&lt;&#x2F;p&gt;
+&lt;p&gt;I found this article both surprising and intriguing. The possibility that one of history&#x27;s greatest minds might have had ADHD challenges our conventional understanding of this condition and invites us to reconsider the relationship between neurodiversity and creativity. In this blog post, I aim to summarize the key arguments of Catani and Mazzarello&#x27;s article, discuss potential criticisms, and share my personal reflections on their hypothesis. Whether you&#x27;re a fan of da Vinci, interested in the history of science, or curious about the many facets of the human mind, I hope you&#x27;ll find this exploration as fascinating as I did.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;evidences-about-why-leonardo-had-adhd&quot;&gt;Evidences about why Leonardo had ADHD:&lt;&#x2F;h3&gt;
+&lt;p&gt;The authors point to several key pieces of evidence to support their hypothesis. Firstly, da Vinci&#x27;s difficulties were pervasive since childhood, a fundamental characteristic of ADHD. Secondly, he was constantly on the go, often jumping from task to task, a trait common among those with ADHD. Lastly, da Vinci was left-handed and had a severe left hemisphere stroke at age 65, which left his language abilities intact. These clinical observations strongly indicate a reverse right-hemisphere dominance for language in Leonardo’s brain, a trait found in 55% of the general population but more prevalent in individuals with neurodevelopmental conditions, including ADHD.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;potential-criticism-killjoy-explanation&quot;&gt;Potential Criticism:(Killjoy explanation)&lt;&#x2F;h3&gt;
+&lt;p&gt;While the hypothesis is intriguing, it&#x27;s important to note that it is speculative. Diagnosing historical figures with modern medical conditions is inherently challenging due to the lack of direct evidence. Moreover, da Vinci&#x27;s work habits could also be attributed to other factors, such as his wide range of interests, the socio-cultural context of his time, or his unique personality traits. ADHD is a complex disorder that should not be diagnosed based solely on anecdotal evidence or behavioral traits.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;dav.jpg&quot; alt=&quot;Saint Jerome in the Wilderness&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;*A work Leonardo started but never finished: Saint Jerome in the Wilderness.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion:&lt;&#x2F;h3&gt;
+&lt;p&gt;Despite potential criticisms, the hypothesis that Leonardo da Vinci may have had ADHD offers a fresh perspective on his life and work. It invites us to reconsider the traditional narrative of genius and suggests that traits often perceived as flaws, such as impulsivity and distractibility, can also fuel creativity and innovation. This idea not only humanizes da Vinci but also provides a source of inspiration for those living with ADHD today.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References:&lt;&#x2F;h3&gt;
+&lt;p&gt;Catani M, Mazzarello P. Grey Matter Leonardo da Vinci: a genius driven to distraction. Brain. 2019 Jun 1;142(6):1842-1846. doi: 10.1093&#x2F;brain&#x2F;awz131. PMID: 31121603; PMCID: PMC6536914.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

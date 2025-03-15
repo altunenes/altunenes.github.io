@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - coding</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/coding/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-16T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/coding/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Rust: The best Language for Programmers with ADHD</title>
+        <published>2025-01-16T00:00:00+00:00</published>
+        <updated>2025-01-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/rust/"/>
+        <id>https://altunenes.github.io/posts/rust/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/rust/">&lt;h2 id=&quot;my-story-with-different-programming-languages&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;My Story with Different Programming Languages&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;ve worked with many programming languages over the years. In C, I often made mistakes with memory. I would forget to free memory or use pointers wrongly. In TypeScript, even though it helped me with types, I still made mistakes when I lost focus.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-rust-helps-me-code-better&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;How Rust Helps Me Code Better&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;When I started using Rust, it felt like having a helpful friend always sitting by my side who stopped me from making mistakes.
+The Rust compiler is like a friend who checks your work. It tells you exactly what&#x27;s wrong and how to fix it. This is perfect when your mind sometimes skips important details.&lt;&#x2F;p&gt;
+&lt;p&gt;People with ADHD often have a &lt;strong&gt;&quot;now or never&quot;&lt;&#x2F;strong&gt; brain - we either hyperfocus or struggle to focus at all. This makes it easy to skip important details when coding. I used to write code quickly when I was in the flow, but would forget about error handling or memory management.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-compiler-watches-out-for-you&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Compiler Watches Out for You&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#39bae6;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;from(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;Enes&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; greeting &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; name moves here
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07178;&quot;&gt;println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;Hello, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c2d94c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; name)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; Error: name is not valid anymore!
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Think about how our ADHD brain works: we often have multiple thoughts racing through our mind, like browser tabs open in the background. In other languages, this can lead to:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Forgetting we already used a variable&lt;&#x2F;li&gt;
+&lt;li&gt;Not remembering if we freed memory&lt;&#x2F;li&gt;
+&lt;li&gt;Missing important error checks because we got distracted&lt;&#x2F;li&gt;
+&lt;li&gt;Accidentally using null values because we forgot to initialize something&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;But Rust&#x27;s compiler is like having a supportive friend who:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Catches our mistakes before they become problems&lt;&#x2F;li&gt;
+&lt;li&gt;Gives us clear, step-by-step instructions to fix issues&lt;&#x2F;li&gt;
+&lt;li&gt;Forces us to slow down and think about data ownership&lt;&#x2F;li&gt;
+&lt;li&gt;Provides immediate feedback, which is crucial for ADHD minds&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;But more importantly, Rust forces us to write &lt;strong&gt;type-safe code&lt;&#x2F;strong&gt;. This is a game-changer for the ADHD brain. Let me show you what I mean:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; In other languages, we might write code like this: (at least I did :D)
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; let result = someFunction();  &#x2F;&#x2F; What type is result? Who knows! :(
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; In Rust, we must be clear about our types:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#59c2ff;&quot;&gt;TaskStatus &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    InProgress&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Done(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#39bae6;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Failed(Error)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;process_task&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; Task) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; TaskStatus {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; Rust won&amp;#39;t let us forget to handle all possible cases
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;match&lt;&#x2F;span&gt;&lt;span&gt; task&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;status {
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;InProgress &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Done(message) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        TaskStatus&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Failed(error) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#5c6773;&quot;&gt;&#x2F;&#x2F; We must handle this case
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This type safety is like having &lt;strong&gt;guard rails for our racing thoughts&lt;&#x2F;strong&gt;. When our mind wants to skip ahead, Rust gently pulls us back. It turns our ADHD tendency to miss edge cases into a structured process of handling each possibility.&lt;&#x2F;p&gt;
+&lt;p&gt;So the beauty of Rust isn&#x27;t just that it catches our mistakes - it teaches us to think in a more organized way. Each variable must have a clear type. Each function must specify what it returns. Each error must be handled. For the ADHD brain that often struggles with organization, this external structure becomes a &lt;strong&gt;powerful tool&lt;&#x2F;strong&gt; for writing better code.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-hard-parts&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Hard Parts&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s be honest - Rust isn&#x27;t always easy, especially for brains that want everything to happen right now:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Takes Time to Learn&lt;&#x2F;strong&gt;: Learning about ownership and borrowing can be tough at first. When your mind races ahead, wanting to build cool things, it&#x27;s frustrating to deal with these new concepts.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Sometimes Too Strict&lt;&#x2F;strong&gt;: The compiler can make simple tasks feel complicated. You might think &quot;I just want to share this data between two functions, why is it so hard?!&quot;&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Lots of Documentation&lt;&#x2F;strong&gt;: You need to read docs often, which can break your focus. For ADHD folks who might struggle with context switching, having to pause and read documentation can feel like slamming the brakes on your thought process. Also, creates in Rust are not mature as in other languages. They always change and you need to update your codebase frequently and read the documentation (and in most cases they dont have documatation but just code examples :D)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Fighting with the Borrow Checker&lt;&#x2F;strong&gt;: Sometimes you just want to write code quickly, and the borrow checker feels like that friend who keeps interrupting your story to correct small details.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;yes, it&#x27;s annoying to put on every time, but it saves us from bigger problems later.&lt;&#x2F;p&gt;
+&lt;p&gt;Remember: &lt;strong&gt;&quot;This five-minute battle with the compiler now might save me five hours of debugging later.&quot;&lt;&#x2F;strong&gt; :-)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
