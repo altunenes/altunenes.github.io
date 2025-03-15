@@ -1,7 +1,7 @@
 +++
 title = "sorceress"
 description = "Coding optical illusions in Python and JavaScript"
-weight = 1
+weight = 8
 
 [extra]
 local_image = "images/blackenigma.png"
