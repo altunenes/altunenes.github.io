@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - ADHD</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/adhd/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-01-16T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/adhd/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Why Rust&#x27;s Structure Resonates with the ADHD Brain</title>
+        <published>2025-01-16T00:00:00+00:00</published>
+        <updated>2025-01-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/rust/"/>
+        <id>https://altunenes.github.io/posts/rust/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/rust/">&lt;h2 id=&quot;my-the-cognitive-landscape-of-coding-with-adhd&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;My The Cognitive Landscape of Coding with ADHD&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Programming is a demanding cognitive task. For individuals with ADHD, the challenges can be amplified. Common experiences include difficulties with working memory (holding multiple pieces of information actively in mind), executive functions (planning, organization, sequencing tasks), sustained attention, and impulsivity. In the context of software development, this can manifest as:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Working Memory Strain&lt;&#x2F;strong&gt;: Forgetting variable states, missed dependencies, or the intricate rules of manual memory management in languages like C.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Executive Function Hurdles&lt;&#x2F;strong&gt;: Struggling to structure complex logic, overlooking error handling paths, or finding it hard to break down large problems into manageable steps.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Focus Fluctuation&lt;&#x2F;strong&gt;: Periods of intense hyperfocus leading to rapid code generation (sometimes neglecting crucial details like edge cases or resource cleanup), alternating with periods where maintaining concentration on intricate or tedious tasks feels impossible.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Impulsivity&lt;&#x2F;strong&gt;: Jumping ahead in logic, making assumptions about data states, or skipping validation steps in a rush to see results.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;These aren&#x27;t reflections of skill or &quot;intelligence&quot;, but rather how the ADHD brain processes information and manages tasks. This cognitive profile means the structure and feedback mechanisms of a programming language can significantly impact productivity and code quality.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-rust-s-design-intersects-with-adhd-cognition&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;How Rust&#x27;s Design Intersects with ADHD Cognition&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;My journey through various programming languages highlighted these cognitive friction points. While tools like TypeScript offered type safety, the underlying potential for focus-related errors remained. Discovering Rust felt different. Its core design principles seem to inadvertently offer cognitive scaffolding that resonates surprisingly well with the ADHD experience.&lt;&#x2F;p&gt;
+&lt;p&gt;The Rust compiler is notoriously strict, particularly regarding its ownership and borrowing rules. Initially, this can feel like a barrier, especially when the ADHD brain craves rapid progress and iteration. Because We need immediate feedback to maintain engagement. However, this strictness serves a crucial cognitive function:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;1-&lt;&#x2F;strong&gt; &lt;span style=&quot;color:orange;&quot;&gt;Offloading Working Memory:&lt;&#x2F;span&gt; Ownership rules force clarity about which part of the code is responsible for data at any given time. This externalizes the mental load of tracking lifetimes and memory validity, a task that heavily relies on working memory – often a challenge area for ADHD. The compiler remembers the rules, so you don&#x27;t have to hold them all precariously in your head.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;2-&lt;&#x2F;strong&gt; &lt;span style=&quot;color:orange;&quot;&gt;Enforcing Structure and Planning: &lt;&#x2F;span&gt; The borrow checker demands careful thought about data flow and mutability before code compiles. This counteracts the impulsive tendency to write code first and figure out the data interactions later. It imposes a level of planning and organization that might not come naturally but leads to more robust designs.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;3-&lt;&#x2F;strong&gt; &lt;span style=&quot;color:orange;&quot;&gt;Providing Immediate, Actionable Feedback:&lt;&#x2F;span&gt;ADHD brains often thrive on clear, immediate feedback loops. Vague runtime errors discovered hours later can be demoralizing and hard to trace back, especially if focus has shifted multiple times. Rust&#x27;s compiler errors are typically precise, pinpointing the issue and often suggesting concrete solutions. This immediate correction cycle is cognitively validating and helps maintain momentum without building up &quot;cognitive debt&quot; from unresolved uncertainties.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Conclusion&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Despite these cognitive alignments, it would be misleading to portray Rust as a frictionless experience for programmers with ADHD. The very features that provide scaffolding can also be sources of significant initial frustration:&lt;&#x2F;p&gt;
+&lt;p&gt;Delayed Gratification and Compile Times: The need for immediate results and feedback can be challenged by Rust&#x27;s sometimes lengthy compile times, especially on large projects. This delay can interrupt flow and potentially dampen motivation when the brain seeks quicker reinforcement cycles.&lt;&#x2F;p&gt;
+&lt;p&gt;The Rigidity Hurdle: The compiler&#x27;s strictness, while ultimately beneficial for correctness, can feel intensely frustrating during the initial learning phase or when exploring ideas rapidly. The desire to &quot;just make it work&quot; quickly can clash with the compiler&#x27;s demands for rigorous adherence to rules like ownership and lifetimes. This forced organization, while helpful, can feel restrictive when creativity or impulsivity seeks less constrained pathways. Moreover, mastering concepts like ownership, borrowing, and lifetimes requires significant focused effort and persistence – executive functions that can already be taxed. The initial investment phase can feel daunting.&lt;&#x2F;p&gt;
+&lt;p&gt;However, it&#x27;s essential to frame this friction appropriately. These challenges are predominantly front-loaded. The &quot;battles&quot; fought with the borrow checker early on are often preventing entire classes of subtle, hard-to-debug runtime errors later – the kind of errors that can be particularly draining and difficult to manage with fluctuating attention.&lt;&#x2F;p&gt;
+&lt;p&gt;Believe me, this initial investment pays substantial dividends, especially as projects scale. In the complex, sprawling codebases typical of real-world software development, Rust&#x27;s enforced structure becomes an invaluable asset. It prevents the kind of tangled dependencies and state management issues that can quickly overwhelm cognitive resources. The clarity imposed by the type system and ownership rules significantly reduces the mental overhead required to navigate and reason about large amounts of code. In the long term, this often translates to increased productivity, reduced debugging time, and ultimately, a less stressful coding experience, allowing the strengths of the ADHD mind – creativity, hyperfocus bursts, novel connections – to be applied more effectively. The initial cognitive effort yields a more stable and predictable foundation, which is profoundly beneficial when managing the inherent complexities of both software and ADHD.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Leonardo Da Vinci ADHD?</title>
+        <published>2021-02-03T00:00:00+00:00</published>
+        <updated>2021-02-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/adhd/"/>
+        <id>https://altunenes.github.io/posts/adhd/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/adhd/">&lt;h3 id=&quot;revisiting-genius-was-leonardo-da-vinci-s-creative-spark-fueled-by-adhd&quot;&gt;Revisiting Genius: Was Leonardo da Vinci&#x27;s Creative Spark Fueled by ADHD?&lt;&#x2F;h3&gt;
+&lt;p&gt;In the realm of art and science, few names shine as brightly as Leonardo da Vinci. A polymath of the highest order, his contributions to various fields continue to inspire awe and admiration. However, a recent article by Marco Catani and Paolo Mazzarello published in the journal BRAIN offers a fascinating new perspective on da Vinci&#x27;s life and work. The authors propose that da Vinci may have had Attention Deficit Hyperactivity Disorder (ADHD), a condition that could explain his well-documented struggles with procrastination and task completion.&lt;&#x2F;p&gt;
+&lt;p&gt;I found this article both surprising and intriguing. The possibility that one of history&#x27;s greatest minds might have had ADHD challenges our conventional understanding of this condition and invites us to reconsider the relationship between neurodiversity and creativity. In this blog post, I aim to summarize the key arguments of Catani and Mazzarello&#x27;s article, discuss potential criticisms, and share my personal reflections on their hypothesis. Whether you&#x27;re a fan of da Vinci, interested in the history of science, or curious about the many facets of the human mind, I hope you&#x27;ll find this exploration as fascinating as I did.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;evidences-about-why-leonardo-had-adhd&quot;&gt;Evidences about why Leonardo had ADHD:&lt;&#x2F;h3&gt;
+&lt;p&gt;The authors point to several key pieces of evidence to support their hypothesis. Firstly, da Vinci&#x27;s difficulties were pervasive since childhood, a fundamental characteristic of ADHD. Secondly, he was constantly on the go, often jumping from task to task, a trait common among those with ADHD. Lastly, da Vinci was left-handed and had a severe left hemisphere stroke at age 65, which left his language abilities intact. These clinical observations strongly indicate a reverse right-hemisphere dominance for language in Leonardo’s brain, a trait found in 55% of the general population but more prevalent in individuals with neurodevelopmental conditions, including ADHD.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;potential-criticism-killjoy-explanation&quot;&gt;Potential Criticism:(Killjoy explanation)&lt;&#x2F;h3&gt;
+&lt;p&gt;While the hypothesis is intriguing, it&#x27;s important to note that it is speculative. Diagnosing historical figures with modern medical conditions is inherently challenging due to the lack of direct evidence. Moreover, da Vinci&#x27;s work habits could also be attributed to other factors, such as his wide range of interests, the socio-cultural context of his time, or his unique personality traits. ADHD is a complex disorder that should not be diagnosed based solely on anecdotal evidence or behavioral traits.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;&#x2F;images&#x2F;dav.jpg&quot; alt=&quot;Saint Jerome in the Wilderness&quot; &#x2F;&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;*A work Leonardo started but never finished: Saint Jerome in the Wilderness.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion:&lt;&#x2F;h3&gt;
+&lt;p&gt;Despite potential criticisms, the hypothesis that Leonardo da Vinci may have had ADHD offers a fresh perspective on his life and work. It invites us to reconsider the traditional narrative of genius and suggests that traits often perceived as flaws, such as impulsivity and distractibility, can also fuel creativity and innovation. This idea not only humanizes da Vinci but also provides a source of inspiration for those living with ADHD today.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References:&lt;&#x2F;h3&gt;
+&lt;p&gt;Catani M, Mazzarello P. Grey Matter Leonardo da Vinci: a genius driven to distraction. Brain. 2019 Jun 1;142(6):1842-1846. doi: 10.1093&#x2F;brain&#x2F;awz131. PMID: 31121603; PMCID: PMC6536914.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
