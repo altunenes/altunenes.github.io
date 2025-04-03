@@ -1,5 +1,5 @@
 +++
-title = "Rust: The best Language for Programmers with ADHD"
+title = "Why Rust's Structure Resonates with the ADHD Brain"
 date = "2025-01-16"
 
 [taxonomies]
