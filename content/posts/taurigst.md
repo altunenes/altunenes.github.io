@@ -11,7 +11,7 @@ Working with multimedia in desktop applications often requires using GStreamer, 
 
 After some troubleshooting and experimentation, I've successfully overcome these challenges. This guide shares key insights to help other developers avoid similar headaches.
 
-## The Challenge
+## <span style="color:orange;">The Challenge</span>
 
 Bundling GStreamer with a Tauri app on macOS involves several complex issues:
 
@@ -21,7 +21,7 @@ Bundling GStreamer with a Tauri app on macOS involves several complex issues:
 4. **Code signing** must be applied correctly to each individual binary
 5. **Tauri's bundling system** must be properly configured to include GStreamer
 
-## 1. Bundling Challenges
+## <span style="color:orange;"> 1. Bundling Challenges</span>
 
 GStreamer is complex because:
 
@@ -30,7 +30,7 @@ GStreamer is complex because:
 - They must be bundled for distribution to users who don't have GStreamer installed
 - Missing even one dependency can cause cryptic runtime errors
 
-### 2. Apple's Signing & Notarization Requirements
+### <span style="color:orange;"> 1.1 Apple's Signing & Notarization Requirements</span>
 
 Apple's requirements directly conflict with GStreamer's documentation:
 
@@ -42,7 +42,7 @@ Apple's requirements directly conflict with GStreamer's documentation:
   - `com.apple.security.cs.disable-library-validation`
   - `com.apple.security.cs.allow-dyld-environment-variables`
 
-### 3. Path Handling Solutions
+### <span style="color:orange;"> 1.2 Path Handling Solutions</span>
 
 Getting the library paths right is critical:
 
@@ -53,7 +53,7 @@ Getting the library paths right is critical:
   - `GST_PLUGIN_PATH`
   - `DYLD_LIBRARY_PATH`
 
-### 4. Missing Library Issues
+### <span style="color:orange;"> 1.3 Missing Library Issues</span>
 
 Certain libraries are particularly important to check for:
 
@@ -61,9 +61,9 @@ Certain libraries are particularly important to check for:
 - `libgstreamer-1.0.0.dylib`
 - `libgstbase-1.0.0.dylib`
 
-Missing these can cause "Library not loaded" crashes at runtime, which can be especially confusing since the app works fine on development machines that have GStreamer installed.
+Missing these can cause "Library not loaded" crashes at runtime, which can be especially confusing since the app works fine on development machines that have GStreamer installed. 
 
-### 5. Tauri Integration
+### <span style="color:orange;">1.4 Tauri Integration</span>
 
 Integrating with Tauri requires special attention:
 
@@ -72,7 +72,7 @@ Integrating with Tauri requires special attention:
 - Avoid interfering with Tauri's DMG creation process
 - Use a wrapper script for your main executable to set environment variables
 
-### Testing Your Integration
+### <span style="color:orange;">1.5 Testing Your Integration</span>
 
 To verify everything is working correctly:
 
@@ -80,7 +80,7 @@ To verify everything is working correctly:
 2. Use `otool -L` to inspect the binary dependencies
 3. Add temporary debug output to see which libraries are being loaded
 
-## Conclusion
+## <span style="color:orange;">Conclusion</span>
 
 Successfully bundling GStreamer with a Tauri app on macOS requires navigating the complex interplay between GStreamer's architecture, Apple's notarization requirements, and Tauri's bundling system. 
 
