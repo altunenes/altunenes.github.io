@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - statistics</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/statistics/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-01T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/statistics/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Galton Board</title>
+        <published>2024-01-01T00:00:00+00:00</published>
+        <updated>2024-01-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/projects/project-9/"/>
+        <id>https://altunenes.github.io/projects/project-9/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/projects/project-9/">&lt;p&gt;There is more than enough about Galton Board, but the code&#x2F;interactive version is almost like an oasis in the desert! So in my spare time I sat down and created something like this:&lt;&#x2F;p&gt;
+&lt;p&gt;Note: The “Matter” physics engine is really cool!  :-)&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe src=&quot;https:&#x2F;&#x2F;openprocessing.org&#x2F;sketch&#x2F;2291810&#x2F;embed&#x2F;&quot; width=&quot;800&quot; height=&quot;700&quot;&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;To change the initial randomness, you can play with the following functions and observe :-)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;JavaScript&quot; style=&quot;background-color:#0f1419;color:#bfbab0;&quot; class=&quot;language-JavaScript &quot;&gt;&lt;code class=&quot;language-JavaScript&quot; data-lang=&quot;JavaScript&quot;&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;addPrt&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;height &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(rws &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;7&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;rndX &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;width &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    prts&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;Prt(rndX&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;01 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;height))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    pc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;addPrts&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;spcY&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;maxPc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span&gt;i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;rndX &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;width &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;02 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;width)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;        prts&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffb454;&quot;&gt;push&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff7733;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;Prt(rndX&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span&gt;spcY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29718;&quot;&gt;01 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;height))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;        pc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f29668;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bfbab0cc;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+        
+    </entry>
+</feed>
