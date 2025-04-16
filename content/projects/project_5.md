@@ -1,6 +1,6 @@
 +++
 title = "butter2d"
-description = "Butterworth filter for spatial frequencies on images. Includes a WASM demo"
+description = "Rust crate: Butterworth filter for spatial frequencies on images. Includes a WASM demo"
 weight = 1
 
 [extra]
