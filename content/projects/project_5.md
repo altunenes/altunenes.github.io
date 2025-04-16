@@ -1,6 +1,6 @@
 +++
 title = "butter2d"
-description = "A Rusty desktop app for Butterworth filter for spatial frequencies on images"
+description = "Butterworth filter for spatial frequencies on images. Includes a WASM demo"
 weight = 1
 
 [extra]
