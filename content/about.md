@@ -4,7 +4,11 @@ path = "about"
 +++
 
 
-I'm a psychology graduate from Akdeniz University with a deep interest in the intricacies of the mind and visual perception. My lab journey introduced me to a blend of psychological testing, brain-waves, skin conductances, facial electromyography and machine learning. Alongside my studies, I discovered a profound passion for coding with various languages but especially Rust. After my master's degree I've been working as a professional Rust developer. Currently, working on a GPU-accelerated desktop app in Rust. Outside of my professional jobs, I enjoy creative coding/algorithmic art, optical illusions, playing electric guitar, making Dungeon Synth, watching budgies, and orienteering.
+I hold a degree in Psychology from Akdeniz University, where I developed a strong interest in the human perception. 
+
+Alongside my psychology studies, I discovered a deep passion for programming. This passion led me to transition into software development after my master's degree. I now work as a professional Rust developer, currently focused on building a GPU-accelerated desktop app
+
+Beyond my professional work, I enjoy creative coding/algorithmic art, exploring visual illusions, playing electric guitar, composing Dungeon Synth, observing budgies, and orienteering.
 
 <div style="text-align: center;">
     <div style="display: inline-block; margin-top: 20px; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;">
