@@ -53,17 +53,7 @@ Getting the library paths right is critical:
   - `GST_PLUGIN_PATH`
   - `DYLD_LIBRARY_PATH`
 
-### <span style="color:orange;"> 1.3 Missing Library Issues</span>
-
-Certain libraries are particularly important to check for:
-
-- `libgstapp-1.0.0.dylib`
-- `libgstreamer-1.0.0.dylib`
-- `libgstbase-1.0.0.dylib`
-
-Missing these can cause "Library not loaded" crashes at runtime, which can be especially confusing since the app works fine on development machines that have GStreamer installed. 
-
-### <span style="color:orange;">1.4 Tauri Integration</span>
+### <span style="color:orange;">1.3 Tauri Integration</span>
 
 Integrating with Tauri requires special attention:
 
@@ -72,13 +62,6 @@ Integrating with Tauri requires special attention:
 - Avoid interfering with Tauri's DMG creation process
 - Use a wrapper script for your main executable to set environment variables
 
-### <span style="color:orange;">1.5 Testing Your Integration</span>
-
-To verify everything is working correctly:
-
-1. Test the app on a system without GStreamer installed (Or just change the library names on your machine and see if it works)
-2. Use `otool -L` to inspect the binary dependencies
-3. Add temporary debug output to see which libraries are being loaded
 
 ## <span style="color:orange;">Conclusion</span>
 
