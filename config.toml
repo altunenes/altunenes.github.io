@@ -39,9 +39,7 @@ socials = [
     { name = "linkedin", url = "https://www.linkedin.com/in/enes-altun-0a3076167", icon = "linkedin" },
     { name = "instagram", url = "https://www.instagram.com/altunanes/", icon = "instagram" },
     { name = "orcid", url = "https://orcid.org/0000-0002-6478-6909", icon = "orcid" },
-    { name = "kaggle", url = "https://www.kaggle.com/enesaltun", icon = "kaggle" },
     { name = "shadertoy", url = "https://www.shadertoy.com/user/altunenes", icon = "shadertoy" },
-    { name = "stackoverflow", url = "https://stackoverflow.com/users/14492150/altune", icon = "stackoverflow" },
     { name = "bluesky", url = "https://bsky.app/profile/altunenes.bsky.social", icon = "bluesky" }
     
 ]
