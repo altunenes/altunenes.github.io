@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - illusion</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/illusion/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-12-05T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/illusion/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Illusory Movement of Dotted Lines but Gabor Version</title>
+        <published>2024-12-05T00:00:00+00:00</published>
+        <updated>2024-12-05T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/gabordots/"/>
+        <id>https://altunenes.github.io/posts/gabordots/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/gabordots/">&lt;h2 id=&quot;introduction&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Introduction&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Today, I was exploring &lt;a href=&quot;https:&#x2F;&#x2F;michaelbach.de&#x2F;ot&#x2F;mot-dottedLines&#x2F;index.html&quot;&gt;Michael Bach&#x27;s&lt;&#x2F;a&gt; comments about some illusions and I stumbled upon an illusion called &quot;Dotted Line Motion Illusion&quot; that I hadn&#x27;t known before. I wanted to read more about it because the effect didn&#x27;t seem to work well for me. Both Bach and the original article used a rectangular checkerboard design for the illusion. I tried to reproduce the code in ShaderToy and noticed that the scale of the rectangles and the background color significantly affect the strength of the illusion, at least from my perception.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;plain-version&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Plain Version&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;First, investigate the illusion below. Click the play button, track the red disc as it moves, and notice how the checkered lines seem to shift. It works best on a big screen.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;450&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;XcKXRV?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;After finishing the coding, I pondered whether &quot;The reason is that the black&#x2F;white contrast signals between adjacent dots along the length of the line are stronger than black&#x2F;grey or white&#x2F;grey contrast signals across the line, and the motion is computed as a vector sum of local contrast-weighted motion signals.&quot; could be an explanation, and then, could Gabor patches be more effective here?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;gabor-version&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Gabor Version&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Here&#x27;s what I did. Now, try this and see which one appears stronger. Interestingly, even on a smaller screen, this version works much better for me and it&#x27;s really functioning very nicely.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;450&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;McKSRK?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;exploring-reverse-effects&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Exploring Reverse Effects&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Even more interestingly, I discovered a reverse effect when I animated the phase offset. Follow the red dot again, and you&#x27;ll notice that the phase movement stops at some point.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;450&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;4fyXz3?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;reference-paper&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Reference Paper&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;For more detailed information on the scientific background of these visual phenomena, refer to the following paper:&lt;&#x2F;p&gt;
+&lt;p&gt;Ito, H., Anstis, S., &amp;amp; Cavanagh, P. (2009). Illusory Movement of Dotted Lines. Perception, 38(9), 1405-1409. &lt;a href=&quot;https:&#x2F;&#x2F;doi.org&#x2F;10.1068&#x2F;p6383&quot;&gt;https:&#x2F;&#x2F;doi.org&#x2F;10.1068&#x2F;p6383&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Reverse Phi Motion Using Gabors</title>
+        <published>2023-10-15T00:00:00+00:00</published>
+        <updated>2023-10-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/gaborillusion/"/>
+        <id>https://altunenes.github.io/posts/gaborillusion/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/gaborillusion/">&lt;h3 id=&quot;new-gabor-illusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; New Gabor Illusion &lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;While diving into some hands-on coding with &lt;a href=&quot;https:&#x2F;&#x2F;altunenes.github.io&#x2F;posts&#x2F;2023&#x2F;10&#x2F;gabor&#x2F;&quot;&gt;Gabor patches&lt;&#x2F;a&gt;, a fascinating idea struck me: What if I sculpted shapes like triangles or ellipses, infused them with some sine phases, and voila—could I possibly evoke a simple reverse phi effect? 🤔🔄&lt;&#x2F;p&gt;
+&lt;p&gt;To my delight, I believe I succeeded! 🎉 Navigate your cursor and hit the space bar to unveil the effect. 🖱️⌨️ Your insights and thoughts are eagerly awaited! =)&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;dsdfzS?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;or look at that =) not: unlike other &quot;reverse phi motion&quot; effects, this one doesn&#x27;t have &quot;thin edges&quot; with sine phases. Its just Gabors... 😁&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;dscfzs?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Asahi illusion on the Fractal!</title>
+        <published>2023-09-30T00:00:00+00:00</published>
+        <updated>2023-09-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/asahi/"/>
+        <id>https://altunenes.github.io/posts/asahi/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/asahi/">&lt;h2 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;While experimenting with shader code, I stumbled upon a fascinating visual phenomenon. When focusing on the center of a particular design, surrounded by colorful petals, the center appears brighter than it actually is.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;DsfyRX?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Dr. Bruno Laeng&#x27;s study unveiled that our brain is deceived into triggering a pupillary light reflex, causing our pupils to constrict as if protecting our eyes from intense light, like the sun&#x27;s rays.&lt;&#x2F;p&gt;
+&lt;p&gt;The Asahi illusion&#x27;s effect on the pupil isn&#x27;t instantaneous. In humans, there&#x27;s a notable delay between the onset of the illusion and the pupillary response. This delay might be attributed to the time required for the brain&#x27;s processing mechanisms to influence the pupillary light reflex.&lt;&#x2F;p&gt;
+&lt;p&gt;Interestingly, the Visual Cortex (V1) seems to play a pivotal role. The V1 response to the Asahi illusion precedes the pupil constriction, suggesting its potential involvement in modulating the Autonomic Nervous System (ANS). However, the exact pathways, be it direct projections or intricate subcortical synapses, remain a topic of ongoing &lt;a href=&quot;https:&#x2F;&#x2F;academic.oup.com&#x2F;cercor&#x2F;article&#x2F;33&#x2F;12&#x2F;7952&#x2F;7084649?login=false&quot;&gt;research&lt;&#x2F;a&gt; .&lt;&#x2F;p&gt;
+&lt;p&gt;here is another one I coded after the above one.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;MX23Wz?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;43SGDh?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Note, you can download the asahi illusion demos with using interactive GUI I implemented (easy to change the parameters like colors etc) on here: (I compiled them with Rust :-) &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&quot;&gt;Source code:&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;asahi-demo-downloads&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Asahi Demo Downloads &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi2&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>About the Reverse Phi Motion Effect</title>
+        <published>2023-09-12T00:00:00+00:00</published>
+        <updated>2023-09-12T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/rphi/"/>
+        <id>https://altunenes.github.io/posts/rphi/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/rphi/">&lt;h3 id=&quot;decoding-the-reverse-phi-illusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Decoding the Reverse Phi Illusion &lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;After diving into the code for reverse phi motion, I found myself pondering its intricacies for days. While I can articulate the phenomenon in terms of programming or mathematics, the scientific literature seemed to offer limited insights into whether this illusion is purely retinal or a result of complex neural interactions, such as those involving the geniculate nucleus or the motion-sensitive neurons in V1.&lt;&#x2F;p&gt;
+&lt;p&gt;an example of Reverse Phi illusion I coded in Rust &lt;a href=&quot;https:&#x2F;&#x2F;journals.sagepub.com&#x2F;doi&#x2F;full&#x2F;10.1177&#x2F;2041669518815708&quot;&gt;Flynn &amp;amp; Shapiro, 2018 &lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center;&quot;&gt;
+  &lt;video width=&quot;320&quot; height=&quot;240&quot; controls&gt;
+    &lt;source src=&quot;https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;54986652&#x2F;248949171-4d361b74-e377-4409-9286-525614ff92bf.mp4&quot; type=&quot;video&#x2F;mp4&quot;&gt;
+    Your browser does not support the video tag.
+  &lt;&#x2F;video&gt;
+&lt;&#x2F;div&gt;
+&lt;h4 id=&quot;a-glimpse-into-comparative-vision-science&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; A Glimpse into Comparative Vision Science &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;While exploring this topic, I stumbled upon an intriguing article titled &lt;a href=&quot;https:&#x2F;&#x2F;www.nature.com&#x2F;articles&#x2F;nn.4050&quot;&gt;&quot;Common Circuit Design in Fly and Mammalian Motion Vision&quot;&lt;&#x2F;a&gt;. Although the paper primarily focuses on flies and mice, its findings can be extrapolated to human vision.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;on-and-off-pathways-the-universal-language-of-vision&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; ON and OFF Pathways: The Universal Language of Vision &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Both flies and humans possess separate pathways for processing ON and OFF signals generated by photoreceptors that respond to changes in luminance. These pathways originate at different synapses in the visual system and have distinct anatomical and functional properties. According to a &lt;a href=&quot;https:&#x2F;&#x2F;pubmed.ncbi.nlm.nih.gov&#x2F;29261684&quot;&gt;2017 study&lt;&#x2F;a&gt;, these ON and OFF pathways are sensitive to specific interactions, which may also be applicable to human psychophysics.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;demo-example&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Demo Example &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;To better understand ON and OFF pathways, check out this interactive shader: &lt;a href=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;view&#x2F;XtdyWj&quot;&gt;ShaderToy Example&lt;&#x2F;a&gt;. This shader illustrates how ON pathways are more activated by a bright stimulus on a dark background, while OFF pathways are more activated by a dark stimulus on a bright background.&lt;&#x2F;p&gt;
+&lt;p&gt;Note: That shader code not belong to me!&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;the-role-of-correlation-based-algorithms&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The Role of Correlation-Based Algorithms &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;The article also discusses how both species utilize correlation-based algorithms for motion detection. These algorithms compare temporal changes in luminance at different spatial locations using a multiplication or correlation process. This is in line with another &lt;a href=&quot;https:&#x2F;&#x2F;pubmed.ncbi.nlm.nih.gov&#x2F;18848956&quot;&gt;study&lt;&#x2F;a&gt; that showed equal efficiency in correlating dots of opposite contrast and of similar contrast in reverse-phi motion stimuli.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;reverse-phi-more-than-just-stimulus-properties&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Reverse Phi: More Than Just Stimulus Properties &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;In essence, reverse phi motion is not merely a result of low-level stimulus properties. It appears to be a complex interplay between ON and OFF signals processed through discrete pathways. These interactions can even reverse the direction of motion when contrast changes accompany the discrete motion, as suggested by &lt;a href=&quot;https:&#x2F;&#x2F;dblp.org&#x2F;rec&#x2F;journals&#x2F;neco&#x2F;MoK03&quot;&gt;biophysical simulations&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;why-parallel-processing&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why Parallel Processing? &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;You might wonder why our visual system even employs this kind of parallel processing. The authors of the article provide an insightful explanation. They suggest that separating ON and OFF signals simplifies the task for motion-sensitive neurons, making it easier to correlate two positive input signals. This seems to resolve a significant biophysical challenge in implementing correlation mechanisms.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;final-thoughts-the-elegance-of-on-and-off-pathways-in-motion-perception&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Final Thoughts: The Elegance of ON and OFF Pathways in Motion Perception &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;As we draw this exploration to a close, let&#x27;s revisit a profound insight from the paper &quot;Common Circuit Design in Fly and Mammalian Motion Vision&quot;. The paper asks an essential question: What could be the advantage of separating ON and OFF signals in both the mouse and fly visual systems?&lt;&#x2F;p&gt;
+&lt;p&gt;The separation of ON and OFF pathways in our visual system serves a practical, computational purpose. Motion perception, at its core, involves the temporal correlation of similar events at distinct spatial locations. When a bright object moves across our field of vision, the neurons responsible for detecting this motion have to process both the increasing and the decreasing luminance as the object passes by.&lt;&#x2F;p&gt;
+&lt;p&gt;The challenge lies in the biophysics: there&#x27;s no known mechanism that allows a postsynaptic neuron to get excited both when two inputs increase and when they decrease their membrane potential. This is where the genius of biological design comes into play. By segregating ON and OFF signals, each dealing exclusively with brightness increments or decrements, the visual system effectively simplifies the task for motion-sensitive neurons. Now, they only have to correlate two positive input signals, significantly easing the computational burden.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Why I love optical illusions</title>
+        <published>2022-08-02T00:00:00+00:00</published>
+        <updated>2022-08-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/illusions/"/>
+        <id>https://altunenes.github.io/posts/illusions/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/illusions/">&lt;p&gt;Ever stumbled upon something so interesting that you just couldn&#x27;t let it go? That&#x27;s what happened to me with optical illusions. My first exposure to optical illusions was in my undergraduate intro textbooks, and that was the point from which I was captured. So, whenever I see a new illusion, mostly on Twitter, my day is ruined because my brain just won&#x27;t let it go until I try to reproduce it with coding and understand the mechanism at a low level.&lt;&#x2F;p&gt;
+&lt;p&gt;Four years (2018-2022) ago my coding skills were. well, let&#x27;s say, they were just born. But the challenge to create these optical illusions was very tempting. I wanted to dig deeper into this, so as to control the illusion. I saw how with just small changes in the code, it became stronger or disappeared.&lt;&#x2F;p&gt;
+&lt;p&gt;It had been a very steep learning curve, but every line of code was a step closer to finally unraveling the mysteries of human vision. After so much coding and debugging, I finally reached a repository using which you can display and manipulate almost all famous optical illusions with just a few lines of code &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;sorceress&quot;&gt;&lt;strong&gt;&lt;font color=&quot;red&quot;&gt;sorceress&lt;&#x2F;font&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;. And for those curious minds, I&#x27;ve also documented the science and explanations behind each illusion. Not only illusions explained, but you can also find the API documentation for humans, of course &lt;a href=&quot;https:&#x2F;&#x2F;altunenes.github.io&#x2F;sorceress&#x2F;explanations%20of%20illusions&#x2F;&quot;&gt;&lt;strong&gt;&lt;font color=&quot;red&quot;&gt;here&lt;&#x2F;font&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Sometimes I look at my old code and cringe a little, but then I smile—it shows me only how far I came. From a total beginner to this comprehensive repo on Optical Illusions, the journey has been quite something. I don&#x27;t really contribute to this repository since I mostly write my code in Rust. So if you are in search of more dynamic, solid, and the latest illusions, check my other repository
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&quot;&gt;&lt;strong&gt;&lt;font color=&quot;red&quot;&gt;Rust&lt;&#x2F;font&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;.
+.&lt;&#x2F;p&gt;
+&lt;div style=&quot;text-align: center;&quot;&gt;
+  &lt;video width=&quot;320&quot; height=&quot;240&quot; controls&gt;
+    &lt;source src=&quot;https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;54986652&#x2F;248949171-4d361b74-e377-4409-9286-525614ff92bf.mp4&quot; type=&quot;video&#x2F;mp4&quot;&gt;
+    Your browser does not support the video tag.
+  &lt;&#x2F;video&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;But why in the world, you may ask, why all this effort? Well, to be totally honest, I really don&#x27;t know.&lt;&#x2F;p&gt;
+&lt;p&gt;This is actually a question that I always come across, especially on interviews that I mostly bomb. But the answer probably lies in the complexity of human vision. I believe most of the understanding of vision from us is based on implicit assumptions. Optical illusions challenge these assumptions more like little experiments and with an irresistibly captivating factor about them: seeing how easily our vision can be played with. And let&#x27;s not forget the human curiosity factor. Perhaps one of the questions for research could be the fascination of optical illusions and, in fact, lifelong attempts to understand them. Yes, I do realize that up to now I haven&#x27;t had any concrete answer to the question. I tried to play tricks with your brain through the illusion to let you think I have a concrete answer. I am sorry for that.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
