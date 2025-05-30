@@ -1,6 +1,6 @@
 +++
 title = "Cuneus"
-description = "a Graphic Engine for Creative Coding with Rust and WGSL: Powered by wgpu"
+description = "a Graphic Engine with Rust: Powered by WebGPU"
 weight = 1
 
 [extra]
