@@ -59,9 +59,9 @@ host_url = "https://stats.mywebsite.com" # default: https://analytics.eu.umami.i
 
 [extra.giscus]
 repo = "altunenes/altunenes.github.io"
-repo_id = ""
+repo_id = "R_kgDOL5NyoQ"
 category = "General"
-category_id = ""
+category_id = "DIC_kwDOL5Nyoc4CfU7n"
 mapping = "pathname"
 strict = "0"
 reactions_enabled = "1"
