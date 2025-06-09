@@ -19,7 +19,7 @@ toc = true
 use_cdn = false
 favicon = "/icon/favicon.png"
 theme = "toggle"              # light, dark, auto, toggle
-comment = false
+comment = true
 # mathjax = true
 # mathjax_dollar_inline_enable = true
 
@@ -56,3 +56,16 @@ host = "example.com" # default= goatcounter.com
 [extra.analytics.umami]
 website_id = "43929cd1-1e83...."
 host_url = "https://stats.mywebsite.com" # default: https://analytics.eu.umami.is
+
+[extra.giscus]
+repo = "altunenes/altunenes.github.io"
+repo_id = ""
+category = "General"
+category_id = ""
+mapping = "pathname"
+strict = "0"
+reactions_enabled = "1"
+emit_metadata = "0"
+input_position = "bottom"
+theme = "preferred_color_scheme"
+lang = "en"
