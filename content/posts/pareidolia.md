@@ -53,7 +53,7 @@ Next, I used one of the most famous pareidolia images on the internet. My ration
 
 | ![C](/images/C.png)|
 |:-:|
-| *The famous 'Church Face' pareidolia.*|
+| *The famous 'Church Face' pareidolia.*<br>*Note that the model only sees a "Face (Pareidolia)" in the LSF version, describing only architectural elements in the others.*|
 
 #### <span style="color:orange;"> Test 3: The Oval Hypothesis </span>
 
@@ -63,7 +63,7 @@ The first, an electrical component, followed the now-established pattern. A **"I
 
 | ![E](/images/E.png)|
 |:-:|
-| *A illusory face in an electrical component.*|
+| *An illusory face in an electrical component.*<br>*The LSF version triggered a "Pareidolia Face" detection, while the detailed versions only yielded descriptions of machine parts.*|
 
 The second image, however, gave a breakthrough result. This time, the LLM saw a face in **all three versions!** It identified a "Face" in both LSF and BB, and even a **"Illusory Face"** in the sharp HSF image. This is a brilliant finding. It suggests that when an object's structure is a strong enough match for the AI's internal face template (a round shape, two distinct "eyes," a "mouth"), it can overcome the distracting HSF noise. This is also highly consistent with human vision, where HSF information is vital for analyzing the fine features *of a face* once it has been detected.
 
@@ -87,7 +87,7 @@ The first painting is a face constructed from a landscape. Interestingly, the mo
 
 | ![P](/images/P.png)|
 |:-:|
-| *A composite face, testing holistic perception.*|
+| *A composite face, testing holistic perception.*<br>*Notably, the model identified the face in all three versions, even describing it as an 'optical illusion' in the BB.*|
 
 I tried a second, similar painting of a shepherd in a landscape forming a face. The results were just as intriguing. In the full-detail versions, the model successfully identified both the whole (**"Face"**) and the parts (**"Sheep"**, **"Shepherd"**). It seemed to parse the image on multiple levels simultaneously.
 
