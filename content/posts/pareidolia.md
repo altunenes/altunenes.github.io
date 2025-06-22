@@ -2,7 +2,7 @@
 title = "How LLMs See Illusory Faces"
 date = "2025-06-22"
 [taxonomies]
-tags=["llm","pareidolia","AI","vision","perception"]
+tags=["llm","pareidolia","AI","vision","perception","illusion"]
 +++
 
 #### <span style="color:orange;"> Background </span>
