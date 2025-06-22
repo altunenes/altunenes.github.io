@@ -31,7 +31,7 @@ This makes pareidolia a particularly interesting test. It's not a geometric tric
 
 ### <span style="color:orange;"> The Experiment </span>
 
-To test how Gemini handles pareidolia, I took several images and created three versions of each (using butterworth filter): the original **Broadband (BB)**, a blurry **Low Spatial Frequency (LSF)** version, and a sharp-edged **High Spatial Frequency (HSF)** version. I then fed them to the model with a simple prompt. To avoid any "memory" or context-priming effects, each of the nine images was processed in a completely separate session.
+To test how Gemini handles pareidolia, I took several images and created three versions of each (using butterworth filter): the original **Broadband (BB)**, a blurry **Low Spatial Frequency (LSF)** version, and a sharp-edged **High Spatial Frequency (HSF)** version. I then fed them to the model with a simple prompt. To avoid any "memory" or context-priming effects, each images was processed in a completely separate session.
 
 Here was the prompt:
 > "What are the three most prominent objects you see in this image? Respond in a JSON format where each object has a 'name' and a 'confidence_score'."
