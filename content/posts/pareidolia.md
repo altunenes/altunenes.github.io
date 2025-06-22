@@ -15,13 +15,14 @@ With the incredible rise of powerful Vision-Language Models (VLMs), a new questi
 
 At its core, any image can be broken down into its fundamental visual components. **Low Spatial Frequencies (LSF)** represent the broad, blurry, large-scale shapes—the "gist" of an image. **High Spatial Frequencies (HSF)** represent the sharp edges, fine lines, and intricate textures.
 
-The **Coarse-to-Fine (CtF)** theory is a cornerstone of human vision. It posits that our brain processes visual information with incredible efficiency by first grasping the LSF "gist" of a scene in a fraction of a second. This rapid, coarse understanding then guides the slower, more deliberate analysis of the HSF details. It's a predictive, top-down strategy that allows us to make sense of a complex world with remarkable speed.
+**Coarse-to-Fine** theory is a cornerstone of human vision. It posits that our brain processes visual information with incredible efficiency by first grasping the LSF "gist" of a scene in a fraction of a second. This rapid, coarse understanding then guides the slower, more deliberate analysis of the HSF details. It's a predictive, top-down strategy that allows us to make sense of a complex world with remarkable speed.
 
 | ![SF](/images/sf.png)|
 |:-:|
-| *A simplified model of how the brain processes a visual object from coarse to fine.*|
+| *Visualizing the Coarse-to-Fine theory. The left shows an image broken into coarse (Low Frequency) and fine (High Frequency) information. The right shows how the brain processes the coarse 'gist' first to guide perception.*|
 
 To digitally manipulate these frequencies, we can use tools like the Butterworth filter. For anyone interested in experimenting with this, I developed a Rust crate and a WebAssembly (WASM) demo that you can use to apply these filters to your own images. You can find it here: [butter2d](https://altunenes.github.io/butter2d/). I conducted all my experiments using this.
+
 
 #### <span style="color:orange;"> How LLMs see illusions </span>
 
