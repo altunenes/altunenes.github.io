@@ -25,7 +25,7 @@ To digitally manipulate these frequencies, we can use tools like the Butterworth
 
 #### <span style="color:orange;"> How LLMs see illusions </span>
 
-Research shows that modern VLMs are not objective, infallible observers; they can be "fooled" by classic visual illusions, and their susceptibility often increases with model scale [Shen et al., 2023](https://arxiv.org/abs/2311.00047) . This suggests they are learning statistical heuristics from their training data that mimic human perception, rather than developing a deep, structural understanding of the world. I also have some fun with this idea: I keep a small collection of novel, never-publicly-seen visual illusions I created. Maybe they can be my personal AGI test; when an AI can spontaneously see the faces in *those*, we'll know we've reached a new milestone :-P
+Research shows that modern VLMs are not objective, infallible observers; they can be "fooled" by classic visual illusions, and their susceptibility often increases with model scale [Shen et al., 2023](https://arxiv.org/abs/2311.00047) . This suggests they are learning statistical heuristics from their training data that mimic human perception, rather than developing a deep, structural understanding of the world. 
 
 This makes pareidolia a particularly interesting test. It's not a geometric trick, but an illusion driven by a powerful, top-down, and likely evolutionary bias to find faces in our environment.
 
