@@ -105,4 +105,7 @@ This method of probing with spatial frequencies and illusions could serve as a s
 
 Of course, there are clear limitations here. I only used one model, Gemini 2.5 Pro, primarily because company I work provides free access to it. Other powerful models from OpenAI, Anthropic, or elsewhere might react to these images in completely different ways. The number of images was also small.
 
+Also you might be realized that model's own distinction between a "Face" and a "Pareidolia Face". What is the difference? When the model uses the simple "Face" label, does it believe it's seeing a real person or animal? Is the "Pareidolia" tag an admission that it recognizes the illusion?
+ 
+
 Perhaps the most important takeaway is the value of using novel stimuli. The real test for these models isn't showing them the famous "Church Face" again, but presenting them with the new, illusory faces we discover in our daily lives—a pattern in a coffee stain, the front of a new car, or a strangely-shaped vegetable. These "wild" pareidolia images, which the AI could not have been trained on, are the truest test of whether they are learning to *see* or just to *recognize*. And for me, that's an experiment that never gets old.
