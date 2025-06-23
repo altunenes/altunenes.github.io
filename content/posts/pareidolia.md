@@ -7,9 +7,9 @@ tags=["llm","pareidolia","AI","vision","perception","illusion"]
 
 #### <span style="color:orange;"> Background </span>
 
-During my master's studies, I became fascinated with how the human brain processes illusory faces, a phenomenon known as face pareidolia. My research specifically focused on the role of different **spatial frequencies**—the building blocks of an image—in triggering this fascinating illusion. This led to an [ERP paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4341900) exploring how our brain uses these frequencies to see real versus illusory faces. The paper is still under review, but the core ideas about perception inspired this new line of questioning.
+Seeing faces in inanimate objects —a phenomenon called pareidolia— is a common human experience. With today's powerful Vision-Language Models (VLMs), a simple question arises: do they see these illusory faces too? Probing their "vision" this way isn't just a fun experiment. It's a practical way to understand their inner workings, challenge our assumptions when building with them, and explore the gap between artificial and biological sight.
 
-With the incredible rise of powerful Vision-Language Models (VLMs), a new question emerged: how do these "artificial minds" perceive the same illusions? I think probing their "vision" isn't just an academic curiosity. It might helps us understand their inner workings, question our implicit assumptions when building LLM apps, and appreciate the subtle but significant gap that still exists between artificial and biological sight.
+This question grew out of my master's research, where I used EEG to study how the human brain processes these very illusions, which led to an [ERP paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4341900) on the topic.
 
 #### <span style="color:orange;"> What is Spatial Frequency and Coarse-to-Fine Theory? </span>
 
