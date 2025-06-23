@@ -13,15 +13,16 @@ This question grew out of my master's research, where I used EEG to study how th
 
 #### <span style="color:orange;"> What is Spatial Frequency and Coarse-to-Fine Theory? </span>
 
-So, how do you fairly test an AI's perception? My plan was to see if it falls for the same visual shortcuts our brains do.  
-Think about how you recognize someone from across the street. You don't see the details of their face first; you see their general shape and how they walk .  For example, one study found people can spot an *animal* in an image in just 120ms, but need longer to identify it as a *dog* ([Wu et al., 2014](https://pubmed.ncbi.nlm.nih.gov/25208739/))
+So, how do you fairly test an AI's perception? My plan was to see if it falls for the same visual shortcuts our brains do.
 
-The technical way to separate the visual "gist" from the "details" is with **spatial frequencies**: We can achieve this with 2D Fourier filtering.
+This is based on a key idea in human vision called the **Coarse-to-Fine** theory. In short, human brain processes the blurry, general, coarse, "gist" of something first, and then uses that initial guess to figure out the finer details more quickly. The technical way to separate the "gist" from the "details" is with **spatial frequencies**, which can be isolated using techniques like 2D Fourier filtering.
 
-*   **Low Spatial Frequencies (LSF)** are the blurry, large-scale shapes that give you the "gist" of what you're seeing.
-*   **High Spatial Frequencies (HSF)** are the sharp edges, lines, and fine textures that provide the detail.
+*   **Low Spatial Frequencies (LSF)** are the blurry, large-scale shapes.
+*   **High Spatial Frequencies (HSF)** are the sharp edges and fine textures.
 
-The **Coarse-to-Fine** theory suggests our brain takes a shortcut: it first rapidly processes the blurry LSF information to get a quick guess, and then uses that guess to guide how it analyzes the finer HSF details. To see if the AI had a similar bias, I needed to isolate these frequencies. 
+You experience this all the time. Think about recognizing someone from across the street—you see their overall shape long before you see their eyes. While not about spatial frequency directly, a study on hierarchical processing shows a similar "general first" principle: people can spot an *animal* in an image in just 120ms, but need longer to identify it as a *dog* ([Wu et al., 2014](https://pubmed.ncbi.nlm.nih.gov/25208739/)).
+
+My whole experiment was designed around this: would the AI also see a face in the blur, but get confused by the sharp details? To test this, I needed to isolate these frequencies.
 
 | ![SF](/images/sf.png)|
 |:-:|
