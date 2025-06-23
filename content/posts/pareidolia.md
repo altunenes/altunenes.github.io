@@ -99,9 +99,9 @@ However, an interesting twist occurred in the LSF version. The blur, which helpe
 
 ### <span style="color:orange;"> Conclusion and Final Thoughts </span>
 
-These little experiments, while far from a rigorous scientific study, offer a fascinating glimpse into the perceptual world of a modern VLM. For anyone working with or building on top of these AI systems, I believe understanding these kinds of behaviors is incredibly important. An AI's failure to see a pattern that is obvious to us—or its tendency to see one only under specific conditions like blurring—highlights the inherent differences in how they process visual information.
+For anyone working with or building on top of these AI systems, I believe understanding these kinds of behaviors is important. An AI's failure to see a pattern that is obvious to us—or its tendency to see one only under specific conditions like blurring—highlights the inherent differences in how they process visual information.
 
-This method of probing with spatial frequencies and illusions could serve as a simple, intuitive benchmark for tracking the progress of future vision models. As new architectures are developed, seeing how they handle these edge cases can tell us a lot about whether they are developing more robust, human-like perception or simply becoming better at pattern-matching their training data.
+This method of probing with spatial frequencies and illusions could serve as a simple, fun, intuitive benchmark for tracking the progress of future vision models. As new architectures are developed, seeing how they handle these edge cases can tell us a lot about whether they are developing more robust, human-like perception or simply becoming better at pattern-matching their training data.
 
 Of course, there are clear limitations here. I only used one model, Gemini 2.5 Pro, primarily because company I work provides free access to it. Other powerful models from OpenAI, Anthropic, or elsewhere might react to these images in completely different ways. The number of images was also small.
 
