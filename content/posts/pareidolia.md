@@ -13,15 +13,21 @@ This question grew out of my master's research, where I used EEG to study how th
 
 #### <span style="color:orange;"> What is Spatial Frequency and Coarse-to-Fine Theory? </span>
 
-At its core, any image can be broken down into its fundamental visual components. **Low Spatial Frequencies (LSF)** represent the broad, blurry, large-scale shapes—the "gist" of an image. **High Spatial Frequencies (HSF)** represent the sharp edges, fine lines, and intricate textures.
+So, how do you fairly test an AI's perception? My plan was to see if it falls for the same visual shortcuts our brains do.  
+Think about how you recognize someone from across the street. You don't see the details of their face first; you see their general shape and how they walk .  For example, one study found people can spot an *animal* in an image in just 120ms, but need longer to identify it as a *dog* ([Wu et al., 2014](https://pubmed.ncbi.nlm.nih.gov/25208739/))
 
-**Coarse-to-Fine** theory is a cornerstone of human vision. It posits that our brain processes visual information with incredible efficiency by first grasping the LSF "gist" of a scene in a fraction of a second. This rapid, coarse understanding then guides the slower, more deliberate analysis of the HSF details. It's a predictive, top-down strategy that allows us to make sense of a complex world with remarkable speed.
+The technical way to separate the visual "gist" from the "details" is with **spatial frequencies**: We can achieve this with 2D Fourier filtering.
+
+*   **Low Spatial Frequencies (LSF)** are the blurry, large-scale shapes that give you the "gist" of what you're seeing.
+*   **High Spatial Frequencies (HSF)** are the sharp edges, lines, and fine textures that provide the detail.
+
+The **Coarse-to-Fine** theory suggests our brain takes a shortcut: it first rapidly processes the blurry LSF information to get a quick guess, and then uses that guess to guide how it analyzes the finer HSF details. To see if the AI had a similar bias, I needed to isolate these frequencies. 
 
 | ![SF](/images/sf.png)|
 |:-:|
 | *Visualizing the Coarse-to-Fine theory. The left shows an image broken into coarse (Low Frequency) and fine (High Frequency) information. The right shows how the brain processes the coarse 'gist' first to guide perception.*|
 
-To digitally manipulate these frequencies, we can use tools like the Butterworth filter. For anyone interested in experimenting with this, I developed a Rust crate and a WebAssembly (WASM) demo that you can use to apply these filters to your own images. You can find it here: [butter2d](https://altunenes.github.io/butter2d/). I conducted all my experiments using this.
+To do this, I used a Butterworth filter from my own Rust tool, which you can try out here: [butter2d](https://altunenes.github.io/butter2d/).
 
 
 #### <span style="color:orange;"> How LLMs see illusions </span>
