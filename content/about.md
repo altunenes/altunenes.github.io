@@ -4,9 +4,10 @@ path = "about"
 +++
 
 
-I hold a degree in Psychology from Akdeniz University, where I developed a strong interest in the human perception. 
+I hold a degree in Psychology, where I developed a strong interest in human perception.
 
-Alongside my psychology studies, I discovered a deep passion for programming. This passion led me to transition into software development after my master's degree. I now work as a professional Rust developer, currently focused on building a GPU-accelerated desktop app
+I started programming during my undergraduate studies for scientific purposes, a passion that grew alongside my academic work. After completing my master's degree, I transitioned into software development professionally. I now work as a full time Rust developer, currently focused on building a GPU-accelerated desktop app.
+
 
 Beyond my professional work, I enjoy creative coding/algorithmic art, exploring visual illusions, playing electric guitar, composing Dungeon Synth, observing budgies, and orienteering.
 

@@ -8,7 +8,7 @@ weight = 6
 local_image = "images/audiovis.png"
 +++
 
-I'm excited to share my new audio visualization tool built with my graphics engine, Cuneus.
+my new audio visualization tool built with my graphics engine, Cuneus.
 Spectrum and BPM analysis made in the CPU/Rust side, shader is WGSL. 
 
 ## <span style="color:orange;"> Video Preview </span>
