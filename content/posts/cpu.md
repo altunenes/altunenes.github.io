@@ -135,12 +135,12 @@ Within the context of this specific implementation, the two-phase approach isola
 
 ## <span style="color:orange;">  The Takeaway </span>
 
-Within this test scenario, I observe that optimal performance requires tuning both worker count and batch size. For this specific workload on the M3 MacBook Air:
+This experiment shows that for this specific workload on an M3 MacBook Air, the optimal solution requires tuning both worker count and batch size together.
 
-**Worker Count**: 4 workers provide the best measured balance of speed and efficiency before resource contention creates a performance cliff.
+**Worker Count**: While **8 workers** produced the fastest result (7.2s), **4 workers** gave a nearly identical speed (7.4s) with far greater efficiency (74% vs 38%). For practical purposes, 4 workers is the better configuration.
 
-**Batch Size**: Optimal batch size scales with worker count—smaller worker pools (2-4) work best with moderate batch sizes (10), while larger pools (6-8) benefit from larger batches (20).
+**Batch Size**: The best batch size changes with the worker count. Smaller worker pools (2-4) were fastest with a batch size of 10, while larger pools (6-8) needed a larger batch size of 20 to perform well.
 
-**Combined Optimization**: The interaction between worker count and batch size can cause 30%+ performance swings, making both parameters critical for optimization.
+**Combined Optimization**: The interaction between these two parameters is critical and can account for performance swings of 30% or more, making it essential to test and tune them together.
 
 Note: These results are specific to this implementation, hardware, and workload type. Different applications, algorithms, or hardware configurations may show different optimal points. The batch size effects will vary significantly based on task granularity and data access patterns.
