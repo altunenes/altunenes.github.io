@@ -26,43 +26,40 @@ Key components:
 - Artificial CPU load simulation (matrix operations + fibonacci)
 - Two-phase execution (decode then process)
 
-```
-PHASE 1: Sequential Frame Extraction
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│ Video File  │───▶│ GStreamer    │───▶│ All Frames      │
-│ (MP4)       │    │ Pipeline     │    │ in Memory       │
-│             │    │ (Decode)     │    │ (1440 frames)   │
-└─────────────┘    └──────────────┘    └─────────────────┘
-                                              │
-                                              ▼
-PHASE 2: Parallel Processing                  │
-┌─────────────────────────────────────────────┴─────────────────────┐
-│                            Batch Creator                                   
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐                         
-│  │ Batch 1     │  │ Batch 2     │  │ Batch N     │                         
-│  │ (4-20       │  │ (4-20       │  │ (4-20       │                         
-│  │ frames)     │  │ frames)     │  │ frames)     │                       
-│  └─────────────┘  └─────────────┘  └─────────────┘                        
-└───────┬─────────────────┬─────────────────┬───────────────────────┘
-        │                 │                 │
-        ▼                 ▼                 ▼
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ Worker 1    │  │ Worker 2    │  │ Worker N    │  │ Metrics     │
-│             │  │             │  │             │  │ Collector   │
-│ • Matrix    │  │ • Matrix    │  │ • Matrix    │  │             │
-│   Ops       │  │   Ops       │  │   Ops       │  │ • Timing    │
-│ • Fibonacci │  │ • Fibonacci │  │ • Fibonacci │  │ • Worker    │
-│ • Timing    │  │ • Timing    │  │ • Timing    │  │   Stats     │
-│             │  │             │  │             │  │ • Contention│
-└─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
-        │                 │                 │                 │
-        └─────────────────┼─────────────────┴─────────────────┘
-                          ▼
-                  ┌─────────────┐
-                  │ Results &   │
-                  │ Analysis    │
-                  └─────────────┘
-```
+<div class="highlight" style="background: #2b303b; padding: 1em; border-radius: 8px; font-family: 'Fira Code', 'Source Code Pro', monospace; font-size: 14px; line-height: 1.4;">
+<pre style="margin: 0; white-space: pre;">
+                        <span style="color: #ff9900;">PHASE 1: Sequential Frame Extraction</span>
+                        <span style="color: #61afef;">┌─────────────┐</span>      <span style="color: #61afef;">┌────────────────┐</span>      <span style="color: #61afef;">┌───────────────────┐</span>
+                        <span style="color: #61afef;">│</span> Video File  <span style="color: #61afef;">│</span><span style="color: #c3e88d;">─────▶</span><span style="color: #61afef;">│</span> GStreamer      <span style="color: #61afef;">│</span><span style="color: #c3e88d;">─────▶</span><span style="color: #61afef;">│</span> All Frames in   <span style="color: #61afef;">  │</span>
+                        <span style="color: #61afef;">│</span> (MP4)       <span style="color: #61afef;">│</span>      <span style="color: #61afef;">│</span> Pipeline       <span style="color: #61afef;">│</span>      <span style="color: #61afef;">│</span> Memory (1440)   <span style="color: #61afef;">  │</span>
+                        <span style="color: #61afef;">└─────────────┘</span>      <span style="color: #61afef;">└────────────────┘</span>      <span style="color: #61afef;">└───────────────────┘</span>
+                                                                      <span style="color: #c3e88d;">│</span>
+                                                                      <span style="color: #c3e88d;">▼</span>
+                   <span style="color: #ff9900;">PHASE 2: Parallel Processing</span>
+                   <span style="color: #61afef;">┌───────────────────────────────────────────────────────────────────┐</span>
+                   <span style="color: #61afef;">│</span>    <span style="color: #abb2bf;">Main Thread: Pre-batches all frames, then sends to channel</span>     <span style="color: #61afef;">│</span>
+                   <span style="color: #61afef;">│</span>           <span style="color: #c3e88d;">[Batch 1]</span> <span style="color: #c3e88d;">[Batch 2]</span> <span style="color: #c3e88d;">[Batch 3]</span> ... <span style="color: #c3e88d;">[Batch N]</span>           <span style="color: #61afef;">  │</span>
+                   <span style="color: #61afef;">└──────────────────────────────────┬────────────────────────────────┘</span>
+                                                      <span style="color: #c3e88d;">│</span>
+                                                      <span style="color: #c3e88d;">▼</span> <span style="color: #abb2bf;">(Crossbeam Channel)</span>
+          <span style="color: #c3e88d;">┌────────────────────────────────────────────────────────────────────────────────────────────┐</span>
+          <span style="color: #c3e88d;">│</span>                         <span style="color: #c3e88d;">│</span>                                  <span style="color: #c3e88d;">│</span>                               <span style="color: #c3e88d;">│</span>
+          <span style="color: #c3e88d;">▼</span>                         <span style="color: #c3e88d;">▼</span>                                  <span style="color: #c3e88d;">▼</span>                               <span style="color: #c3e88d;">▼</span>
+<span style="color: #61afef;">┌────────────────────┐</span>   <span style="color: #61afef;">┌────────────────────┐</span>         <span style="color: #61afef;">┌────────────────────┐</span>   <span style="color: #61afef;">┌────────────────────┐</span>
+<span style="color: #61afef;">│</span>    <span style="color: #89ddff;">Worker 1</span>      <span style="color: #61afef;"></span>   <span style="color: #61afef;"> </span>    <span style="color: #89ddff;"> Worker 2</span>      <span style="color: #61afef;"></span>       ...   <span style="color: #61afef;">│</span>    <span style="color: #89ddff;">   Worker N</span>      <span style="color: #61afef;">│</span>   <span style="color: #61afef;">│</span>      <span style="color: #ff7b72;">Metrics</span>       <span style="color: #61afef;"></span>
+<span style="color: #61afef;">│</span> <span style="color: #abb2bf;">• Matrix Ops</span>     <span style="color: #61afef;"></span>   <span style="color: #61afef;"> </span> <span style="color: #abb2bf;">    • Matrix Ops</span>     <span style="color: #61afef;"> </span>         <span style="color: #61afef;">│</span> <span style="color: #abb2bf;">   • Matrix Ops</span>     <span style="color: #61afef;">│</span>   <span style="color: #61afef;">│</span>     <span style="color: #ff7b72;">Collector</span>      <span style="color: #61afef;">│</span>
+<span style="color: #61afef;">│</span> <span style="color: #abb2bf;">• Fibonacci</span>      <span style="color: #61afef;"></span>   <span style="color: #61afef;"> </span> <span style="color: #abb2bf;">    • Fibonacci</span>      <span style="color: #61afef;"> </span>         <span style="color: #61afef;">│</span> <span style="color: #abb2bf;">   • Fibonacci</span>      <span style="color: #61afef;">│</span>   <span style="color: #61afef;">│</span>    <span style="color: #abb2bf;">(Receives)</span>    <span style="color: #61afef;"></span>
+<span style="color: #61afef;">└────────────────────┘</span>   <span style="color: #61afef;">└────────────────────┘</span>         <span style="color: #61afef;">└────────────────────┘</span>   <span style="color: #61afef;">└────────────────────┘</span>
+          <span style="color: #c3e88d;">│</span>                         <span style="color: #c3e88d;">│</span>                                  <span style="color: #c3e88d;">│</span>
+          <span style="color: #c3e88d;">└─────────────────────────┼──────────────────────────────────┘</span>
+                                    <span style="color: #c3e88d;">│</span>
+                                    <span style="color: #c3e88d;">▼</span>
+                               <span style="color: #61afef;">┌────────────────────┐</span>
+                               <span style="color: #61afef;">│</span>     <span style="color: #ff9900;">Results &</span>    <span style="color: #61afef;">  │</span>
+                               <span style="color: #61afef;">│</span>      <span style="color: #ff9900;">Analysis</span>    <span style="color: #61afef;">  │</span>
+                               <span style="color: #61afef;">└────────────────────┘</span>
+</pre>
+</div>
 
 ###  <span style="color:orange;"> Why Crossbeam Channels with std::thread? </span>
 
