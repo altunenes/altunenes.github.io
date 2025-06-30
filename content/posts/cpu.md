@@ -10,7 +10,7 @@ tags=["CPU","gstreamer","video","experiment"]
 Ever wondered why throwing more CPU cores at a problem doesn't always make it faster? I built a simple video frame processor to see this parallel processing paradox in action. The results are pretty interesting - while total processing time drops significantly, each individual frame actually takes longer to process. Let's see why.
 
 
-**🔬 All experiments and code available**: [github.com/altunenes/gstreamer-parallelism-study](https://github.com/altunenes/gstreamer-parallelism-study)
+**All experiments and code available**: [github.com/altunenes/gstreamer-parallelism-study](https://github.com/altunenes/gstreamer-parallelism-study)
 
 ## <span style="color:orange;">  Implementation </span>
 
