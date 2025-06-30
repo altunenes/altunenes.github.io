@@ -72,6 +72,8 @@ For this experiment I use crossbeam channels with std::thread rather than async/
 
 ## Worker Count Results (Optimal Batch Size)
 
+*Total Time = complete processing duration, Efficiency = speedup/workers, Contention = resource competition level*
+
 | Workers | Total Time | Avg Frame Time | Speedup | Efficiency | Best Batch | Contention |
 |---------|------------|----------------|---------|------------|------------|------------|
 | 1       | 21.8s      | 14.4ms        | 1.00x   | 100%       | N/A        | -          |
@@ -83,6 +85,8 @@ For this experiment I use crossbeam channels with std::thread rather than async/
 ## Batch Size Impact Analysis
 
 The batch size significantly affects performance, with different optimal points for different worker counts:
+
+*Each cell shows total completion time in seconds for that worker/batch combination*
 
 | Workers | Batch 4 | Batch 10 | Batch 20 | Optimal |
 |---------|---------|----------|----------|---------|
