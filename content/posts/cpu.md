@@ -9,6 +9,9 @@ tags=["CPU","gstreamer","video","experiment"]
 
 Ever wondered why throwing more CPU cores at a problem doesn't always make it faster? I built a simple video frame processor to see this parallel processing paradox in action. The results are pretty interesting - while total processing time drops significantly, each individual frame actually takes longer to process. Let's see why.
 
+
+**🔬 All experiments and code available**: [github.com/altunenes/gstreamer-parallelism-study](https://github.com/altunenes/gstreamer-parallelism-study)
+
 ## <span style="color:orange;">  Implementation </span>
 
 The implementation uses a two-phase approach to properly isolate parallel processing effects:
@@ -61,6 +64,10 @@ PHASE 2: Parallel Processing                  │
                   │ Analysis    │
                   └─────────────┘
 ```
+
+###  <span style="color:orange;"> Why Crossbeam Channels with std::thread? </span>
+
+For this experiment I use crossbeam channels with std::thread rather than async/await because the workload is purely CPU-bound (matrix operations, fibonacci calculations). Since CPU-intensive tasks don't benefit from async's cooperative scheduling and would block the thread anyway, dedicated threads provide clearer measurement of CPU resource contention without introducing async runtime scheduling as a confounding variable in our worker count and batch size analysis.
 
 ## Test Configuration
 
