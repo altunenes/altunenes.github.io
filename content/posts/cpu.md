@@ -7,10 +7,9 @@ tags=["CPU","gstreamer","video","experiment"]
 
 ## <span style="color:orange;">  Why This Matters </span>
 
-Ever wondered why throwing more CPU cores at a problem doesn't always make it faster? I built a simple video frame processor to see this parallel processing paradox in action. The results are pretty interesting - while total processing time drops significantly, each individual frame actually takes longer to process. Let's see why.
+I created a small experiment to observe how a CPU-bound task behaves as more worker threads are added. Using a custom-built video processor in Rust, I processed frames with an artificial, heavy workload to see where the performance trade-offs would appear. The results show a clear point of diminishing returns, where adding more workers eventually hurts performance instead of helping it. 
 
-
-**All experiments and code available**: [github.com/altunenes/gstreamer-parallelism-study](https://github.com/altunenes/gstreamer-parallelism-study)
+This post presents the data from that experiment. The full source code is available on [GitHub](https://github.com/altunenes/gstreamer-parallelism-study).
 
 ## <span style="color:orange;">  Implementation </span>
 
@@ -100,19 +99,15 @@ The batch size significantly affects performance, with different optimal points 
 
 ## <span style="color:orange;">  Key Findings </span>
 
-The results from this specific test implementation show parallel processing behavior with observable optimal points and diminishing returns:
+The results from the experiment show a clear trade-off between speed and efficiency:
 
-**Peak Performance at 4 Workers**: In this test, best overall speedup was achieved with 4 workers using batch size 10 (2.96x), completing processing in 7.4s vs 21.8s single-threaded.
+**Fastest Time vs. Optimal Efficiency**: The absolute fastest time was **7.2s with 8 workers**. However, the most efficient configuration was **4 workers**, which completed the task in **7.4s**. This setup provided 74% efficiency, representing a better balance of speed and resource use.
 
-**Batch Size Scaling Pattern**: Lower worker counts (2-4) perform optimally with batch size 10, while higher worker counts (6-8) benefit from larger batch size 20 in this implementation.
+**Performance Regression at 6 Workers**: Adding workers beyond 4 proved counterproductive. Performance degraded when moving from 4 workers (7.4s) to 6 workers (8.8s), indicating that the costs of thread management and resource contention outweighed the benefits of more threads.
 
-**Resource Contention Threshold**: Individual frame processing time increased from 19.9ms (4 workers) to 35.7ms (6 workers), suggesting CPU resource saturation in this workload.
+**Batch Size Scaling**: The optimal batch size increased with the worker count. Configurations with 2-4 workers performed best with a batch size of 10, while 6-8 workers required a larger batch size of 20 to reduce coordination overhead.
 
-**Measured Optimal Worker Count**: For this specific test, 4 workers provided 74% efficiency, while 6+ workers showed efficiency drops (41% and 38%).
-
-**Performance Regression**: In this implementation, 6 workers performed worse (8.8s) than 4 workers (7.4s), showing that additional threads can hurt performance in certain scenarios.
-
-**Batch Size Impact**: Wrong batch size can cause 30%+ performance degradation (e.g., 4 workers: 7.4s with batch 10 vs 9.7s with batch 4).
+**Batch Size Impact**: Using a non-optimal batch size caused significant performance loss. With 4 workers, a batch size of 4 resulted in a 9.7s completion time, over 30% slower than the 7.4s achieved with the optimal batch size of 10.
 
 ## <span style="color:orange;">  Batch Size Effects in This Test </span>
 
