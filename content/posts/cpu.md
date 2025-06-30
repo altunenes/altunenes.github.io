@@ -7,9 +7,7 @@ tags=["CPU","gstreamer","video","experiment"]
 
 ## <span style="color:orange;">  Why This Matters </span>
 
-I created a small experiment to observe how a CPU-bound task behaves as more worker threads are added. Using a custom-built video processor in Rust, I processed frames with an artificial, heavy workload to see where the performance trade-offs would appear. The results show a clear point of diminishing returns, where adding more workers eventually hurts performance instead of helping it. 
-
-This post presents the data from that experiment. The full source code is available on [GitHub](https://github.com/altunenes/gstreamer-parallelism-study).
+I previously researched parallel video processing, which led to a discussion on the [GStreamer Discourse forums](https://discourse.gstreamer.org/t/optimizing-video-frame-processing-with-gstreamer-gpu-acceleration-and-parallel-processing/4190). That work inspired this separate, simplified experiment to isolate and measure CPU parallelism effects in context of video. Since public resources on this topic are limited, I hope these findings offer some insight. Video processing is complex and requires systematic testing to understand performance bottlenecks. This post documents my results from using a heavy, artificial workload to find the trade-offs of adding more worker threads. The full source code is available on [GitHub](https://github.com/altunenes/gstreamer-parallelism-study).
 
 ## <span style="color:orange;">  Implementation </span>
 
