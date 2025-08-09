@@ -166,6 +166,19 @@
             </div>
         {% endif %}
 
+        {% if page.date %}
+        <hr>
+        <div class="citation" style="font-size: 0.8em; color: var(--text-color-secondary); margin-top: 2em;">
+            <p style="font-size: 0.9em; margin-bottom: 0.6em; font-weight: bold;">Cite:</p>
+            <p style="margin-bottom: 0.5em;">
+                Altun, E. ({{ page.date | date(format="%Y, %B %d") }}). <em>{{ page.title }}</em>. Retrieved from <a href="{{ page.permalink | safe }}">{{ page.permalink | safe }}</a>
+            </p>
+            <p>
+                <small><a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a></small>
+            </p>
+        </div>
+        {% endif %}
+
     </article>
 </main>
 {% endmacro content %}
