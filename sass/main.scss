@@ -37,6 +37,11 @@ html {
   word-wrap: break-word;
 }
 
+// Make post headings orange
+.body h1, .body h2, .body h3, .body h4, .body h5, .body h6 {
+  color: orange;
+}
+
 @media all and (min-width:640px) {
   html {
     font-size: 16.5px;
