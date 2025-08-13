@@ -5,7 +5,7 @@ date = "2025-08-13"
 tags=["GPU","math","shaders", "GLSL"]
 +++
 
-## <span style="color:orange;">Why Shaders Turn Black: A Practical Guide to pow() and sqrt()</span>
+## <span style="color:orange;">Why Shaders Turn Black: negatives in pow() and sqrt()</span>
 
 Black pixels appearing in a shader often trace back to a mathematical domain error. The most common sources are the `sqrt()` and `pow()` functions when they receive invalid inputs.
 
