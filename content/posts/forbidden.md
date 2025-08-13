@@ -1,5 +1,5 @@
 +++
-title = "Why Shaders Turn Black: A Practical Guide to pow() and sqrt()"
+title = "Why Shaders Turn Black: negatives in pow() and sqrt()"
 date = "2025-08-13"
 [taxonomies]
 tags=["GPU","math","shaders", "GLSL"]
