@@ -31,9 +31,18 @@ Graphing `y = pow(sin(x), 2.5)`. The same issue occurs, breaking the function wh
 
 <iframe width="640" height="360" frameborder="0" src="https://www.shadertoy.com/embed/33GSDc?gui=true&t=10&paused=true&muted=false" allowfullscreen></iframe>
 </div>
-
 <br>
 *<small>Note: If a shader appears broken, try refreshing the page as Shadertoy can sometimes be unstable.</small>*
+
+This variance across platforms, which can depend on the GPU hardware or its drivers, is a key reason to handle these edge cases proactively with `abs()` or other methods, as the output is not guaranteed. For example, while most desktop GPUs produce clean gaps, some GPUs (like on an iPhone 6s in the example below) handle the error differently. Notice how the `sqrt()` error is avoided entirely, but the `pow()` error still renders artifacts—not as empty gaps, but this time as large black columns!
+
+<div align="center" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+    <img src="/images/iphone6s_1.jpg" width="48%" alt="iPhone 6s screenshot of sqrt shader without gaps">
+    <img src="/images/iphone6s_2.jpg" width="48%" alt="iPhone 6s screenshot of pow shader with black columns">
+</div>
+<center>
+*<small>Screenshot from an iPhone 6s: in contrast to modern desktop GPUs, this older mobile hardware appears to fill the gaps in the `sqrt` example, yet produces distinct vertical artifacts for the `pow` function.</small>*
+</center>
 
 ### The Technical Reality Behind the Error
 
