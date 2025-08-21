@@ -1,0 +1,42 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="width=device-width,initial-scale=1.0" name=viewport><title>
+         altunenes
+        
+    </title><meta content=altunenes property=og:title><meta content="personal blog" property=og:description><meta content="personal blog" name=description><link href=/icon/favicon.png rel=icon type=image/png><link href=https://altunenes.github.io/fonts.css rel=stylesheet><link href=https://altunenes.github.io/atom.xml rel=alternate title=altunenes type=application/atom+xml><link href=https://altunenes.github.io/theme/light.css rel=stylesheet><link href=https://altunenes.github.io/theme/dark.css id=darkModeStyle rel=stylesheet><script src=https://altunenes.github.io/js/themetoggle.js></script><script>setTheme(getSavedTheme());</script><link href=https://altunenes.github.io/main.css media=screen rel=stylesheet><script data-cf-beacon='{"token": "37a0f981a37240aea00b781e300bc6c0"}' defer src=https://static.cloudflareinsights.com/beacon.min.js></script></head><script>// Function to set the theme
+        function setTheme(theme) {
+            document.documentElement.className = theme;
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get the saved theme
+        function getSavedTheme() {
+            return localStorage.getItem('theme') || 'light';
+        }
+
+        // Set the theme on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTheme(getSavedTheme());
+        });</script><body><div class=content><header><div class=main><a href=https://altunenes.github.io/>altunenes</a><div class=socials><a class=social href=https://twitter.com/emportent rel=me> <img alt=x src=https://altunenes.github.io/social_icons/x.svg> </a><a class=social href=https://github.com/altunenes rel=me> <img alt=github src=https://altunenes.github.io/social_icons/github.svg> </a><a href="https://scholar.google.com/citations?user=_OtEw5oAAAAJ&hl" class=social rel=me> <img alt=scholar src=https://altunenes.github.io/social_icons/googlescholar.svg> </a><a class=social href=https://www.linkedin.com/in/enes-altun-0a3076167 rel=me> <img alt=linkedin src=https://altunenes.github.io/social_icons/linkedin.svg> </a><a class=social href=https://www.instagram.com/altunanes/ rel=me> <img alt=instagram src=https://altunenes.github.io/social_icons/instagram.svg> </a><a class=social href=https://orcid.org/0000-0002-6478-6909 rel=me> <img alt=orcid src=https://altunenes.github.io/social_icons/orcid.svg> </a><a class=social href=https://www.shadertoy.com/user/altunenes rel=me> <img alt=shadertoy src=https://altunenes.github.io/social_icons/shadertoy.svg> </a><a class=social href=https://bsky.app/profile/altunenes.bsky.social rel=me> <img alt=bluesky src=https://altunenes.github.io/social_icons/bluesky.svg> </a></div></div><nav><a href=https://altunenes.github.io/posts style=margin-left:.7em>/posts</a><a href=https://altunenes.github.io/projects style=margin-left:.7em>/projects</a><a href=https://altunenes.github.io/about style=margin-left:.7em>/about</a><a href=https://altunenes.github.io/tags style=margin-left:.7em>/tags</a><a href=https://altunenes.github.io/CV style=margin-left:.7em>/CV</a><button aria-label="Toggle dark mode" id=dark-mode-toggle onclick=toggleTheme();><img alt="Light mode" id=sun-icon src=https://altunenes.github.io/feather/sun.svg> <img alt="Dark mode" id=moon-icon src=https://altunenes.github.io/feather/moon.svg></button></nav></header><script>function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    html.classList.remove(currentTheme);
+    html.classList.add(newTheme);
+    
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcons();
+}
+
+function updateThemeToggleIcons() {
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    sunIcon.style.display = isDarkMode ? 'none' : 'inline';
+    moonIcon.style.display = isDarkMode ? 'inline' : 'none';
+}
+
+// Set initial theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.add(savedTheme);
+updateThemeToggleIcons();</script><h1>Entries tagged - "CPU"</h1><ul class=posts><li class=post><a href=https://altunenes.github.io/posts/random/>Randomness: CPU & GPU</a> <span class=meta>2025-08-09</span><li class=post><a href=https://altunenes.github.io/posts/cpu/>GStreamer Parallel Video Processing Experiment: Testing Worker Count and Batch Size Trade-offs</a> <span class=meta>2025-06-30</span></ul></div>
