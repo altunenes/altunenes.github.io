@@ -7,7 +7,7 @@ tags=["GStreamer", "macOS", "Rust"]
 
 ## <span style="color:orange;">How We Fixed macOS GStreamer Library Path Issues in Rust Releases</span>
 
-I spent hours debugging why our Rust application worked perfectly in development but failed with GStreamer library conflicts in release builds on macOS. Users would see this error when double-clicking the app:
+I spent way too many hours debugging why our Rust app worked fine in development but kept crashing on macOS release builds due to GStreamer library conflicts. Users would see this error when double-clicking the app:
 
 ```bash
   objc[43583]: Class GstCocoaApplicationDelegate is implemented in both
@@ -17,11 +17,10 @@ I spent hours debugging why our Rust application worked perfectly in development
 
 ### <span style="color:orange;">The Problem</span>
 
-Our GitHub Actions release script was trying to fix `@rpath` entries using `install_name_tool` to point to bundled libraries, but the commands were silently failing.
+Turns out our GitHub Actions script was trying to fix `@rpath` entries with `install_name_tool`, but those commands were just failing silently.
 
-### <span style="color:orange;">The Root Cause</span>
 
-Rust binaries don't have enough header padding by default for `install_name_tool` to modify library paths.
+Rust binaries don't have enough header padding by default for `install_name_tool` to actually work.
 
 ### <span style="color:orange;">The Solution</span>
 
@@ -31,11 +30,10 @@ Add this linker flag to your macOS Rust builds:
 export RUSTFLAGS="$RUSTFLAGS -C link-arg=-Wl,-headerpad_max_install_names"
 ```
 
-This reserves enough space in the binary header for dynamic library path modifications.
+This simple flag reserves enough space in the binary header so the tool can actually do its job.
 
 - **Before:** Binary had unfixable `@rpath` entries → loaded both system and bundled GStreamer → conflicts
 - **After:** Binary library paths properly fixed → loads only bundled GStreamer → works perfectly
 
-### <span style="color:orange;">Key Lesson</span>
 
-Always verify that your `install_name_tool` commands actually succeed. Silent failures can waste hours of debugging!
+So always verify that your `install_name_tool` commands actually succeed. Silent failures can waste hours of debugging!
