@@ -13,7 +13,7 @@ Beyond my professional work, I enjoy creative coding/algorithmic art, exploring 
 
 <div style="text-align: center;">
     <div style="display: inline-block; margin-top: 20px; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;">
-        <img src="/images/pp3.png" alt="Profile Picture" style="width: 120px; height: 140px; border-radius: 2%; box-shadow: 0 0 8px 1px #ff1493; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.boxShadow='0 0 12px 3px #ff1493'; this.style.transform='scale(1.3)';" onmouseout="this.style.boxShadow='0 0 8px 1px #ff1493'; this.style.transform='scale(1.0)';">
+        <img src="/images/e2.png" alt="Profile Picture" style="width: 120px; height: 140px; border-radius: 2%; box-shadow: 0 0 8px 1px #ff1493; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.boxShadow='0 0 12px 3px #ff1493'; this.style.transform='scale(1.3)';" onmouseout="this.style.boxShadow='0 0 8px 1px #ff1493'; this.style.transform='scale(1.0)';">
     </div>
     <p><a href="mailto:enesaltun2@gmail.com">enesaltun2@gmail.com</a></p>
 
