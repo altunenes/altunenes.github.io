@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - Randomness</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/randomness/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-09T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/randomness/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Randomness: CPU &amp; GPU</title>
+        <published>2025-08-09T00:00:00+00:00</published>
+        <updated>2025-08-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/random/"/>
+        <id>https://altunenes.github.io/posts/random/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/random/">&lt;h4 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Traditional random number generation, common on CPUs in languages, often relies on a sequential process. A generator object holds an internal state, and each request for a number updates that state for the next call. This approach is fundamentally incompatible with the massively parallel nature of GPUs, where thousands of threads need to generate numbers independently and simultaneously. If all threads tried to access and update a single shared state, it would require complex synchronization that would effectively destroy the GPU&#x27;s performance advantage.&lt;&#x2F;p&gt;
+&lt;p&gt;GPUs &quot;solve&quot; this by adopting a &quot;stateless&quot; or functional approach. Instead of updating a state, each thread computes its random number directly by calling a function that scrambles its inputs. In GLSL shaders, a common technique is to use a hash function that takes a thread&#x27;s unique coordinates (&lt;code&gt;gl_FragCoord.xy&lt;&#x2F;code&gt;) and often the current time (&lt;code&gt;iTime&lt;&#x2F;code&gt;: in shadertoy) as input. This ensures every pixel gets a different, independent number on every frame. A simple, widely-used hash function looks like this:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; A simple hash function that turns a 2D vector into a pseudo-random float.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; Adding a time input makes it dynamic for animations.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(vec2 &lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; t&lt;&#x2F;span&gt;&lt;span&gt;) {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    vec2 p_with_time &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; p &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(t)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; fract&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sin&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;&#x2F;span&gt;&lt;span&gt;(p_with_time&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;12.9898&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 78.233&lt;&#x2F;span&gt;&lt;span&gt;)))&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 43758.5453&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; You would call it in your main shader code like this:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; (iTime is a standard uniform in environments like Shadertoy)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span&gt; randomValue &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(gl_FragCoord.xy&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; iTime)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h4 id=&quot;the-real-world-bottleneck&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Real-World Bottleneck&lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;This functional paradigm is a prime example of co-designing an algorithm for its hardware. However, the GPU is not always the faster choice. Performance studies show a clear &quot;crossover point&quot;: for small tasks that require fewer than roughly 10,000 numbers, a modern CPU is often faster due to the overhead of launching a GPU kernel (Askar et al., 2021).
+For larger tasks where the GPU&#x27;s throughput dominates, a second, more surprising bottleneck emerges: data transfer. If the numbers are generated on the GPU but needed by the CPU, the transfer itself can cripple performance. One analysis found that copying the results back to the CPU took, on average, seven times longer than the computation itself (Gregg &amp;amp; Hazelwood, 2011). This highlights a fundamental rule: the highest performance is only achieved when random numbers are both generated and consumed on the same device.&lt;&#x2F;p&gt;
+&lt;p&gt;While a simple hash is great for visual effects, this same &quot;stateless&quot; principle is the foundation of high-performance libraries. They use complex, cryptographically-inspired functions to generate statistically robust and uncorrelated random streams for demanding scientific simulations, an approach detailed in the landmark paper on parallel random numbers by Salmon et al..&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;references&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; References &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Askar, T., Shukirgaliyev, B., Lukac, M., &amp;amp; Abdikamalov, E. (2021). Evaluation of Pseudo-Random Number Generation on GPU Cards. Computation, 9(12), 142.&lt;&#x2F;p&gt;
+&lt;p&gt;Salmon, J.K., Moraes, M.A., Dror, R.O., &amp;amp; Shaw, D.E. (2011). Parallel random numbers: As easy as 1, 2, 3. 2011 International Conference for High Performance Computing, Networking, Storage and Analysis (SC), 1-12.&lt;&#x2F;p&gt;
+&lt;p&gt;Gregg, C., &amp;amp; Hazelwood, K.M. (2011). Where is the data? Why you cannot debate CPU vs. GPU performance without the answer. (IEEE ISPASS) IEEE INTERNATIONAL SYMPOSIUM ON PERFORMANCE ANALYSIS OF SYSTEMS AND SOFTWARE, 134-144.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

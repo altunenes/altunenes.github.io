@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - macOS</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/macos/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-09-02T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/macos/atom.xml</id>
+    <entry xml:lang="en">
+        <title>How We Fixed macOS GStreamer Library Path Issues in Rust Releases</title>
+        <published>2025-09-02T00:00:00+00:00</published>
+        <updated>2025-09-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/gstmac/"/>
+        <id>https://altunenes.github.io/posts/gstmac/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/gstmac/">&lt;h2 id=&quot;how-i-fixed-macos-gstreamer-library-path-issues-in-rust-releases&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;How I Fixed macOS GStreamer Library Path Issues in Rust Releases&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Very short post but I spent way too many hours debugging why our Rust app worked fine in development but kept crashing on macOS release builds due to GStreamer library conflicts. Users would see this error when double-clicking the app:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  objc[43583]:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; Class GstCocoaApplicationDelegate is implemented in both&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  &#x2F;Library&#x2F;Frameworks&#x2F;GStreamer.framework&#x2F;Versions&#x2F;1.0&#x2F;lib&#x2F;libgstreamer-1.0.0.dylib&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  and&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &#x2F;Users&#x2F;user&#x2F;app&#x2F;gstreamer&#x2F;lib&#x2F;libgstreamer-1.0.0.dylib&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;the-problem&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Problem&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Turns out our GitHub Actions script was trying to fix &lt;code&gt;@rpath&lt;&#x2F;code&gt; entries with &lt;code&gt;install_name_tool&lt;&#x2F;code&gt;, but those commands were just failing silently.&lt;&#x2F;p&gt;
+&lt;p&gt;Rust binaries don&#x27;t have enough header padding by default for &lt;code&gt;install_name_tool&lt;&#x2F;code&gt; to actually work.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-solution&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Solution&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Add this linker flag to your macOS Rust builds:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;export&lt;&#x2F;span&gt;&lt;span&gt; RUSTFLAGS&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;$RUSTFLAGS&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; -C link-arg=-Wl,-headerpad_max_install_names&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This simple flag reserves enough space in the binary header so the tool can actually do its job.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Before:&lt;&#x2F;strong&gt; Binary had unfixable &lt;code&gt;@rpath&lt;&#x2F;code&gt; entries → loaded both system and bundled GStreamer → conflicts&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;After:&lt;&#x2F;strong&gt; Binary library paths properly fixed → loads only bundled GStreamer → works perfectly&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So always verify that your &lt;code&gt;install_name_tool&lt;&#x2F;code&gt; commands actually succeed. Silent failures can waste hours of debugging!&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

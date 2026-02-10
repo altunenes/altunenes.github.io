@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - Video</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/video/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-02-10T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/video/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Debugging VP9+Alpha Playback</title>
+        <published>2026-02-10T00:00:00+00:00</published>
+        <updated>2026-02-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/vp9/"/>
+        <id>https://altunenes.github.io/posts/vp9/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/vp9/">&lt;h2 id=&quot;llms-cant-solve-this-when-gstreamer-elements-silently-refuse-to-work-debugging-vp9-alpha-playback&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;LLMs cant solve this: When GStreamer Elements Silently Refuse to Work: Debugging VP9+Alpha Playback&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;a-few-terms-before-we-start-because-this-post-is-going-to-be-very-technical&quot;&gt;A few terms before we start because this post is going to be very technical:&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;VP9&lt;&#x2F;strong&gt; is a video codec developed by Google, widely used in &lt;strong&gt;WebM&lt;&#x2F;strong&gt; containers. Some VP9 videos carry an &lt;em&gt;alpha channel&lt;&#x2F;em&gt; — transparency information — which enables things like background removal or overlay effects. In WebM files, this alpha data is stored as &lt;code&gt;BlockAdditional&lt;&#x2F;code&gt; entries inside the Matroska container structure.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;GStreamer&lt;&#x2F;strong&gt; is a pipeline based multimedia framework where you chain together &quot;elements&quot; (demuxers, decoders, converters, sinks) and data flows through them like an assembly line. Each element has a &quot;state&quot; — &lt;code&gt;NULL&lt;&#x2F;code&gt;, &lt;code&gt;READY&lt;&#x2F;code&gt;, &lt;code&gt;PAUSED&lt;&#x2F;code&gt;, or &lt;code&gt;PLAYING&lt;&#x2F;code&gt; — and an element in &lt;code&gt;NULL&lt;&#x2F;code&gt; state won&#x27;t process anything, even if data is being pushed into it.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Pads&lt;&#x2F;strong&gt; are the connection points between elements, and &lt;strong&gt;&quot;caps&quot;&lt;&#x2F;strong&gt; (capabilities) describe the format of data flowing through a pad. A &lt;strong&gt;&quot;pad probe&quot;&lt;&#x2F;strong&gt; is a callback you attach to a pad to inspect or modify data as it passes through.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Additional note&lt;&#x2F;strong&gt; I think its important to mention but this problem not solved by LLM (gemini 3, claude opus 4.6). Took me about days of debugging to figure out the root cause and the fix. So I wanted to write this post to save others from the same headache :-) .Maybe next LLM will be able to auto solve this problem, who knows but still...&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-alpha-problem&quot;&gt;The alpha problem&lt;&#x2F;h3&gt;
+&lt;p&gt;I was building a video analysis app and everything worked fine until someone uploaded a &lt;strong&gt;VP9+alpha WebM&lt;&#x2F;strong&gt; file. The decoding froze at 0% with no error messages.&lt;&#x2F;p&gt;
+&lt;p&gt;Here&#x27;s what was happening under the hood: when &lt;code&gt;matroskademux&lt;&#x2F;code&gt; (GStreamer&#x27;s Matroska&#x2F;WebM demuxer) encounters alpha data, it sets &lt;code&gt;codec-alpha=true&lt;&#x2F;code&gt; in the video caps and attaches &lt;code&gt;GstVideoCodecAlphaMeta&lt;&#x2F;code&gt; to each compressed buffer. Downstream, &lt;code&gt;GstVideoDecoder&lt;&#x2F;code&gt; — the base class that all video decoders inherit from — sees this flag and enters &lt;strong&gt;&quot;alpha subframe mode.&quot;&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;In this mode, it expects the decoder to handle paired color and alpha subframes. If the right decoder isn&#x27;t available (like &lt;code&gt;vp9alphadecodebin&lt;&#x2F;code&gt;), it fails with:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;Cannot handle streams without an initial alpha buffer.&quot;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;btw my app didn&#x27;t need transparency at all. I just needed the color frames. But GStreamer&#x27;s decoder layer didn&#x27;t give me a way to say &quot;just ignore the alpha.&quot;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-workaround&quot;&gt;The workaround&lt;&#x2F;h3&gt;
+&lt;p&gt;I bypassed &lt;code&gt;decodebin&lt;&#x2F;code&gt; (GStreamer&#x27;s auto plugging decoder bin) entirely for these files. Instead, I wired the pipeline manually:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;matroskademux&lt;&#x2F;code&gt; → &lt;code&gt;queue&lt;&#x2F;code&gt; → &lt;code&gt;avdec_vp9&lt;&#x2F;code&gt; → &lt;code&gt;videoconvert&lt;&#x2F;code&gt; → &lt;code&gt;videorate&lt;&#x2F;code&gt; → &lt;code&gt;appsink&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;The key trick was two &lt;strong&gt;pad probes&lt;&#x2F;strong&gt; on the queue&#x27;s source pad:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;The first probe intercepts caps events and removes the &lt;code&gt;codec-alpha&lt;&#x2F;code&gt; field, so &lt;code&gt;avdec_vp9&lt;&#x2F;code&gt;&#x27;s base class never enters alpha subframe mode.&lt;&#x2F;li&gt;
+&lt;li&gt;The second probe intercepts buffers and creates clean copies without any meta attached, stripping &lt;code&gt;GstVideoCodecAlphaMeta&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;With both probes in place, &lt;code&gt;avdec_vp9&lt;&#x2F;code&gt; thinks it&#x27;s dealing with a normal VP9 stream and decodes the color frames without complaints. I confirmed this with a diagnostic probe on the decoder&#x27;s output pad frames were being produced.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-real-bug&quot;&gt;The real bug&lt;&#x2F;h3&gt;
+&lt;p&gt;Frames were coming out of the decoder, but the analysis was still stuck at 0%. No errors on the bus, no warnings in the logs.&lt;&#x2F;p&gt;
+&lt;p&gt;I added more diagnostic probes downstream and discovered that elements after the decoder — a &lt;code&gt;queue&lt;&#x2F;code&gt;, &lt;code&gt;videoconvert&lt;&#x2F;code&gt;, &lt;code&gt;videoscale&lt;&#x2F;code&gt;, &lt;code&gt;tee&lt;&#x2F;code&gt;, and the &lt;code&gt;appsink&lt;&#x2F;code&gt; — were never receiving any data. They were all in &lt;code&gt;NULL&lt;&#x2F;code&gt; state.&lt;&#x2F;p&gt;
+&lt;p&gt;This is where I lost a lot of time because these elements were correctly added to the pipeline and correctly linked. The pipeline graph looked perfect. But in GStreamer, &lt;strong&gt;adding an element to a bin does not automatically set its state.&lt;&#x2F;strong&gt; When you add elements inside a &lt;code&gt;pad-added&lt;&#x2F;code&gt; callback — which fires while the pipeline is already running — those elements start in &lt;code&gt;NULL&lt;&#x2F;code&gt;. Data flows into their sink pads and gets silently dropped. No error, no warning. Just nothing.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fix&quot;&gt;fix&lt;&#x2F;h3&gt;
+&lt;p&gt;After adding each element to the pipeline, call:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;c&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sync_state_with_parent&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;That&#x27;s it. This function checks the parent bin&#x27;s current state and transitions the element to match. If the pipeline is &lt;code&gt;PLAYING&lt;&#x2F;code&gt;, the element goes through &lt;code&gt;NULL&lt;&#x2F;code&gt; → &lt;code&gt;READY&lt;&#x2F;code&gt; → &lt;code&gt;PAUSED&lt;&#x2F;code&gt; → &lt;code&gt;PLAYING&lt;&#x2F;code&gt;. If the element is already in the right state, the call does nothing.&lt;&#x2F;p&gt;
+&lt;p&gt;The GStreamer documentation explicitly says to do this for dynamically added elements, but it&#x27;s easy to skip because it often works without it. In my case, the normal pipeline using &lt;code&gt;decodebin&lt;&#x2F;code&gt; worked by coincidence — &lt;code&gt;decodebin&lt;&#x2F;code&gt; fires &lt;code&gt;pad-added&lt;&#x2F;code&gt; during the &lt;code&gt;PAUSED&lt;&#x2F;code&gt; transition, and the subsequent &lt;code&gt;PLAYING&lt;&#x2F;code&gt; transition happens to sweep newly added elements along with it.&lt;&#x2F;p&gt;
+&lt;p&gt;When I switched to &lt;code&gt;matroskademux&lt;&#x2F;code&gt; for the alpha workaround, the timing was slightly different, and the elements got left behind in &lt;code&gt;NULL&lt;&#x2F;code&gt;. A textbook case of &lt;em&gt;&quot;worked by accident, broke by design.&quot;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>GStreamer Parallel Video Processing Experiment: Testing Worker Count and Batch Size Trade-offs</title>
+        <published>2025-06-30T00:00:00+00:00</published>
+        <updated>2025-06-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/cpu/"/>
+        <id>https://altunenes.github.io/posts/cpu/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/cpu/">&lt;h2 id=&quot;why-this-matters&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Why This Matters &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;I previously researched parallel video processing, which led to a discussion on the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discourse.gstreamer.org&#x2F;t&#x2F;optimizing-video-frame-processing-with-gstreamer-gpu-acceleration-and-parallel-processing&#x2F;4190&quot;&gt;GStreamer Discourse forums&lt;&#x2F;a&gt;. That work inspired this separate, simplified experiment to isolate and measure CPU parallelism effects in context of video. Since public resources on this topic are limited, I hope these findings offer some insight. Video processing is complex and requires systematic testing to understand performance bottlenecks. This post documents my results from using a heavy, artificial workload to find the trade-offs of adding more worker threads. The full source code is available on &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;gstreamer-parallelism-study&quot;&gt;GitHub&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Implementation &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The implementation uses a two-phase approach to properly isolate parallel processing effects:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Phase 1 - Frame Extraction&lt;&#x2F;strong&gt;: GStreamer sequentially decodes all video frames into memory, eliminating I&#x2F;O bottlenecks from parallel processing measurement.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Phase 2 - Parallel Processing&lt;&#x2F;strong&gt;: All frames are distributed to worker threads through crossbeam channels. Each worker performs CPU-intensive operations including matrix multiplication and recursive fibonacci calculations.&lt;&#x2F;p&gt;
+&lt;p&gt;Key components:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;GStreamer pipeline for video decoding&lt;&#x2F;li&gt;
+&lt;li&gt;Worker pool with crossbeam channels&lt;&#x2F;li&gt;
+&lt;li&gt;Artificial CPU load simulation (matrix operations + fibonacci)&lt;&#x2F;li&gt;
+&lt;li&gt;Two-phase execution (decode then process)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;div class=&quot;highlight&quot; style=&quot;background: #2b303b; padding: 1em; border-radius: 8px; font-family: &#x27;Fira Code&#x27;, &#x27;Source Code Pro&#x27;, monospace; font-size: 14px; line-height: 1.4;&quot;&gt;
+&lt;pre style=&quot;margin: 0; white-space: pre;&quot;&gt;
+                        &lt;span style=&quot;color: #ff9900;&quot;&gt;PHASE 1: Sequential Frame Extraction&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;┌─────────────┐&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────┐&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;┌───────────────────┐&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Video File  &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span style=&quot;color: #c3e88d;&quot;&gt;─────▶&lt;&#x2F;span&gt;&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; GStreamer      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span style=&quot;color: #c3e88d;&quot;&gt;─────▶&lt;&#x2F;span&gt;&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; All Frames in   &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; (MP4)       &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Pipeline       &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Memory (1440)   &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;└─────────────┘&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────┘&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;└───────────────────┘&lt;&#x2F;span&gt;
+                                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #ff9900;&quot;&gt;PHASE 2: Parallel Processing&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;┌───────────────────────────────────────────────────────────────────┐&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #abb2bf;&quot;&gt;Main Thread: Pre-batches all frames, then sends to channel&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;           &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 1]&lt;&#x2F;span&gt; &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 2]&lt;&#x2F;span&gt; &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 3]&lt;&#x2F;span&gt; ... &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch N]&lt;&#x2F;span&gt;           &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;└──────────────────────────────────┬────────────────────────────────┘&lt;&#x2F;span&gt;
+                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;(Crossbeam Channel)&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;┌────────────────────────────────────────────────────────────────────────────────────────────┐&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                               &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                               &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt;Worker 1&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt; Worker 2&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;       ...   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt;   Worker N&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #ff7b72;&quot;&gt;Metrics&lt;&#x2F;span&gt;       &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;• Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;    • Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;   • Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #ff7b72;&quot;&gt;Collector&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;• Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;    • Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;   • Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #abb2bf;&quot;&gt;(Receives)&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;└─────────────────────────┼──────────────────────────────────┘&lt;&#x2F;span&gt;
+                                    &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                    &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #ff9900;&quot;&gt;Results &amp;&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #ff9900;&quot;&gt;Analysis&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;
+&lt;&#x2F;pre&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;why-crossbeam-channels-with-std-thread&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why Crossbeam Channels with std::thread? &lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;For this experiment I use crossbeam channels with std::thread rather than async&#x2F;await because the workload is purely CPU-bound (matrix operations, fibonacci calculations). Since CPU-intensive tasks don&#x27;t benefit from async&#x27;s cooperative scheduling and would block the thread anyway, dedicated threads provide clearer measurement of CPU resource contention without introducing async runtime scheduling as a confounding variable in our worker count and batch size analysis.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;test-configuration&quot;&gt;Test Configuration&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Hardware: MacBook Air M3, 16GB RAM&lt;&#x2F;li&gt;
+&lt;li&gt;Video: Big Buck Bunny 60-second clip (1440 frames, MIT licensed)&lt;&#x2F;li&gt;
+&lt;li&gt;CPU Load: Matrix operations + recursive fibonacci calculations&lt;&#x2F;li&gt;
+&lt;li&gt;Batch Sizes Tested: 4, 10, 20 frames per batch&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;worker-count-results-optimal-batch-size&quot;&gt;Worker Count Results (Optimal Batch Size)&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;em&gt;Total Time = complete processing duration, Efficiency = speedup&#x2F;workers, Contention = resource competition level&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Workers&lt;&#x2F;th&gt;&lt;th&gt;Total Time&lt;&#x2F;th&gt;&lt;th&gt;Avg Frame Time&lt;&#x2F;th&gt;&lt;th&gt;Speedup&lt;&#x2F;th&gt;&lt;th&gt;Efficiency&lt;&#x2F;th&gt;&lt;th&gt;Best Batch&lt;&#x2F;th&gt;&lt;th&gt;Contention&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;21.8s&lt;&#x2F;td&gt;&lt;td&gt;14.4ms&lt;&#x2F;td&gt;&lt;td&gt;1.00x&lt;&#x2F;td&gt;&lt;td&gt;100%&lt;&#x2F;td&gt;&lt;td&gt;N&#x2F;A&lt;&#x2F;td&gt;&lt;td&gt;-&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;11.3s&lt;&#x2F;td&gt;&lt;td&gt;15.1ms&lt;&#x2F;td&gt;&lt;td&gt;1.94x&lt;&#x2F;td&gt;&lt;td&gt;97%&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;Low&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;7.4s&lt;&#x2F;td&gt;&lt;td&gt;19.9ms&lt;&#x2F;td&gt;&lt;td&gt;2.96x&lt;&#x2F;td&gt;&lt;td&gt;74%&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;8.8s&lt;&#x2F;td&gt;&lt;td&gt;35.7ms&lt;&#x2F;td&gt;&lt;td&gt;2.48x&lt;&#x2F;td&gt;&lt;td&gt;41%&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;7.2s&lt;&#x2F;td&gt;&lt;td&gt;39.0ms&lt;&#x2F;td&gt;&lt;td&gt;3.02x&lt;&#x2F;td&gt;&lt;td&gt;38%&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;batch-size-impact-analysis&quot;&gt;Batch Size Impact Analysis&lt;&#x2F;h2&gt;
+&lt;p&gt;The batch size significantly affects performance, with different optimal points for different worker counts:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Each cell shows total completion time in seconds for that worker&#x2F;batch combination&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Workers&lt;&#x2F;th&gt;&lt;th&gt;Batch 4&lt;&#x2F;th&gt;&lt;th&gt;Batch 10&lt;&#x2F;th&gt;&lt;th&gt;Batch 20&lt;&#x2F;th&gt;&lt;th&gt;Optimal&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;22.02s&lt;&#x2F;td&gt;&lt;td&gt;21.80s&lt;&#x2F;td&gt;&lt;td&gt;21.99s&lt;&#x2F;td&gt;&lt;td&gt;Any&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;11.74s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;11.25s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;12.05s&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;9.71s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;7.37s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;9.39s&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;9.22s&lt;&#x2F;td&gt;&lt;td&gt;8.93s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;8.77s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;8.14s&lt;&#x2F;td&gt;&lt;td&gt;7.22s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;7.19s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;key-findings&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Key Findings &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The results from the experiment show a clear trade-off between speed and efficiency:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Fastest Time vs. Optimal Efficiency&lt;&#x2F;strong&gt;: The absolute fastest time was &lt;strong&gt;7.2s with 8 workers&lt;&#x2F;strong&gt;. However, the most efficient configuration was &lt;strong&gt;4 workers&lt;&#x2F;strong&gt;, which completed the task in &lt;strong&gt;7.4s&lt;&#x2F;strong&gt;. This setup provided 74% efficiency, representing a better balance of speed and resource use.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Performance Regression at 6 Workers&lt;&#x2F;strong&gt;: Adding workers beyond 4 proved counterproductive. Performance degraded when moving from 4 workers (7.4s) to 6 workers (8.8s), indicating that the costs of thread management and resource contention outweighed the benefits of more threads.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size Scaling&lt;&#x2F;strong&gt;: The optimal batch size increased with the worker count. Configurations with 2-4 workers performed best with a batch size of 10, while 6-8 workers required a larger batch size of 20 to reduce coordination overhead.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size Impact&lt;&#x2F;strong&gt;: Using a non-optimal batch size caused significant performance loss. With 4 workers, a batch size of 4 resulted in a 9.7s completion time, over 30% slower than the 7.4s achieved with the optimal batch size of 10.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;batch-size-effects-in-this-test&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Batch Size Effects in This Test &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Within this specific implementation, batch size optimization shows clear patterns:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Single Worker Baseline&lt;&#x2F;strong&gt;: Batch size has minimal impact on single-threaded performance (21.8s-22.0s), confirming that batch size effects are purely parallel processing artifacts.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Small Worker Counts (2-4)&lt;&#x2F;strong&gt;: Batch size 10 provides optimal balance. Smaller batches (4) create excessive context switching overhead, while larger batches (20) may cause load imbalance.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Large Worker Counts (6-8)&lt;&#x2F;strong&gt;: Batch size 20 performs best, likely due to better cache locality and reduced coordination overhead among many workers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Load Balancing&lt;&#x2F;strong&gt;: With 1440 frames, batch size 4 creates 360 batches (good distribution), batch size 10 creates 144 batches, and batch size 20 creates 72 batches. Fewer workers benefit from more batches for better load distribution.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Memory Context&lt;&#x2F;strong&gt;: Each test loads 1.26 GB of frame data into memory, which fits comfortably within the 16GB system RAM, eliminating memory pressure as a confounding factor.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-s-happening-in-this-test&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  What&#x27;s Happening in This Test &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Within the context of this specific implementation, the two-phase approach isolates parallel processing effects from video I&#x2F;O bottlenecks. The test results show a performance cliff at 6+ workers where resource contention appears to overwhelm parallelization benefits.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The 4-Worker Measurement&lt;&#x2F;strong&gt;: Up to 4 workers in this test, I observe scaling with moderate frame time increases (14.4ms → 19.9ms). CPU cores appear to work with manageable cache and memory bandwidth competition in this workload.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The 6-Worker Measurement&lt;&#x2F;strong&gt;: At 6 workers in this test, frame processing time nearly doubles (36.0ms), suggesting resource saturation. This may indicate the CPU cannot efficiently feed all workers in this specific scenario.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;8-Worker Recovery&lt;&#x2F;strong&gt;: While 8 workers recovered slightly (7.2s vs 8.8s for 6 workers), the measured efficiency remained low (38%) in this test configuration.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-takeaway&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  The Takeaway &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;This experiment shows that for this specific workload on an M3 MacBook Air, the optimal solution requires tuning both worker count and batch size together.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Worker Count&lt;&#x2F;strong&gt;: While &lt;strong&gt;8 workers&lt;&#x2F;strong&gt; produced the fastest result (7.2s), &lt;strong&gt;4 workers&lt;&#x2F;strong&gt; gave a nearly identical speed (7.4s) with far greater efficiency (74% vs 38%). For practical purposes, 4 workers is the better configuration.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size&lt;&#x2F;strong&gt;: The best batch size changes with the worker count. Smaller worker pools (2-4) were fastest with a batch size of 10, while larger pools (6-8) needed a larger batch size of 20 to perform well.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Combined Optimization&lt;&#x2F;strong&gt;: The interaction between these two parameters is critical and can account for performance swings of 30% or more, making it essential to test and tune them together.&lt;&#x2F;p&gt;
+&lt;p&gt;Note: These results are specific to this implementation, hardware, and workload type. Different applications, algorithms, or hardware configurations may show different optimal points. The batch size effects will vary significantly based on task granularity and data access patterns.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

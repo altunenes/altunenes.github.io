@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - Rust</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/rust/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-09-02T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/rust/atom.xml</id>
+    <entry xml:lang="en">
+        <title>How We Fixed macOS GStreamer Library Path Issues in Rust Releases</title>
+        <published>2025-09-02T00:00:00+00:00</published>
+        <updated>2025-09-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/gstmac/"/>
+        <id>https://altunenes.github.io/posts/gstmac/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/gstmac/">&lt;h2 id=&quot;how-i-fixed-macos-gstreamer-library-path-issues-in-rust-releases&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;How I Fixed macOS GStreamer Library Path Issues in Rust Releases&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Very short post but I spent way too many hours debugging why our Rust app worked fine in development but kept crashing on macOS release builds due to GStreamer library conflicts. Users would see this error when double-clicking the app:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  objc[43583]:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; Class GstCocoaApplicationDelegate is implemented in both&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  &#x2F;Library&#x2F;Frameworks&#x2F;GStreamer.framework&#x2F;Versions&#x2F;1.0&#x2F;lib&#x2F;libgstreamer-1.0.0.dylib&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;  and&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &#x2F;Users&#x2F;user&#x2F;app&#x2F;gstreamer&#x2F;lib&#x2F;libgstreamer-1.0.0.dylib&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;the-problem&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Problem&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Turns out our GitHub Actions script was trying to fix &lt;code&gt;@rpath&lt;&#x2F;code&gt; entries with &lt;code&gt;install_name_tool&lt;&#x2F;code&gt;, but those commands were just failing silently.&lt;&#x2F;p&gt;
+&lt;p&gt;Rust binaries don&#x27;t have enough header padding by default for &lt;code&gt;install_name_tool&lt;&#x2F;code&gt; to actually work.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-solution&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Solution&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Add this linker flag to your macOS Rust builds:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;export&lt;&#x2F;span&gt;&lt;span&gt; RUSTFLAGS&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;$RUSTFLAGS&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; -C link-arg=-Wl,-headerpad_max_install_names&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This simple flag reserves enough space in the binary header so the tool can actually do its job.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Before:&lt;&#x2F;strong&gt; Binary had unfixable &lt;code&gt;@rpath&lt;&#x2F;code&gt; entries → loaded both system and bundled GStreamer → conflicts&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;After:&lt;&#x2F;strong&gt; Binary library paths properly fixed → loads only bundled GStreamer → works perfectly&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So always verify that your &lt;code&gt;install_name_tool&lt;&#x2F;code&gt; commands actually succeed. Silent failures can waste hours of debugging!&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Randomness: CPU &amp; GPU</title>
+        <published>2025-08-09T00:00:00+00:00</published>
+        <updated>2025-08-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/random/"/>
+        <id>https://altunenes.github.io/posts/random/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/random/">&lt;h4 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Traditional random number generation, common on CPUs in languages, often relies on a sequential process. A generator object holds an internal state, and each request for a number updates that state for the next call. This approach is fundamentally incompatible with the massively parallel nature of GPUs, where thousands of threads need to generate numbers independently and simultaneously. If all threads tried to access and update a single shared state, it would require complex synchronization that would effectively destroy the GPU&#x27;s performance advantage.&lt;&#x2F;p&gt;
+&lt;p&gt;GPUs &quot;solve&quot; this by adopting a &quot;stateless&quot; or functional approach. Instead of updating a state, each thread computes its random number directly by calling a function that scrambles its inputs. In GLSL shaders, a common technique is to use a hash function that takes a thread&#x27;s unique coordinates (&lt;code&gt;gl_FragCoord.xy&lt;&#x2F;code&gt;) and often the current time (&lt;code&gt;iTime&lt;&#x2F;code&gt;: in shadertoy) as input. This ensures every pixel gets a different, independent number on every frame. A simple, widely-used hash function looks like this:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; A simple hash function that turns a 2D vector into a pseudo-random float.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; Adding a time input makes it dynamic for animations.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(vec2 &lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; t&lt;&#x2F;span&gt;&lt;span&gt;) {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    vec2 p_with_time &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; p &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(t)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; fract&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sin&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;&#x2F;span&gt;&lt;span&gt;(p_with_time&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;12.9898&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 78.233&lt;&#x2F;span&gt;&lt;span&gt;)))&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 43758.5453&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; You would call it in your main shader code like this:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; (iTime is a standard uniform in environments like Shadertoy)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span&gt; randomValue &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(gl_FragCoord.xy&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; iTime)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h4 id=&quot;the-real-world-bottleneck&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Real-World Bottleneck&lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;This functional paradigm is a prime example of co-designing an algorithm for its hardware. However, the GPU is not always the faster choice. Performance studies show a clear &quot;crossover point&quot;: for small tasks that require fewer than roughly 10,000 numbers, a modern CPU is often faster due to the overhead of launching a GPU kernel (Askar et al., 2021).
+For larger tasks where the GPU&#x27;s throughput dominates, a second, more surprising bottleneck emerges: data transfer. If the numbers are generated on the GPU but needed by the CPU, the transfer itself can cripple performance. One analysis found that copying the results back to the CPU took, on average, seven times longer than the computation itself (Gregg &amp;amp; Hazelwood, 2011). This highlights a fundamental rule: the highest performance is only achieved when random numbers are both generated and consumed on the same device.&lt;&#x2F;p&gt;
+&lt;p&gt;While a simple hash is great for visual effects, this same &quot;stateless&quot; principle is the foundation of high-performance libraries. They use complex, cryptographically-inspired functions to generate statistically robust and uncorrelated random streams for demanding scientific simulations, an approach detailed in the landmark paper on parallel random numbers by Salmon et al..&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;references&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; References &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Askar, T., Shukirgaliyev, B., Lukac, M., &amp;amp; Abdikamalov, E. (2021). Evaluation of Pseudo-Random Number Generation on GPU Cards. Computation, 9(12), 142.&lt;&#x2F;p&gt;
+&lt;p&gt;Salmon, J.K., Moraes, M.A., Dror, R.O., &amp;amp; Shaw, D.E. (2011). Parallel random numbers: As easy as 1, 2, 3. 2011 International Conference for High Performance Computing, Networking, Storage and Analysis (SC), 1-12.&lt;&#x2F;p&gt;
+&lt;p&gt;Gregg, C., &amp;amp; Hazelwood, K.M. (2011). Where is the data? Why you cannot debate CPU vs. GPU performance without the answer. (IEEE ISPASS) IEEE INTERNATIONAL SYMPOSIUM ON PERFORMANCE ANALYSIS OF SYSTEMS AND SOFTWARE, 134-144.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Bundling &amp; Notarization GStreamer with Tauri Apps on macOS: A Developer&#x27;s Guide</title>
+        <published>2025-04-09T00:00:00+00:00</published>
+        <updated>2025-04-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/taurigst/"/>
+        <id>https://altunenes.github.io/posts/taurigst/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/taurigst/">&lt;p&gt;Working with multimedia in desktop applications often requires using GStreamer, a powerful multimedia framework. However, when building a macOS app with Tauri that uses GStreamer, developers face numerous challenges in bundling, signing, and notarizing the application correctly.&lt;&#x2F;p&gt;
+&lt;p&gt;After some troubleshooting and experimentation, I&#x27;ve successfully overcome these challenges. This guide shares key insights to help other developers avoid similar headaches.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-challenge&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Challenge&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Bundling GStreamer with a Tauri app on macOS involves several complex issues:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;GStreamer&#x27;s architecture&lt;&#x2F;strong&gt; consists of numerous interdependent dynamic libraries that must be correctly bundled and linked&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Apple&#x27;s notarization requirements&lt;&#x2F;strong&gt; conflict with GStreamer&#x27;s recommended configurations&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Path references&lt;&#x2F;strong&gt; in dynamic libraries must be properly relocated&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Code signing&lt;&#x2F;strong&gt; must be applied correctly to each individual binary&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Tauri&#x27;s bundling system&lt;&#x2F;strong&gt; must be properly configured to include GStreamer&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;1-bundling-challenges&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; 1. Bundling Challenges&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;GStreamer is complex because:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;It contains dozens of &lt;code&gt;.dylib&lt;&#x2F;code&gt; files that must be included in your app bundle&lt;&#x2F;li&gt;
+&lt;li&gt;These libraries reference each other with absolute paths&lt;&#x2F;li&gt;
+&lt;li&gt;They must be bundled for distribution to users who don&#x27;t have GStreamer installed&lt;&#x2F;li&gt;
+&lt;li&gt;Missing even one dependency can cause cryptic runtime errors&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;1-1-apple-s-signing-notarization-requirements&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; 1.1 Apple&#x27;s Signing &amp;amp; Notarization Requirements&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Apple&#x27;s requirements directly conflict with GStreamer&#x27;s documentation:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Hardened Runtime&lt;&#x2F;strong&gt;: Apple requires enabling the hardened runtime for notarization, while GStreamer documentation suggests disabling it&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Individual Signing&lt;&#x2F;strong&gt;: Each &lt;code&gt;.dylib&lt;&#x2F;code&gt; must be signed separately with a valid Developer ID&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Secure Timestamps&lt;&#x2F;strong&gt;: All signatures must include a secure timestamp&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Special Entitlements&lt;&#x2F;strong&gt;: GStreamer requires specific entitlements to function with hardened runtime enabled:
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;com.apple.security.cs.allow-unsigned-executable-memory&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;com.apple.security.cs.disable-library-validation&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;com.apple.security.cs.allow-dyld-environment-variables&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;1-2-path-handling-solutions&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; 1.2 Path Handling Solutions&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Getting the library paths right is critical:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use &lt;code&gt;install_name_tool&lt;&#x2F;code&gt; to modify library references to use &lt;code&gt;@executable_path&lt;&#x2F;code&gt; instead of absolute paths&lt;&#x2F;li&gt;
+&lt;li&gt;Add &lt;code&gt;@rpath&lt;&#x2F;code&gt; references to the executable&lt;&#x2F;li&gt;
+&lt;li&gt;Set environment variables in a wrapper script and &lt;code&gt;Info.plist&lt;&#x2F;code&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GST_PLUGIN_SYSTEM_PATH&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;GST_PLUGIN_PATH&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;DYLD_LIBRARY_PATH&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;1-3-tauri-integration&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;1.3 Tauri Integration&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Integrating with Tauri requires special attention:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Configure Tauri&#x27;s resources system to include GStreamer libraries&lt;&#x2F;li&gt;
+&lt;li&gt;Modify &lt;code&gt;build.rs&lt;&#x2F;code&gt; to add the correct rpath&lt;&#x2F;li&gt;
+&lt;li&gt;Avoid interfering with Tauri&#x27;s DMG creation process&lt;&#x2F;li&gt;
+&lt;li&gt;Use a wrapper script for your main executable to set environment variables&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Conclusion&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Successfully bundling GStreamer with a Tauri app on macOS requires navigating the complex interplay between GStreamer&#x27;s architecture, Apple&#x27;s notarization requirements, and Tauri&#x27;s bundling system.&lt;&#x2F;p&gt;
+&lt;p&gt;The key is to:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;ALWAYS use custom build scripts to handle library paths, do not rely tauri.conf file manually but edit the tauri file WITH your build script.&lt;&#x2F;li&gt;
+&lt;li&gt;Sign each library individually&lt;&#x2F;li&gt;
+&lt;li&gt;Use appropriate entitlements&lt;&#x2F;li&gt;
+&lt;li&gt;Fix all library paths using &lt;code&gt;install_name_tool&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Ensure required environment variables are set&lt;&#x2F;li&gt;
+&lt;li&gt;Verify all required libraries are included&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;With this approach, you can create properly signed, notarized macOS apps that include GStreamer libraries and will work perfectly on customer systems without requiring a separate GStreamer installation.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>You&#x27;ll Finally Understand Lifetimes in Rust After Read This</title>
+        <published>2025-03-29T00:00:00+00:00</published>
+        <updated>2025-03-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/lifetimes/"/>
+        <id>https://altunenes.github.io/posts/lifetimes/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/lifetimes/">&lt;p&gt;Lifetimes in Rust are often one of the most confusing topics for beginners. In fact, learning about lifetimes is actually same as learning why Rust is forcing you to write them. I&#x27;ll try to keep this post as very simple and short, so if you are already familiar with Rust and lifetimes, this post definitely not for you.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;what-are-lifetimes-and-why-do-we-need-them&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; What Are Lifetimes and Why Do We Need Them? &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Lifetimes help the Rust compiler understand how long references (borrowed data) are valid. Imagine you have two pieces of paper borrowed from friends. You need to know how long you can safely use each piece before one of your friends asks for it back. Without knowing this, you might accidentally rely on a note that’s no longer available. That’s what lifetimes prevent in your code—they ensure references never outlive the data they point to.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;a-broken-example-when-lifetimes-are-missing&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; A Broken Example: When Lifetimes Are Missing &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Consider this function:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; This function doesn&amp;#39;t compile because Rust doesn&amp;#39;t know how long the returned reference should be valid.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;() &amp;gt; y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        x&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; else&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        y&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; string1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;Hello&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; string2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;World&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; result&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;string1,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;string2);&lt;&#x2F;span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; &#x2F;&#x2F; Compiler error: missing lifetime annotations&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The longest string is {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, result);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Output:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;error[E0106]: missing lifetime specifier&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt; --&amp;gt; src&#x2F;main.rs:1:33&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;1 | fn longest(x: &amp;amp;str, y: &amp;amp;str) -&amp;gt; &amp;amp;str {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |               ----     ----     ^ expected named lifetime parameter&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  = help: this function&amp;#39;s return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, What’s the problem? The compiler is confused. It doesn’t know whether the returned reference is tied to &lt;code&gt;string1&lt;&#x2F;code&gt; or &lt;code&gt;string2&lt;&#x2F;code&gt;, or how long that &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;&#x2F;span&gt;  should remain valid. Without this information, Rust can’t guarantee that the &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;&#x2F;span&gt; won’t point to data that no longer exists.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&#x2F;&#x2F; The Compiler&amp;#39;s View&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                                                  &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string1 ──┐                 &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;           ├─▶ longest() ──▶ returns &amp;amp;str from... where?&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string2 ──┘                 &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&#x2F;&#x2F; Rust can&amp;#39;t tell if the returned reference will outlive its source!&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now let&#x27;s simply fix this by adding lifetimes:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;&#x2F;span&gt;&lt;span&gt;, y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;() &amp;gt; y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        x&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; else&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        y&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;() {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; string1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;Hello&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; string2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;World&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; result&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;string1,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;string2);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The longest string is {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, result);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use string1: {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, string1);&lt;&#x2F;span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; &#x2F;&#x2F; Still valid! thanks to lifetimes!!&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string1 (&amp;#39;a) ──┐                 &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                ├─▶ longest&amp;lt;&amp;#39;a&amp;gt;() ──▶ returns &amp;amp;&amp;#39;a str &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string2 (&amp;#39;a) ──┘                 &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&#x2F;&#x2F; Now Rust knows the returned reference lives as long as both inputs!&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;We added a lifetime parameter &lt;code&gt;&#x27;a&lt;&#x2F;code&gt; to the function signature.&lt;&#x2F;li&gt;
+&lt;li&gt;We used this lifetime parameter to specify that the returned reference will live as long as the references passed in as arguments.&lt;&#x2F;li&gt;
+&lt;li&gt;Now, the compiler knows how long the returned reference should be valid, and the code compiles successfully.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;when-do-you-need-lifetimes&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; When Do You Need Lifetimes? &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;I think this is the most important question to understand lifetimes. Generally, lifetimes are only necessary when you work with references. If you write a function that takes ownership of values, like a simple subtraction or sum, lifetimes aren’t needed. For example:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sum&lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;&#x2F;span&gt;&lt;span&gt;, y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; y&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span&gt; main () {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 5&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 10&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; result&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sum&lt;&#x2F;span&gt;&lt;span&gt;(x, y);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The sum is {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, result);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use x: {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, x); &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Here, no lifetimes are required because:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;No references (&lt;code&gt;&amp;amp;x&lt;&#x2F;code&gt; or &lt;code&gt;&amp;amp;y&lt;&#x2F;code&gt;): The function simple takes ownership of &lt;code&gt;x&lt;&#x2F;code&gt; and &lt;code&gt;y&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Returns a new value: The result &lt;code&gt;x + y&lt;&#x2F;code&gt; is a brand-new &lt;code&gt;i32&lt;&#x2F;code&gt;, not a &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;&#x2F;span&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Nothing borrowed: Rust doesn&#x27;t need to track how long &lt;code&gt;x&lt;&#x2F;code&gt; or &lt;code&gt;y&lt;&#x2F;code&gt; live because the values are already copied.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Extra note: &lt;&#x2F;span&gt;
+You might ask why this still works:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use x: {}&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, x); &lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The reason &lt;code&gt;x&lt;&#x2F;code&gt; is still usable after calling &lt;code&gt;sum&lt;&#x2F;code&gt; is that integers are &quot;&lt;code&gt;Copy&lt;&#x2F;code&gt;&quot; types in Rust. When you pass them to a function, they get copied, not moved. This is because integers are small, simple values that are cheap to duplicate.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;the-lifetime-elision-rules&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The Lifetime Elision Rules &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Good thing is when you program in Rust in real-world projects, you don&#x27;t need to write lifetimes all the time. Rust has smart defaults that often let you skip writing lifetimes explicitly. These are called &quot;lifetime elision rules.&quot; You can read more about them in the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;nomicon&#x2F;lifetime-elision.html&quot;&gt;official Rust book&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;But still, since I think that understanding the concept of lifetimes is an important cornerstone in understanding the overall paradigm of the Rust programming language, if I were to start Rust again, I would refer to and experiment with lifetimes even where I don&#x27;t need to.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>How I Implemented Hot Reloading for WGSL Shaders in Rust</title>
+        <published>2025-03-15T00:00:00+00:00</published>
+        <updated>2025-03-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/hotreload/"/>
+        <id>https://altunenes.github.io/posts/hotreload/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/hotreload/">&lt;p&gt;&lt;span style=&quot;color:orange;&quot;&gt;My solution&lt;&#x2F;span&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;When developing WGSL shaders for my Rust-based graphics engine, I needed a solution to avoid constantly restarting the application to see changes. I built a hot reload system that watches shader files and automatically recompiles them when modifications are detected. The core of this approach uses Rust&#x27;s notify crate to monitor file system events, combined with a debouncing mechanism to prevent multiple reloads during rapid file saves. When a change is detected, the engine creates new shader modules with &lt;code&gt;core.device.create_shader_module()&lt;&#x2F;code&gt; and carefully rebuilds the render pipeline while maintaining the original bind group layouts.&lt;&#x2F;p&gt;
+&lt;p&gt;Important struct:
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;cuneus&#x2F;blob&#x2F;b068041c7902df29d33c3100ea4b74a1a38164ff&#x2F;src&#x2F;hot.rs#L9-L231&quot;&gt;Source Code&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;pub struct&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; ShaderHotReload&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    pub&lt;&#x2F;span&gt;&lt;span&gt; vs_module&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; wgpu&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderModule&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    pub&lt;&#x2F;span&gt;&lt;span&gt; fs_module&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; wgpu&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderModule&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    device&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Arc&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;wgpu&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Device&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    shader_paths&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;PathBuf&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_vs_content&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_fs_content&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    #[allow(dead_code)]&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    watcher&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; notify&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;RecommendedWatcher&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    rx&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Receiver&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;notify&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    _watcher_tx&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;sync&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;mpsc&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Sender&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;notify&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_update_times&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; HashMap&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;PathBuf&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Instant&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; &#x2F;&#x2F;Keeps track of when each shader file was last updated.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    debounce_duration&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Duration&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; &#x2F;&#x2F;Defines how long to wait before allowing another reload of the same file. The default is 100ms.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;My ShaderHotReload struct stores references to shader files, tracks the last update times for debouncing, and maintains the original shader content for comparison. When a file change is detected, it reads the new shader content, compares it to the previous version, and only triggers a reload if there&#x27;s an actual change.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Why Rust&#x27;s Structure Resonates with the ADHD Brain</title>
+        <published>2025-01-16T00:00:00+00:00</published>
+        <updated>2025-01-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/rust/"/>
+        <id>https://altunenes.github.io/posts/rust/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/rust/">&lt;h2 id=&quot;programming-through-the-lens-of-cognitive-function&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Programming Through the Lens of Cognitive Function&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Software development places significant demands on several key cognitive functions. Abilities like &lt;strong&gt;working memory&lt;&#x2F;strong&gt; (holding and manipulating information mentally), &lt;strong&gt;executive functions&lt;&#x2F;strong&gt; (planning, organizing, sequencing tasks), sustained &lt;strong&gt;attention&lt;&#x2F;strong&gt;, and the regulation of &lt;strong&gt;impulse&lt;&#x2F;strong&gt; or the drive for immediate outcomes are constantly engaged.&lt;&#x2F;p&gt;
+&lt;p&gt;Individuals with an ADHD cognitive profile often exhibit a distinct pattern in these areas. While challenges in sustaining focus on non-preferred tasks or managing working memory load are common, ADHD is also frequently associated with strengths like high &lt;strong&gt;creativity&lt;&#x2F;strong&gt;, intense &lt;strong&gt;energy&lt;&#x2F;strong&gt; for novel problems, and the ability to make unique &lt;strong&gt;connections&lt;&#x2F;strong&gt;. The drive for &lt;strong&gt;immediacy&lt;&#x2F;strong&gt; – wanting to see results quickly, as often experienced in languages like Python – is also a relevant factor in the programming context. How these cognitive patterns interact with the specific structures and feedback mechanisms of a programming language can significantly influence a developer&#x27;s experience and productivity.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;rust-s-design-potential-cognitive-interactions&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Rust&#x27;s Design: Potential Cognitive Interactions&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;From a psychological perspective, the design of the Rust programming language presents an interesting case study for interaction with ADHD cognitive patterns. Rust is known for its strict compile-time checks, particularly its &lt;strong&gt;ownership and borrowing&lt;&#x2F;strong&gt; system. This upfront rigor contrasts sharply with the immediate feedback loops many individuals with ADHD thrive on, or the rapid iteration often possible in less strict languages. However, this very strictness may offer potential cognitive support.&lt;&#x2F;p&gt;
+&lt;p&gt;Consider &lt;strong&gt;working memory&lt;&#x2F;strong&gt;. Manually tracking memory safety and data lifetimes in other languages requires significant ongoing mental effort. Rust&#x27;s ownership rules define clear responsibility for data, and the compiler enforces these rules rigorously. This system potentially reduces the active mental load required to maintain data validity, lessening the strain on working memory resources, which can be a specific challenge area in ADHD profiles. The compiler performs much of the tracking, alleviating the need for constant internal monitoring.&lt;&#x2F;p&gt;
+&lt;p&gt;Regarding &lt;strong&gt;executive functions&lt;&#x2F;strong&gt;, particularly planning and organization, Rust&#x27;s borrow checker necessitates careful consideration of data flow and mutability &lt;em&gt;before&lt;&#x2F;em&gt; code compiles successfully. This requirement for upfront structural thinking can act as an external framework, potentially supporting the organizational aspects of coding that might otherwise be challenging. It encourages a methodical approach to data interaction.&lt;&#x2F;p&gt;
+&lt;p&gt;The nature of &lt;strong&gt;feedback&lt;&#x2F;strong&gt; is also critical. Delayed runtime errors can be difficult to trace and resolve, especially if attention has shifted. Rust&#x27;s compile-time error reporting provides immediate, specific information about problems, often directing the developer to the exact location and nature of the issue. This type of prompt, concrete feedback aligns well with learning patterns often observed in ADHD, helping to close the loop between action and consequence quickly and reducing the cognitive burden of debugging ambiguous, delayed issues.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;acknowledging-the-cognitive-friction&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Acknowledging the Cognitive Friction&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;This potential alignment doesn&#x27;t negate the real cognitive friction Rust can introduce, especially initially. The demand for adherence to strict rules before code compiles can directly conflict with the desire for rapid results and experimentation often seen in ADHD. Waiting for compilation can interrupt flow and reduce the immediate reinforcement that helps maintain engagement.&lt;&#x2F;p&gt;
+&lt;p&gt;Furthermore, the complexity of mastering concepts like ownership and lifetimes requires sustained focus and deliberate cognitive effort – resources which might be taxed or allocated differently in an ADHD profile. The compiler&#x27;s strictness, while potentially beneficial long-term, can certainly generate frustration during the learning process or when rapid exploration is desired.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;potential-long-term-cognitive-benefits&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Potential Long-Term Cognitive Benefits&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The key consideration is the potential trade-off: increased upfront cognitive effort for potentially reduced long-term cognitive strain. By catching a wide range of errors (especially memory safety and data races) at compile time, Rust aims to prevent complex, difficult-to-diagnose runtime issues. Debugging these subtle, delayed errors often requires significant sustained attention and complex problem-solving, which can be particularly taxing for individuals managing ADHD symptoms.&lt;&#x2F;p&gt;
+&lt;p&gt;While the ADHD cognitive style might often gravitate towards tools offering rapid initial progress and immediate results, the reality of large-scale software development presents a different challenge. As complexity grows in massive projects, the very structure enforced by the Rust compiler can become a significant asset. It helps manage the intricate dependencies and state interactions that can otherwise easily overwhelm cognitive resources, especially working memory and organizational functions. In these demanding, real-world contexts, the compiler&#x27;s tireless vigilance acts as a stabilizing force, potentially preventing the kind of accumulating complexity that leads to burnout or project abandonment.&lt;&#x2F;p&gt;
+&lt;p&gt;If Rust&#x27;s rigorous checks successfully reduce the frequency and complexity of these later-stage debugging efforts, it creates a more predictable development environment. This stability might, in turn, free up cognitive resources. Instead of being consumed by low-level error hunting, mental energy could potentially be redirected towards higher-level design, creative problem-solving, and leveraging the divergent thinking strengths often associated with ADHD. The structure imposed by Rust, while initially demanding, could ultimately provide a foundation that supports sustained productivity and reduces certain types of cognitive overload common in complex software development.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Conclusion&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Ultimately, there is no single &quot;best&quot; programming language for any cognitive profile. However, understanding the specific ways a language&#x27;s design interacts with cognitive functions like working memory, executive control, and attention regulation is crucial. Rust&#x27;s emphasis on compile-time safety and explicit structure, while presenting initial hurdles, offers a compelling example of how language design choices might inadvertently provide valuable support for managing some of the cognitive challenges associated with ADHD, particularly in the context of complex, long-term software projects. Recognizing these potential alignments allows for more informed choices about the tools that best enable diverse minds to thrive in the demanding field of software engineering.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Asahi illusion on the Fractal!</title>
+        <published>2023-09-30T00:00:00+00:00</published>
+        <updated>2023-09-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/asahi/"/>
+        <id>https://altunenes.github.io/posts/asahi/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/asahi/">&lt;h2 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;While experimenting with shader code, I stumbled upon a fascinating visual phenomenon. When focusing on the center of a particular design, surrounded by colorful petals, the center appears brighter than it actually is.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;DsfyRX?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Dr. Bruno Laeng&#x27;s study unveiled that our brain is deceived into triggering a pupillary light reflex, causing our pupils to constrict as if protecting our eyes from intense light, like the sun&#x27;s rays.&lt;&#x2F;p&gt;
+&lt;p&gt;The Asahi illusion&#x27;s effect on the pupil isn&#x27;t instantaneous. In humans, there&#x27;s a notable delay between the onset of the illusion and the pupillary response. This delay might be attributed to the time required for the brain&#x27;s processing mechanisms to influence the pupillary light reflex.&lt;&#x2F;p&gt;
+&lt;p&gt;Interestingly, the Visual Cortex (V1) seems to play a pivotal role. The V1 response to the Asahi illusion precedes the pupil constriction, suggesting its potential involvement in modulating the Autonomic Nervous System (ANS). However, the exact pathways, be it direct projections or intricate subcortical synapses, remain a topic of ongoing &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;academic.oup.com&#x2F;cercor&#x2F;article&#x2F;33&#x2F;12&#x2F;7952&#x2F;7084649?login=false&quot;&gt;research&lt;&#x2F;a&gt; .&lt;&#x2F;p&gt;
+&lt;p&gt;here is another one I coded after the above one.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;MX23Wz?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;43SGDh?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Note, you can download the asahi illusion demos with using interactive GUI I implemented (easy to change the parameters like colors etc) on here: (I compiled them with Rust :-) &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&quot;&gt;Source code:&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;asahi-demo-downloads&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Asahi Demo Downloads &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;&#x2F;th&gt;&lt;th&gt;Operating System&lt;&#x2F;th&gt;&lt;th&gt;Download Link&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi2&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;macOS&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-macos-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Ubuntu&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-ubuntu-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;td&gt;Windows&lt;&#x2F;td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;rusty_art&#x2F;releases&#x2F;download&#x2F;v1.0.4&#x2F;asahi2-windows-latest.zip&quot;&gt;Download&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+        
+    </entry>
+</feed>

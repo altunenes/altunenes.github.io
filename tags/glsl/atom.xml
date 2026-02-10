@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - GLSL</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/glsl/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-13T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/glsl/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Why Shaders Turn Black: negatives in pow() and sqrt()</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/forbidden/"/>
+        <id>https://altunenes.github.io/posts/forbidden/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/forbidden/">&lt;h2 id=&quot;why-shaders-turn-black-negatives-in-pow-and-sqrt&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Why Shaders Turn Black: negatives in pow() and sqrt()&lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Black pixels appearing in a shader often trace back to a mathematical domain error. The most common sources are the &lt;code&gt;sqrt()&lt;&#x2F;code&gt; and &lt;code&gt;pow()&lt;&#x2F;code&gt; functions when they receive invalid inputs.&lt;&#x2F;p&gt;
+&lt;p&gt;In GLSL, &lt;code&gt;sqrt(x)&lt;&#x2F;code&gt; is undefined if &lt;code&gt;x&lt;&#x2F;code&gt; is negative. Similarly, &lt;code&gt;pow(x, y)&lt;&#x2F;code&gt; is undefined if &lt;code&gt;x&lt;&#x2F;code&gt; is negative and &lt;code&gt;y&lt;&#x2F;code&gt; is not an integer. When asked to perform an undefined operation, most GPUs return &lt;code&gt;NaN&lt;&#x2F;code&gt; (Not a Number). Any further math involving this &lt;code&gt;NaN&lt;&#x2F;code&gt; also results in &lt;code&gt;NaN&lt;&#x2F;code&gt;, and the renderer typically draws these pixels as black. To make matters worse, compilers often won&#x27;t warn you about this potential problem, making the bug difficult to trace in a complex shader.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;visualizing-the-error-and-the-fix&quot;&gt;Visualizing the Error and the Fix&lt;&#x2F;h3&gt;
+&lt;p&gt;The following demos show the problem in action. The left side (red) performs the math naively. The right side (green) uses &lt;code&gt;abs()&lt;&#x2F;code&gt; to prevent errors.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;1. The &lt;code&gt;sqrt()&lt;&#x2F;code&gt; Domain Error&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = sqrt(sin(x))&lt;&#x2F;code&gt;. The gaps on the left show where &lt;code&gt;sin(x)&lt;&#x2F;code&gt; is negative and the math fails.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;W3yXWc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;&lt;strong&gt;2. The &lt;code&gt;pow()&lt;&#x2F;code&gt; Domain Error&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = pow(sin(x), 2.5)&lt;&#x2F;code&gt;. The same issue occurs, breaking the function where the base is negative.&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https:&#x2F;&#x2F;www.shadertoy.com&#x2F;embed&#x2F;33GSDc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;
+&lt;br&gt;
+*&lt;small&gt;Note: If a shader appears broken, try refreshing the page as Shadertoy can sometimes be unstable.&lt;&#x2F;small&gt;*
+&lt;p&gt;This variance across platforms, which can depend on the GPU hardware or its drivers, is a key reason to handle these edge cases proactively with &lt;code&gt;abs()&lt;&#x2F;code&gt; or other methods, as the output is not guaranteed. For example, while most desktop GPUs produce clean gaps, some GPUs (like on an iPhone 6s in the example below) handle the error differently. Notice how the &lt;code&gt;sqrt()&lt;&#x2F;code&gt; error is avoided entirely, but the &lt;code&gt;pow()&lt;&#x2F;code&gt; error still renders artifacts—not as empty gaps, but this time as large black columns!&lt;&#x2F;p&gt;
+&lt;div align=&quot;center&quot; style=&quot;display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;iphone6s_1.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of sqrt shader without gaps&quot;&gt;
+    &lt;img src=&quot;&#x2F;images&#x2F;iphone6s_2.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of pow shader with black columns&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;center&gt;
+*&lt;small&gt;Screenshot from an iPhone 6s: in contrast to modern desktop GPUs, this older mobile hardware appears to fill the gaps in the `sqrt` example, yet produces distinct vertical artifacts for the `pow` function.&lt;&#x2F;small&gt;*
+&lt;&#x2F;center&gt;
+&lt;h3 id=&quot;the-technical-reality-behind-the-error&quot;&gt;The Technical Reality Behind the Error&lt;&#x2F;h3&gt;
+&lt;p&gt;Using &lt;code&gt;abs()&lt;&#x2F;code&gt; fixes the black pixels, but it&#x27;s crucial to understand &lt;em&gt;why&lt;&#x2F;em&gt; the failure occurs to write better code.&lt;&#x2F;p&gt;
+&lt;p&gt;GPUs don&#x27;t calculate powers through repeated multiplication. For performance, they use the mathematical identity: &lt;strong&gt;&lt;code&gt;pow(x, y) = exp2(y * log2(x))&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;(see ref). The failure point is &lt;code&gt;log2(x)&lt;&#x2F;code&gt;. The logarithm of a negative number is undefined in the real number system. Therefore, any negative &lt;code&gt;x&lt;&#x2F;code&gt; passed to &lt;code&gt;pow()&lt;&#x2F;code&gt; causes the internal calculation to fail and produce a &lt;code&gt;NaN&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;While &lt;code&gt;abs()&lt;&#x2F;code&gt; prevents &lt;code&gt;NaN&lt;&#x2F;code&gt;s, it can introduce silent mathematical bugs. Consider &lt;code&gt;(-2)³&lt;&#x2F;code&gt;, which should be &lt;code&gt;-8&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pow(-2.0, 3.0)&lt;&#x2F;code&gt; might fail due to the &lt;code&gt;log&#x2F;exp&lt;&#x2F;code&gt; implementation.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;pow(abs(-2.0), 3.0)&lt;&#x2F;code&gt; will incorrectly return &lt;code&gt;8&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This error can invert lighting or break procedural patterns. When you need to preserve the sign for odd integer powers, the correct pattern is:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span&gt; result &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; pow&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;abs&lt;&#x2F;span&gt;&lt;span&gt;(x)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; y)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; sign&lt;&#x2F;span&gt;&lt;span&gt;(x)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;A conditional check like &lt;code&gt;if (x &amp;gt;= 0.0)&lt;&#x2F;code&gt; might seem safe, but it&#x27;s a performance trap. Branches cause &#x27;thread divergence&#x27; on GPUs, hurting the parallelism that makes them fast. Branchless functions like &lt;code&gt;abs()&lt;&#x2F;code&gt;, &lt;code&gt;max()&lt;&#x2F;code&gt;, and &lt;code&gt;sign()&lt;&#x2F;code&gt; are far more efficient  (see: &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;theorangeduck.com&#x2F;page&#x2F;avoiding-shader-conditionals&quot;&gt;theorangeduck&lt;&#x2F;a&gt;, See: &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;gpuopen.com&#x2F;download&#x2F;GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;3&lt;&#x2F;a&gt;).
+Writing robust shader code means handling these cases smartly. For integer powers, explicit multiplication like &lt;code&gt;x*x&lt;&#x2F;code&gt; is always better than &lt;code&gt;pow(x, 2.0)&lt;&#x2F;code&gt; [1,2]. It&#x27;s faster and avoids the log&#x2F;exp path entirely. To prevent floating-point errors from creating negative inputs later, proactively clamp values with &lt;code&gt;max(value, 0.0)&lt;&#x2F;code&gt; or &lt;code&gt;saturate(value)&lt;&#x2F;code&gt;, especially after operations like &lt;code&gt;dot()&lt;&#x2F;code&gt;.
+Finally, use &lt;code&gt;abs()&lt;&#x2F;code&gt; with care. It&#x27;s a tool for getting a magnitude, not a universal patch. If you need to preserve a negative sign with an odd power, the &lt;code&gt;sign(x) * pow(abs(x), y)&lt;&#x2F;code&gt; pattern is the mathematically correct approach.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References&lt;&#x2F;h3&gt;
+&lt;p&gt;[1] &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;community.khronos.org&#x2F;t&#x2F;pow-x-2-different-then-x-x&#x2F;70839&#x2F;3&quot;&gt;Khronos Forums Discussion: &quot;Pow(x, 2) different then x*x?&quot;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;[2] &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;gpuopen.com&#x2F;learn&#x2F;amd-lab-notes&#x2F;amd-lab-notes-register-pressure-readme&#x2F;&quot;&gt;Register pressure in AMD CDNA2™ GPUs&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;[3] &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;gpuopen.com&#x2F;download&#x2F;GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;ADVANCED SHADER PROGRAMMING ON GCN&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

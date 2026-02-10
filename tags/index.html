@@ -1,0 +1,42 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="width=device-width,initial-scale=1.0" name=viewport><title>
+         altunenes
+        
+    </title><meta content=altunenes property=og:title><meta content="personal blog" property=og:description><meta content="personal blog" name=description><link href=/icon/favicon.png rel=icon type=image/png><link href=https://altunenes.github.io/fonts.css rel=stylesheet><link href=https://altunenes.github.io/atom.xml rel=alternate title=altunenes type=application/atom+xml><link href=https://altunenes.github.io/theme/light.css rel=stylesheet><link href=https://altunenes.github.io/theme/dark.css id=darkModeStyle rel=stylesheet><script src=https://altunenes.github.io/js/themetoggle.js></script><script>setTheme(getSavedTheme());</script><link href=https://altunenes.github.io/main.css media=screen rel=stylesheet><script data-cf-beacon='{"token": "37a0f981a37240aea00b781e300bc6c0"}' defer src=https://static.cloudflareinsights.com/beacon.min.js></script></head><script>// Function to set the theme
+        function setTheme(theme) {
+            document.documentElement.className = theme;
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get the saved theme
+        function getSavedTheme() {
+            return localStorage.getItem('theme') || 'light';
+        }
+
+        // Set the theme on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTheme(getSavedTheme());
+        });</script><body><div class=content><header><div class=main><a href=https://altunenes.github.io/>altunenes</a><div class=socials><a class=social href=https://twitter.com/emportent rel=me> <img alt=x src=https://altunenes.github.io/social_icons/x.svg> </a><a class=social href=https://github.com/altunenes rel=me> <img alt=github src=https://altunenes.github.io/social_icons/github.svg> </a><a href="https://scholar.google.com/citations?user=_OtEw5oAAAAJ&hl" class=social rel=me> <img alt=scholar src=https://altunenes.github.io/social_icons/googlescholar.svg> </a><a class=social href=https://www.linkedin.com/in/enes-altun-0a3076167 rel=me> <img alt=linkedin src=https://altunenes.github.io/social_icons/linkedin.svg> </a><a class=social href=https://www.instagram.com/altunanes/ rel=me> <img alt=instagram src=https://altunenes.github.io/social_icons/instagram.svg> </a><a class=social href=https://orcid.org/0000-0002-6478-6909 rel=me> <img alt=orcid src=https://altunenes.github.io/social_icons/orcid.svg> </a><a class=social href=https://www.shadertoy.com/user/altunenes rel=me> <img alt=shadertoy src=https://altunenes.github.io/social_icons/shadertoy.svg> </a><a class=social href=https://bsky.app/profile/altunenes.bsky.social rel=me> <img alt=bluesky src=https://altunenes.github.io/social_icons/bluesky.svg> </a></div></div><nav><a href=https://altunenes.github.io/posts style=margin-left:.7em>/posts</a><a href=https://altunenes.github.io/projects style=margin-left:.7em>/projects</a><a href=https://altunenes.github.io/about style=margin-left:.7em>/about</a><a href=https://altunenes.github.io/tags style=margin-left:.7em>/tags</a><a href=https://altunenes.github.io/CV style=margin-left:.7em>/CV</a><button aria-label="Toggle dark mode" id=dark-mode-toggle onclick=toggleTheme();><img alt="Light mode" id=sun-icon src=https://altunenes.github.io/feather/sun.svg> <img alt="Dark mode" id=moon-icon src=https://altunenes.github.io/feather/moon.svg></button></nav></header><script>function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    html.classList.remove(currentTheme);
+    html.classList.add(newTheme);
+    
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcons();
+}
+
+function updateThemeToggleIcons() {
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    sunIcon.style.display = isDarkMode ? 'none' : 'inline';
+    moonIcon.style.display = isDarkMode ? 'inline' : 'none';
+}
+
+// Set initial theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.add(savedTheme);
+updateThemeToggleIcons();</script><div class=tag-cloud><div class=page-header>Tags<span class=primary-color style=font-size:1.6em>.</span></div><main class=list><ul class=tags><li><a href=https://altunenes.github.io/tags/adhd/> ADHD (2 posts) </a><li><a href=https://altunenes.github.io/tags/ai/> AI (1 post) </a><li><a href=https://altunenes.github.io/tags/animals/> animals (1 post) </a><li><a href=https://altunenes.github.io/tags/art/> art (1 post) </a><li><a href=https://altunenes.github.io/tags/asahi/> asahi (1 post) </a><li><a href=https://altunenes.github.io/tags/brain/> brain (3 posts) </a><li><a href=https://altunenes.github.io/tags/coding/> coding (1 post) </a><li><a href=https://altunenes.github.io/tags/cognition/> cognition (2 posts) </a><li><a href=https://altunenes.github.io/tags/consciousness/> consciousness (2 posts) </a><li><a href=https://altunenes.github.io/tags/cpu/> CPU (2 posts) </a><li><a href=https://altunenes.github.io/tags/eeg/> eeg (1 post) </a><li><a href=https://altunenes.github.io/tags/experiment/> experiment (1 post) </a><li><a href=https://altunenes.github.io/tags/face/> face (2 posts) </a><li><a href=https://altunenes.github.io/tags/fractal/> fractal (1 post) </a><li><a href=https://altunenes.github.io/tags/gabor/> gabor (3 posts) </a><li><a href=https://altunenes.github.io/tags/glsl/> GLSL (1 post) </a><li><a href=https://altunenes.github.io/tags/gpu/> GPU (3 posts) </a><li><a href=https://altunenes.github.io/tags/gstreamer/> GStreamer (4 posts) </a><li><a href=https://altunenes.github.io/tags/history/> history (1 post) </a><li><a href=https://altunenes.github.io/tags/illusion/> illusion (6 posts) </a><li><a href=https://altunenes.github.io/tags/image/> image (2 posts) </a><li><a href=https://altunenes.github.io/tags/lifetimes/> lifetimes (1 post) </a><li><a href=https://altunenes.github.io/tags/llm/> llm (1 post) </a><li><a href=https://altunenes.github.io/tags/machine-learning/> Machine Learning (1 post) </a><li><a href=https://altunenes.github.io/tags/macos/> macOS (1 post) </a><li><a href=https://altunenes.github.io/tags/math/> math (1 post) </a><li><a href=https://altunenes.github.io/tags/pareidolia/> pareidolia (1 post) </a><li><a href=https://altunenes.github.io/tags/perception/> perception (1 post) </a><li><a href=https://altunenes.github.io/tags/pixels/> Pixels (1 post) </a><li><a href=https://altunenes.github.io/tags/psychology/> psychology (2 posts) </a><li><a href=https://altunenes.github.io/tags/randomness/> Randomness (1 post) </a><li><a href=https://altunenes.github.io/tags/rust/> Rust (7 posts) </a><li><a href=https://altunenes.github.io/tags/shader/> shader (5 posts) </a><li><a href=https://altunenes.github.io/tags/shaders/> shaders (1 post) </a><li><a href=https://altunenes.github.io/tags/shadertoy/> Shadertoy (1 post) </a><li><a href=https://altunenes.github.io/tags/tauri/> Tauri (1 post) </a><li><a href=https://altunenes.github.io/tags/thesis/> thesis (1 post) </a><li><a href=https://altunenes.github.io/tags/thoughts/> thoughts (2 posts) </a><li><a href=https://altunenes.github.io/tags/video/> Video (2 posts) </a><li><a href=https://altunenes.github.io/tags/vision/> vision (8 posts) </a></ul></main></div></div>

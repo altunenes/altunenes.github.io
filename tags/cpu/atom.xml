@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - CPU</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/cpu/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-09T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/cpu/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Randomness: CPU &amp; GPU</title>
+        <published>2025-08-09T00:00:00+00:00</published>
+        <updated>2025-08-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/random/"/>
+        <id>https://altunenes.github.io/posts/random/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/random/">&lt;h4 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Traditional random number generation, common on CPUs in languages, often relies on a sequential process. A generator object holds an internal state, and each request for a number updates that state for the next call. This approach is fundamentally incompatible with the massively parallel nature of GPUs, where thousands of threads need to generate numbers independently and simultaneously. If all threads tried to access and update a single shared state, it would require complex synchronization that would effectively destroy the GPU&#x27;s performance advantage.&lt;&#x2F;p&gt;
+&lt;p&gt;GPUs &quot;solve&quot; this by adopting a &quot;stateless&quot; or functional approach. Instead of updating a state, each thread computes its random number directly by calling a function that scrambles its inputs. In GLSL shaders, a common technique is to use a hash function that takes a thread&#x27;s unique coordinates (&lt;code&gt;gl_FragCoord.xy&lt;&#x2F;code&gt;) and often the current time (&lt;code&gt;iTime&lt;&#x2F;code&gt;: in shadertoy) as input. This ensures every pixel gets a different, independent number on every frame. A simple, widely-used hash function looks like this:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot;&gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; A simple hash function that turns a 2D vector into a pseudo-random float.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; Adding a time input makes it dynamic for animations.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(vec2 &lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; t&lt;&#x2F;span&gt;&lt;span&gt;) {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    vec2 p_with_time &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; p &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(t)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; fract&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sin&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;&#x2F;span&gt;&lt;span&gt;(p_with_time&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;12.9898&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 78.233&lt;&#x2F;span&gt;&lt;span&gt;)))&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 43758.5453&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; You would call it in your main shader code like this:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;&#x2F;&#x2F; (iTime is a standard uniform in environments like Shadertoy)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span&gt; randomValue &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;&#x2F;span&gt;&lt;span&gt;(gl_FragCoord.xy&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span&gt; iTime)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h4 id=&quot;the-real-world-bottleneck&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Real-World Bottleneck&lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;This functional paradigm is a prime example of co-designing an algorithm for its hardware. However, the GPU is not always the faster choice. Performance studies show a clear &quot;crossover point&quot;: for small tasks that require fewer than roughly 10,000 numbers, a modern CPU is often faster due to the overhead of launching a GPU kernel (Askar et al., 2021).
+For larger tasks where the GPU&#x27;s throughput dominates, a second, more surprising bottleneck emerges: data transfer. If the numbers are generated on the GPU but needed by the CPU, the transfer itself can cripple performance. One analysis found that copying the results back to the CPU took, on average, seven times longer than the computation itself (Gregg &amp;amp; Hazelwood, 2011). This highlights a fundamental rule: the highest performance is only achieved when random numbers are both generated and consumed on the same device.&lt;&#x2F;p&gt;
+&lt;p&gt;While a simple hash is great for visual effects, this same &quot;stateless&quot; principle is the foundation of high-performance libraries. They use complex, cryptographically-inspired functions to generate statistically robust and uncorrelated random streams for demanding scientific simulations, an approach detailed in the landmark paper on parallel random numbers by Salmon et al..&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;references&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; References &lt;&#x2F;span&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Askar, T., Shukirgaliyev, B., Lukac, M., &amp;amp; Abdikamalov, E. (2021). Evaluation of Pseudo-Random Number Generation on GPU Cards. Computation, 9(12), 142.&lt;&#x2F;p&gt;
+&lt;p&gt;Salmon, J.K., Moraes, M.A., Dror, R.O., &amp;amp; Shaw, D.E. (2011). Parallel random numbers: As easy as 1, 2, 3. 2011 International Conference for High Performance Computing, Networking, Storage and Analysis (SC), 1-12.&lt;&#x2F;p&gt;
+&lt;p&gt;Gregg, C., &amp;amp; Hazelwood, K.M. (2011). Where is the data? Why you cannot debate CPU vs. GPU performance without the answer. (IEEE ISPASS) IEEE INTERNATIONAL SYMPOSIUM ON PERFORMANCE ANALYSIS OF SYSTEMS AND SOFTWARE, 134-144.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>GStreamer Parallel Video Processing Experiment: Testing Worker Count and Batch Size Trade-offs</title>
+        <published>2025-06-30T00:00:00+00:00</published>
+        <updated>2025-06-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/cpu/"/>
+        <id>https://altunenes.github.io/posts/cpu/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/cpu/">&lt;h2 id=&quot;why-this-matters&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Why This Matters &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;I previously researched parallel video processing, which led to a discussion on the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discourse.gstreamer.org&#x2F;t&#x2F;optimizing-video-frame-processing-with-gstreamer-gpu-acceleration-and-parallel-processing&#x2F;4190&quot;&gt;GStreamer Discourse forums&lt;&#x2F;a&gt;. That work inspired this separate, simplified experiment to isolate and measure CPU parallelism effects in context of video. Since public resources on this topic are limited, I hope these findings offer some insight. Video processing is complex and requires systematic testing to understand performance bottlenecks. This post documents my results from using a heavy, artificial workload to find the trade-offs of adding more worker threads. The full source code is available on &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;altunenes&#x2F;gstreamer-parallelism-study&quot;&gt;GitHub&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Implementation &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The implementation uses a two-phase approach to properly isolate parallel processing effects:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Phase 1 - Frame Extraction&lt;&#x2F;strong&gt;: GStreamer sequentially decodes all video frames into memory, eliminating I&#x2F;O bottlenecks from parallel processing measurement.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Phase 2 - Parallel Processing&lt;&#x2F;strong&gt;: All frames are distributed to worker threads through crossbeam channels. Each worker performs CPU-intensive operations including matrix multiplication and recursive fibonacci calculations.&lt;&#x2F;p&gt;
+&lt;p&gt;Key components:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;GStreamer pipeline for video decoding&lt;&#x2F;li&gt;
+&lt;li&gt;Worker pool with crossbeam channels&lt;&#x2F;li&gt;
+&lt;li&gt;Artificial CPU load simulation (matrix operations + fibonacci)&lt;&#x2F;li&gt;
+&lt;li&gt;Two-phase execution (decode then process)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;div class=&quot;highlight&quot; style=&quot;background: #2b303b; padding: 1em; border-radius: 8px; font-family: &#x27;Fira Code&#x27;, &#x27;Source Code Pro&#x27;, monospace; font-size: 14px; line-height: 1.4;&quot;&gt;
+&lt;pre style=&quot;margin: 0; white-space: pre;&quot;&gt;
+                        &lt;span style=&quot;color: #ff9900;&quot;&gt;PHASE 1: Sequential Frame Extraction&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;┌─────────────┐&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────┐&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;┌───────────────────┐&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Video File  &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span style=&quot;color: #c3e88d;&quot;&gt;─────▶&lt;&#x2F;span&gt;&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; GStreamer      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;&lt;span style=&quot;color: #c3e88d;&quot;&gt;─────▶&lt;&#x2F;span&gt;&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; All Frames in   &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; (MP4)       &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Pipeline       &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; Memory (1440)   &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                        &lt;span style=&quot;color: #61afef;&quot;&gt;└─────────────┘&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────┘&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;└───────────────────┘&lt;&#x2F;span&gt;
+                                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #ff9900;&quot;&gt;PHASE 2: Parallel Processing&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;┌───────────────────────────────────────────────────────────────────┐&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #abb2bf;&quot;&gt;Main Thread: Pre-batches all frames, then sends to channel&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;           &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 1]&lt;&#x2F;span&gt; &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 2]&lt;&#x2F;span&gt; &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch 3]&lt;&#x2F;span&gt; ... &lt;span style=&quot;color: #c3e88d;&quot;&gt;[Batch N]&lt;&#x2F;span&gt;           &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                   &lt;span style=&quot;color: #61afef;&quot;&gt;└──────────────────────────────────┬────────────────────────────────┘&lt;&#x2F;span&gt;
+                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                                      &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;(Crossbeam Channel)&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;┌────────────────────────────────────────────────────────────────────────────────────────────┐&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                               &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;                               &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt;Worker 1&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt; Worker 2&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;       ...   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #89ddff;&quot;&gt;   Worker N&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #ff7b72;&quot;&gt;Metrics&lt;&#x2F;span&gt;       &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;• Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;    • Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;   • Matrix Ops&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #ff7b72;&quot;&gt;Collector&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;• Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;    • Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt; &lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt; &lt;span style=&quot;color: #abb2bf;&quot;&gt;   • Fibonacci&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #abb2bf;&quot;&gt;(Receives)&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;         &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;   &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                         &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;                                  &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+          &lt;span style=&quot;color: #c3e88d;&quot;&gt;└─────────────────────────┼──────────────────────────────────┘&lt;&#x2F;span&gt;
+                                    &lt;span style=&quot;color: #c3e88d;&quot;&gt;│&lt;&#x2F;span&gt;
+                                    &lt;span style=&quot;color: #c3e88d;&quot;&gt;▼&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;┌────────────────────┐&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;     &lt;span style=&quot;color: #ff9900;&quot;&gt;Results &amp;&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;│&lt;&#x2F;span&gt;      &lt;span style=&quot;color: #ff9900;&quot;&gt;Analysis&lt;&#x2F;span&gt;    &lt;span style=&quot;color: #61afef;&quot;&gt;  │&lt;&#x2F;span&gt;
+                               &lt;span style=&quot;color: #61afef;&quot;&gt;└────────────────────┘&lt;&#x2F;span&gt;
+&lt;&#x2F;pre&gt;
+&lt;&#x2F;div&gt;
+&lt;h3 id=&quot;why-crossbeam-channels-with-std-thread&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why Crossbeam Channels with std::thread? &lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;For this experiment I use crossbeam channels with std::thread rather than async&#x2F;await because the workload is purely CPU-bound (matrix operations, fibonacci calculations). Since CPU-intensive tasks don&#x27;t benefit from async&#x27;s cooperative scheduling and would block the thread anyway, dedicated threads provide clearer measurement of CPU resource contention without introducing async runtime scheduling as a confounding variable in our worker count and batch size analysis.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;test-configuration&quot;&gt;Test Configuration&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Hardware: MacBook Air M3, 16GB RAM&lt;&#x2F;li&gt;
+&lt;li&gt;Video: Big Buck Bunny 60-second clip (1440 frames, MIT licensed)&lt;&#x2F;li&gt;
+&lt;li&gt;CPU Load: Matrix operations + recursive fibonacci calculations&lt;&#x2F;li&gt;
+&lt;li&gt;Batch Sizes Tested: 4, 10, 20 frames per batch&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;worker-count-results-optimal-batch-size&quot;&gt;Worker Count Results (Optimal Batch Size)&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;em&gt;Total Time = complete processing duration, Efficiency = speedup&#x2F;workers, Contention = resource competition level&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Workers&lt;&#x2F;th&gt;&lt;th&gt;Total Time&lt;&#x2F;th&gt;&lt;th&gt;Avg Frame Time&lt;&#x2F;th&gt;&lt;th&gt;Speedup&lt;&#x2F;th&gt;&lt;th&gt;Efficiency&lt;&#x2F;th&gt;&lt;th&gt;Best Batch&lt;&#x2F;th&gt;&lt;th&gt;Contention&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;21.8s&lt;&#x2F;td&gt;&lt;td&gt;14.4ms&lt;&#x2F;td&gt;&lt;td&gt;1.00x&lt;&#x2F;td&gt;&lt;td&gt;100%&lt;&#x2F;td&gt;&lt;td&gt;N&#x2F;A&lt;&#x2F;td&gt;&lt;td&gt;-&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;11.3s&lt;&#x2F;td&gt;&lt;td&gt;15.1ms&lt;&#x2F;td&gt;&lt;td&gt;1.94x&lt;&#x2F;td&gt;&lt;td&gt;97%&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;Low&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;7.4s&lt;&#x2F;td&gt;&lt;td&gt;19.9ms&lt;&#x2F;td&gt;&lt;td&gt;2.96x&lt;&#x2F;td&gt;&lt;td&gt;74%&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;8.8s&lt;&#x2F;td&gt;&lt;td&gt;35.7ms&lt;&#x2F;td&gt;&lt;td&gt;2.48x&lt;&#x2F;td&gt;&lt;td&gt;41%&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;7.2s&lt;&#x2F;td&gt;&lt;td&gt;39.0ms&lt;&#x2F;td&gt;&lt;td&gt;3.02x&lt;&#x2F;td&gt;&lt;td&gt;38%&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;Medium&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;batch-size-impact-analysis&quot;&gt;Batch Size Impact Analysis&lt;&#x2F;h2&gt;
+&lt;p&gt;The batch size significantly affects performance, with different optimal points for different worker counts:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Each cell shows total completion time in seconds for that worker&#x2F;batch combination&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Workers&lt;&#x2F;th&gt;&lt;th&gt;Batch 4&lt;&#x2F;th&gt;&lt;th&gt;Batch 10&lt;&#x2F;th&gt;&lt;th&gt;Batch 20&lt;&#x2F;th&gt;&lt;th&gt;Optimal&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;22.02s&lt;&#x2F;td&gt;&lt;td&gt;21.80s&lt;&#x2F;td&gt;&lt;td&gt;21.99s&lt;&#x2F;td&gt;&lt;td&gt;Any&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;11.74s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;11.25s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;12.05s&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;9.71s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;7.37s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;9.39s&lt;&#x2F;td&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;9.22s&lt;&#x2F;td&gt;&lt;td&gt;8.93s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;8.77s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;8.14s&lt;&#x2F;td&gt;&lt;td&gt;7.22s&lt;&#x2F;td&gt;&lt;td&gt;&lt;strong&gt;7.19s&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;key-findings&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Key Findings &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The results from the experiment show a clear trade-off between speed and efficiency:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Fastest Time vs. Optimal Efficiency&lt;&#x2F;strong&gt;: The absolute fastest time was &lt;strong&gt;7.2s with 8 workers&lt;&#x2F;strong&gt;. However, the most efficient configuration was &lt;strong&gt;4 workers&lt;&#x2F;strong&gt;, which completed the task in &lt;strong&gt;7.4s&lt;&#x2F;strong&gt;. This setup provided 74% efficiency, representing a better balance of speed and resource use.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Performance Regression at 6 Workers&lt;&#x2F;strong&gt;: Adding workers beyond 4 proved counterproductive. Performance degraded when moving from 4 workers (7.4s) to 6 workers (8.8s), indicating that the costs of thread management and resource contention outweighed the benefits of more threads.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size Scaling&lt;&#x2F;strong&gt;: The optimal batch size increased with the worker count. Configurations with 2-4 workers performed best with a batch size of 10, while 6-8 workers required a larger batch size of 20 to reduce coordination overhead.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size Impact&lt;&#x2F;strong&gt;: Using a non-optimal batch size caused significant performance loss. With 4 workers, a batch size of 4 resulted in a 9.7s completion time, over 30% slower than the 7.4s achieved with the optimal batch size of 10.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;batch-size-effects-in-this-test&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Batch Size Effects in This Test &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Within this specific implementation, batch size optimization shows clear patterns:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Single Worker Baseline&lt;&#x2F;strong&gt;: Batch size has minimal impact on single-threaded performance (21.8s-22.0s), confirming that batch size effects are purely parallel processing artifacts.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Small Worker Counts (2-4)&lt;&#x2F;strong&gt;: Batch size 10 provides optimal balance. Smaller batches (4) create excessive context switching overhead, while larger batches (20) may cause load imbalance.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Large Worker Counts (6-8)&lt;&#x2F;strong&gt;: Batch size 20 performs best, likely due to better cache locality and reduced coordination overhead among many workers.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Load Balancing&lt;&#x2F;strong&gt;: With 1440 frames, batch size 4 creates 360 batches (good distribution), batch size 10 creates 144 batches, and batch size 20 creates 72 batches. Fewer workers benefit from more batches for better load distribution.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Memory Context&lt;&#x2F;strong&gt;: Each test loads 1.26 GB of frame data into memory, which fits comfortably within the 16GB system RAM, eliminating memory pressure as a confounding factor.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-s-happening-in-this-test&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  What&#x27;s Happening in This Test &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Within the context of this specific implementation, the two-phase approach isolates parallel processing effects from video I&#x2F;O bottlenecks. The test results show a performance cliff at 6+ workers where resource contention appears to overwhelm parallelization benefits.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The 4-Worker Measurement&lt;&#x2F;strong&gt;: Up to 4 workers in this test, I observe scaling with moderate frame time increases (14.4ms → 19.9ms). CPU cores appear to work with manageable cache and memory bandwidth competition in this workload.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The 6-Worker Measurement&lt;&#x2F;strong&gt;: At 6 workers in this test, frame processing time nearly doubles (36.0ms), suggesting resource saturation. This may indicate the CPU cannot efficiently feed all workers in this specific scenario.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;8-Worker Recovery&lt;&#x2F;strong&gt;: While 8 workers recovered slightly (7.2s vs 8.8s for 6 workers), the measured efficiency remained low (38%) in this test configuration.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-takeaway&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;  The Takeaway &lt;&#x2F;span&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;This experiment shows that for this specific workload on an M3 MacBook Air, the optimal solution requires tuning both worker count and batch size together.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Worker Count&lt;&#x2F;strong&gt;: While &lt;strong&gt;8 workers&lt;&#x2F;strong&gt; produced the fastest result (7.2s), &lt;strong&gt;4 workers&lt;&#x2F;strong&gt; gave a nearly identical speed (7.4s) with far greater efficiency (74% vs 38%). For practical purposes, 4 workers is the better configuration.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Batch Size&lt;&#x2F;strong&gt;: The best batch size changes with the worker count. Smaller worker pools (2-4) were fastest with a batch size of 10, while larger pools (6-8) needed a larger batch size of 20 to perform well.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Combined Optimization&lt;&#x2F;strong&gt;: The interaction between these two parameters is critical and can account for performance swings of 30% or more, making it essential to test and tune them together.&lt;&#x2F;p&gt;
+&lt;p&gt;Note: These results are specific to this implementation, hardware, and workload type. Different applications, algorithms, or hardware configurations may show different optimal points. The batch size effects will vary significantly based on task granularity and data access patterns.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
