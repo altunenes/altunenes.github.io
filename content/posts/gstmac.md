@@ -5,9 +5,9 @@ date = "2025-09-02"
 tags=["GStreamer", "macOS", "Rust"]
 +++
 
-## <span style="color:orange;">How We Fixed macOS GStreamer Library Path Issues in Rust Releases</span>
+## <span style="color:orange;">How I Fixed macOS GStreamer Library Path Issues in Rust Releases</span>
 
-I spent way too many hours debugging why our Rust app worked fine in development but kept crashing on macOS release builds due to GStreamer library conflicts. Users would see this error when double-clicking the app:
+Very short post but I spent way too many hours debugging why our Rust app worked fine in development but kept crashing on macOS release builds due to GStreamer library conflicts. Users would see this error when double-clicking the app:
 
 ```bash
   objc[43583]: Class GstCocoaApplicationDelegate is implemented in both
