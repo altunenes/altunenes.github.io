@@ -5,6 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {# Host check: everything third-party below is gated on this flag, so a forked  #}
+    {# copy of this repo builds and works but stays out of my analytics/comments.   #}
+    {% set canonical_host = config.extra.canonical_host | default(value="") %}
+    <script>
+        window.siteIsCanonicalHost = {% if canonical_host %}location.hostname === "{{ canonical_host }}"{% else %}true{% endif %};
+        if (!window.siteIsCanonicalHost) {
+            // This is a copy, not the original: ask crawlers to index the canonical URL instead.
+            var robotsMeta = document.createElement('meta');
+            robotsMeta.name = 'robots';
+            robotsMeta.content = 'noindex, nofollow';
+            document.head.appendChild(robotsMeta);
+        }
+    </script>
+
+    {# Canonical URL, so search engines credit the original site for the content #}
+    {% if current_url is defined %}
+        <link rel="canonical" href="{{ current_url | safe }}" />
+    {% endif %}
+
     {% if page.extra.meta %}
          <!-- the meta data config goes here  -->
          {% for data in page.extra.meta %}
@@ -85,6 +104,7 @@
 
             <script>
                 (function () {
+                  if (!window.siteIsCanonicalHost) return;
                   var el = document.createElement('script');
                   el.setAttribute('src', '/js/imamu.js');
                   el.setAttribute('data-website-id', '{{ website_id }}');
@@ -92,14 +112,22 @@
                   document.body.appendChild(el);
                 })();
               </script>
-            <script async src="/js/imamu.js" data-website-id="{{ website_id }}" data-host-url="{{ host_url }}"></script>
         {% endif %}
 
         {% if config.extra.analytics.goatcounter.user %}
             {% set user = config.extra.analytics.goatcounter.user %}
             {% set host = config.extra.analytics.goatcounter.host | default(value="goatcounter.com") %}
 
-            <script data-goatcounter="https://{{ user }}.{{ host }}/count" async src="{{ get_url(path="js/count.js") }}"></script>
+            <script>
+                (function () {
+                  if (!window.siteIsCanonicalHost) return;
+                  var el = document.createElement('script');
+                  el.async = true;
+                  el.setAttribute('data-goatcounter', 'https://{{ user }}.{{ host }}/count');
+                  el.setAttribute('src', '{{ get_url(path="js/count.js") }}');
+                  document.head.appendChild(el);
+                })();
+            </script>
             <noscript>
                 {# EasyList blocks '.com/count?', so we have to use '.com//count' #}
                 <img src="https://{{ user }}.{{ host }}//count?p={{ current_path }}&t={{ page.title | default(value=config.title) }}">
@@ -165,5 +193,16 @@
             <link rel="stylesheet" href="{{ get_url(path=stylesheet) }}">
         {% endfor %}
     {% endif %}
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "37a0f981a37240aea00b781e300bc6c0"}'></script>
+    {# Cloudflare Web Analytics, injected only on the canonical host #}
+    {% if config.extra.analytics.cloudflare.token %}
+        <script>
+            if (window.siteIsCanonicalHost) {
+                var cfBeacon = document.createElement('script');
+                cfBeacon.defer = true;
+                cfBeacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+                cfBeacon.setAttribute('data-cf-beacon', '{"token": "{{ config.extra.analytics.cloudflare.token }}"}');
+                document.head.appendChild(cfBeacon);
+            }
+        </script>
+    {% endif %}
 </head>

@@ -18,6 +18,7 @@ theme = "ayu-dark"
 toc = true
 use_cdn = false
 favicon = "/icon/favicon.png"
+canonical_host = "altunenes.github.io"
 theme = "toggle"              # light, dark, auto, toggle
 comment = true
 # mathjax = true
@@ -50,12 +51,15 @@ custom_css = []
 enabled = false
 
 [extra.analytics.goatcounter]
-user = "your_user"
-host = "example.com" # default= goatcounter.com
+user = ""
+host = "" # default= goatcounter.com
 
 [extra.analytics.umami]
-website_id = "43929cd1-1e83...."
-host_url = "https://stats.mywebsite.com" # default: https://analytics.eu.umami.is
+website_id = ""
+host_url = "" # default: https://analytics.eu.umami.is
+
+[extra.analytics.cloudflare]
+token = "37a0f981a37240aea00b781e300bc6c0"
 
 [extra.giscus]
 repo = "altunenes/altunenes.github.io"
