@@ -176,6 +176,18 @@ because I think it's a neat idea more people should play with, and because the
 same pipeline will drive things like a wall of fire later, where hard directional
 geometry is exactly what you want.
 
+
+<div align="center">
+
+<video width="100%" controls loop playsinline aria-label="Flame wall in Willcaster made with the same compute gen mesh tech.">
+  <source src="/videos/des.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+Flame wall in Willcaster made with the same compute gen mesh tech.
+*THIS IS FINE.*
+
+</div>
+
 ## <span style="color:orange;"> Why bother </span>
 
 The game didn't need any of this. The first flame was fine. But the grass pipeline

@@ -8,18 +8,20 @@
         el.async = true;
         el.crossOrigin = 'anonymous';
 
+        {# json_encode|safe, not '{{ ... }}': inside a <script> Tera would HTML-escape #}
+        {# the "/" in the repo name to &#x2F;, and the HTML parser never decodes it there. #}
         var attrs = {
-            'data-repo': '{{ config.extra.giscus.repo }}',
-            'data-repo-id': '{{ config.extra.giscus.repo_id }}',
-            'data-category': '{{ config.extra.giscus.category }}',
-            'data-category-id': '{{ config.extra.giscus.category_id }}',
-            'data-mapping': '{{ config.extra.giscus.mapping }}',
-            'data-strict': '{{ config.extra.giscus.strict }}',
-            'data-reactions-enabled': '{{ config.extra.giscus.reactions_enabled }}',
-            'data-emit-metadata': '{{ config.extra.giscus.emit_metadata }}',
-            'data-input-position': '{{ config.extra.giscus.input_position }}',
-            'data-theme': '{{ config.extra.giscus.theme }}',
-            'data-lang': '{{ config.extra.giscus.lang }}'
+            'data-repo': {{ config.extra.giscus.repo | json_encode | safe }},
+            'data-repo-id': {{ config.extra.giscus.repo_id | json_encode | safe }},
+            'data-category': {{ config.extra.giscus.category | json_encode | safe }},
+            'data-category-id': {{ config.extra.giscus.category_id | json_encode | safe }},
+            'data-mapping': {{ config.extra.giscus.mapping | json_encode | safe }},
+            'data-strict': {{ config.extra.giscus.strict | json_encode | safe }},
+            'data-reactions-enabled': {{ config.extra.giscus.reactions_enabled | json_encode | safe }},
+            'data-emit-metadata': {{ config.extra.giscus.emit_metadata | json_encode | safe }},
+            'data-input-position': {{ config.extra.giscus.input_position | json_encode | safe }},
+            'data-theme': {{ config.extra.giscus.theme | json_encode | safe }},
+            'data-lang': {{ config.extra.giscus.lang | json_encode | safe }}
         };
         Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
 

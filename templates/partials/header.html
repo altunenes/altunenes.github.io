@@ -107,8 +107,8 @@
                   if (!window.siteIsCanonicalHost) return;
                   var el = document.createElement('script');
                   el.setAttribute('src', '/js/imamu.js');
-                  el.setAttribute('data-website-id', '{{ website_id }}');
-                  el.setAttribute('data-host-url', '{{ host_url }}');
+                  el.setAttribute('data-website-id', {{ website_id | json_encode | safe }});
+                  el.setAttribute('data-host-url', {{ host_url | json_encode | safe }});
                   document.body.appendChild(el);
                 })();
               </script>
@@ -124,7 +124,7 @@
                   var el = document.createElement('script');
                   el.async = true;
                   el.setAttribute('data-goatcounter', 'https://{{ user }}.{{ host }}/count');
-                  el.setAttribute('src', '{{ get_url(path="js/count.js") }}');
+                  el.setAttribute('src', {{ get_url(path="js/count.js") | json_encode | safe }});
                   document.head.appendChild(el);
                 })();
             </script>
