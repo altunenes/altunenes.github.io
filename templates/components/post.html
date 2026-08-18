@@ -1,6 +1,12 @@
-{% macro list_title(pages, tag_name=false) %}
+{% component post.page_header(title: string) %}
+    <div class="page-header">
+        {{ title }}<span class="primary-color" style="font-size: 1.6em">.</span>
+    </div>
+{% endcomponent post.page_header %}
+
+{% component post.list_title(pages: array, tag_name: string = "") %}
     {% if tag_name %}
-        <h1>Entries tagged - "{{ term.name }}"</h1>
+        <h1>Entries tagged - "{{ tag_name }}"</h1>
     {% else %}
         <h1 class="page-title">All articles</h1>
     {% endif %}
@@ -13,9 +19,9 @@
             </li>
         {% endfor %}
     </ul>
-{% endmacro list_title %}
+{% endcomponent post.list_title %}
 
-{% macro list_posts(pages) %}
+{% component post.list_posts(pages: array) %}
 <ul>
     {%- for page in pages %}
     <li class="list-item">
@@ -53,9 +59,9 @@
   </li>
     {% endfor -%}
 </ul>
-{% endmacro list_posts %}
+{% endcomponent post.list_posts %}
 
-{% macro list_terms(terms) %}
+{% component post.list_terms(terms: array) %}
     <ul>
     {%- for term in terms %}
         <section class="list-item">
@@ -66,10 +72,10 @@
 
     {% endfor -%}
     </ul>
-{% endmacro list_terms %}
+{% endcomponent post.list_terms %}
 
-{% macro tags(page, short=false) %}
-    {%- if page.taxonomies and page.taxonomies.tags %}
+{% component post.tags(page: map, short: bool = false) %}
+    {%- if page.taxonomies?.tags %}
         <span class="post-tags-inline">
             {%- if short %}
                 ::
@@ -84,20 +90,14 @@
             {% endfor -%}
         </span>
     {% endif -%}
-{% endmacro tags %}
+{% endcomponent post.tags %}
 
-{% macro page_header(title) %}
-    <div class="page-header">
-        {{ title }}<span class="primary-color" style="font-size: 1.6em">.</span>
-    </div>
-{% endmacro content %}
-
-{% macro content(page) %}
+{% component post.content(page: map, config: map) %}
 <main>
     <article>
         <div class="title">
             {#<h1 class="title">{{ page.title }}</h1>#}
-            {{ post_macros::page_header(title=page.title) }}
+            {{<post.page_header title={page.title} />}}
 
                 <div class="meta">
                     {% if page.date %}
@@ -110,7 +110,7 @@
                 </div>
         </div>
 
-        {% if page.extra.tldr %}
+        {% if page.extra?.tldr %}
             <div class="tldr">
                 <strong>tl;dr:</strong>
                 {{ page.extra.tldr }}
@@ -118,7 +118,7 @@
         {% endif %}
 
         {# Optional table of contents #}
-        {% if config.extra.toc | default(value=false) %}
+        {% if config.extra?.toc | default(value=false) %}
             {% if page.toc %}
                 <h1>Table of Contents</h1>
                 <ul>
@@ -154,7 +154,7 @@
             {{ page.content | safe }}
         </section>
 
-        {% if page.taxonomies and page.taxonomies.tags %}
+        {% if page.taxonomies?.tags %}
             <div class="post-tags">
                 <nav class="nav tags">
                     <ul class="tags">
@@ -181,15 +181,15 @@
 
     </article>
 </main>
-{% endmacro content %}
+{% endcomponent post.content %}
 
-{% macro cards_posts(pages) %}
+{% component post.cards_posts(pages: array) %}
     <div class="cards">
     {%- for page in pages %}
         <div class="card">
-            {% if page.extra.local_image %}
+            {% if page.extra?.local_image %}
                 <img class="card-image" alt={{ page.extra.local_image }} src="{{ get_url(path=page.extra.local_image) }}" />
-            {% elif page.extra.remote_image %}
+            {% elif page.extra?.remote_image %}
                 <img class="card-image" alt={{ page.extra.remote_image }} src="{{ page.extra.remote_image }}" />
             {% else %}
                 <div class="card-image-placeholder"></div>
@@ -197,7 +197,7 @@
 
             <div class="card-info">
                 <h1 class="card-title">
-                    {% if page.extra.link_to %}
+                    {% if page.extra?.link_to %}
                     <a href={{ page.extra.link_to }}>{{page.title}}</a>
                     {% else %}
                     <a href={{ page.permalink }}>{{page.title}}</a>
@@ -216,11 +216,11 @@
                 <div class="card-description">
                     {% if page.description %}
                         {{ page.description }}
-                    {% endif %} 
+                    {% endif %}
                 </div>
             </div>
         </div>
 
     {% endfor -%}
     </div>
-{% endmacro cards_posts %}
+{% endcomponent post.cards_posts %}

@@ -1,5 +1,3 @@
-{% import "macros/macros.html" as post_macros %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +28,7 @@
             Nothing here?!
         {% endblock main_content %}
         
-        {% if page and page.ancestors %}
+        {% if page?.ancestors %}
             {% set is_post = false %}
             {% for ancestor in page.ancestors %}
                 {% if "posts" in ancestor %}
@@ -39,7 +37,7 @@
             {% endfor %}
             
             {% if is_post %}
-                {% if page.extra.comment is defined %}
+                {% if page.extra?.comment is defined %}
                     {% set show_comment = page.extra.comment %}
                 {% else %}
                     {% set show_comment = config.extra.comment %}
