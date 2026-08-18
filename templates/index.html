@@ -2,5 +2,5 @@
 
 {% block main_content %}
     {% set page = get_page(path="about.md") %}
-    {{ post_macros::content(page=page) }}
+    {{<post.content page={page} config={config} />}}
 {% endblock main_content %}
