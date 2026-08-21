@@ -208,13 +208,12 @@ the submerged walls running away from you. The real pit floor is down there
 somewhere but the water is opaque, so nobody has ever seen it.
 
 <div align="center">
-
-| ![The pool from a low angle](/images/pool_low.png)|
-|:-:|
-| *The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that's modelled.*|
-
+  <div style="display: flex; gap: 8px; justify-content: center;">
+    <img src="/images/pool_low.png" alt="The pool from a low angle" style="width: 49%; height: auto;" />
+    <img src="/images/flat.png" alt="Flat view" style="width: 49%; height: auto;" />
+  </div>
+  <p><em>The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that's modelled.</em></p>
 </div>
-
 The ray gets refracted before the intersection runs, which the demo never bothers
 with. One `refract()`, costs nothing, and it ties the depth to the wave normal, so
 the bed swims a little as ripples cross it. That's most of what makes it read as
