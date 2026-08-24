@@ -13,7 +13,7 @@ sphere. I wanted to know exactly how much code that took, so I rebuilt it in
 ShaderToy and then kept going until it was a tunnel instead of a ball.
 
 The finished thing is [here](https://www.shadertoy.com/view/Ncy3W1), and there's a
-video walkthrough if you'd rather watch me type it:
+video walkthrough if you'd rather watch me type it but I realized I'm very bad at video editing/voiceover stuff so the blogged version is easier to extract information from.
 
 <div align="center">
 
@@ -33,7 +33,7 @@ Everything in the scene is one box intersection. Here's the half-size:
 #define W vec3(1.3,1.3,.02)
 ```
 
-That Z is the whole joke. Two hundredths of a unit. Set it to `1.` and you get an
+That Z is the whole thingiy. Two hundredths of a unit. Set it to `1.` and you get an
 actual cube, orbiting like a normal object, and it becomes obvious that nothing
 clever is happening to the geometry at any point. It's a box. We squashed it.
 
@@ -208,12 +208,13 @@ the submerged walls running away from you. The real pit floor is down there
 somewhere but the water is opaque, so nobody has ever seen it.
 
 <div align="center">
-  <div style="display: flex; gap: 8px; justify-content: center;">
-    <img src="/images/pool_low.png" alt="The pool from a low angle" style="width: 49%; height: auto;" />
-    <img src="/images/flat.png" alt="Flat view" style="width: 49%; height: auto;" />
-  </div>
-  <p><em>The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that's modelled.</em></p>
+
+| ![The pool from a low angle](/images/top.png)|
+|:-:|
+| *The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that's modelled.*|
+
 </div>
+
 The ray gets refracted before the intersection runs, which the demo never bothers
 with. One `refract()`, costs nothing, and it ties the depth to the wave normal, so
 the bed swims a little as ripples cross it. That's most of what makes it read as
@@ -243,18 +244,47 @@ it and never gets a wall. Shrinking the box to one tile is wrong the other way:
 with the gain above the ray is shallow enough that a wall's footprint is wider
 than a tile, so any tile touching stone goes solid.
 
-What works is noticing that a slab test only ever asks how far the wall is along X
-and along Z. So that's what each tile stores. Four distances, found by walking the
-grid until the water stops. Not an approximation of the pool's shape, just the
-answer to the only question being asked.
+So each tile stores four distances instead, found by walking the grid until the
+water stops. A slab test only ever asks how far the wall is along X and along Z,
+and that's the answer to exactly that question, whatever shape the pool is.
+
+Which is right about the banks and still wrong as a surface. Neighbouring tiles
+now march into different boxes, so the depth, the wall fade and the floor/wall
+split all step at the tile boundary, and an L reads as a hard seam across open
+water. A per tile box cannot describe a non convex pool consistently; that isn't
+tuning, it's the representation.
+
+So the march went back to one box per pool, the option I'd just called obvious and
+wrong, because a notch that the stone bank mostly stands in front of beats a seam
+that's visible from every angle. The four distances didn't go away, though. They
+turned out to be answering a different question: not "what box do I march" but
+"how far is the stone"??, which is what the shore gradient, the shallow lip and the
+waterline foam are all keyed off. Two values, because they were never one.
 
 <div align="center">
 
-| ![The pool from the game camera](/images/pool_topdown.png)|
+| ![Looking down into the pool](/images/direct.png)|
 |:-:|
-| *The angle the game runs at. Caustics, waves and silt are separate layers on top; the depth under them is the slab test.*|
+| *Straight down into it. Caustics, waves and silt are separate layers on top; the depth under them is the slab test.*|
 
 </div>
+
+A painted texture would survive most frames in this post. It wouldn't survive that
+one. The wall and floor junctions slide against each other at different rates as
+the camera moves, because they're being intersected rather than drawn.
+
+Then drop the camera to the waterline and the mesh gives itself away.
+
+<div align="center">
+
+| ![The water plane seen almost edge on](/images/thin.png)|
+|:-:|
+| *Almost edge on. That plate is the entire mesh.*|
+
+</div>
+
+Everything behind it is still solving. Still one quadratic per pixel, in a frame
+where you can see exactly how little geometry is doing the work.
 
 Two limits worth being honest about. It's per-face, so only the face you mapped
 has the hole, and the depth is fake, so nothing intersects or occludes it correctly
