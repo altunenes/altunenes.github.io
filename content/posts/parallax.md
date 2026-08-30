@@ -190,6 +190,21 @@ it's still one draw call no matter how many faces you point it at. Cost is one
 quadratic per pixel, and it doesn't care whether the tunnel is one unit deep or a
 thousand, which is the part that makes it worth knowing.
 
+The same three lines work on anything you can hang behind a plane. Here's the
+tunnel swapped for a [tank of water](https://www.shadertoy.com/view/NfVSRy):
+one `refract()` before the intersection, a box instead of a cylinder, and the
+caustics fall out of the refraction Jacobian rather than a scrolling texture.
+
+<div align="center">
+
+<video width="100%" controls loop playsinline aria-label="water pool: interior mapping">
+  <source src="/videos/blue.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
+
+
 I put it in a game, so here's what actually changed.
 
 [Willcaster](https://store.steampowered.com/app/4953880/Willcaster/) is a grid roguelike, and its swamp rooms have pools cut
