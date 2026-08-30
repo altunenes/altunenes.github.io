@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - shaders</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/shaders/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-08-18T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/shaders/atom.xml</id>
+    <entry xml:lang="en">
+        <title>A hole that isn&#39;t there: faking infinite depth on a flat quad</title>
+        <published>2026-08-18T00:00:00+00:00</published>
+        <updated>2026-08-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/parallax/"/>
+        <id>https://altunenes.github.io/posts/parallax/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/parallax/">&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https://x.com/cmzw_/status/2082071045113299155&quot;&gt;celestialmaze&lt;/a&gt; posted a clip of a
+Unity scene: a checkered plane with a sphere sunk into it, and when the camera
+swung round to the side, the whole thing folded up into nothing. Flat quad. No
+sphere. I wanted to know exactly how much code that took, so I rebuilt it in
+ShaderToy and then kept going until it was a tunnel instead of a ball.&lt;/p&gt;
+&lt;p&gt;The finished thing is &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/Ncy3W1&quot;&gt;here&lt;/a&gt;, and there&#39;s a
+video walkthrough if you&#39;d rather watch me type it but I realized I&#39;m very bad at video editing/voiceover stuff so the blogged version is easier to extract information from.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/RuKsBPs2FNM?si=yM8P_pof-YM3AfWR&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; referrerpolicy=&quot;strict-origin-when-cross-origin&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;The technique has a name, interior mapping, and it&#39;s old. People use it for
+building windows: one quad on a facade, and behind every window there&#39;s a room
+that doesn&#39;t exist. The version here is the same idea pointed at a hole.&lt;/p&gt;
+&lt;h2 id=&quot;the-quad-is-a-box&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The quad is a box &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Everything in the scene is one box intersection. Here&#39;s the half-size:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;#define&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; W vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.02&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That Z is the whole thingiy. Two hundredths of a unit. Set it to &lt;code&gt;1.&lt;/code&gt; and you get an
+actual cube, orbiting like a normal object, and it becomes obvious that nothing
+clever is happening to the geometry at any point. It&#39;s a box. We squashed it.&lt;/p&gt;
+&lt;p&gt;The intersection is the standard slab test, which packs down to three lines
+because you can do both slabs at once:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;d)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;W&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span&gt;o&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;d&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; q&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;i&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(q.x&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.y)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.z)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;min&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;min&lt;/span&gt;&lt;span&gt;((j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).x&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;(j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).y)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;(j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).z)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;s&lt;/code&gt; is the near hit, &lt;code&gt;h&lt;/code&gt; is the far one. And the face normal falls out of the same
+values without a branch anywhere:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    n&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;sign&lt;/span&gt;&lt;span&gt;(d)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;step&lt;/span&gt;&lt;span&gt;(q.yzx&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;step&lt;/span&gt;&lt;span&gt;(q.zxy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Whichever axis won that &lt;code&gt;max&lt;/code&gt; is the axis you hit. &lt;code&gt;sign&lt;/code&gt; gives you which side of
+it. Two &lt;code&gt;step&lt;/code&gt;s and a multiply, no &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;punching-the-hole&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Punching the hole &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Front face, inside a radius, paint it black:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;        if&lt;/span&gt;&lt;span&gt;(n.z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.5&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;p.xy)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span&gt;r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;r)&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            c&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note the &lt;code&gt;dot&lt;/code&gt; against itself rather than &lt;code&gt;length&lt;/code&gt; under &lt;code&gt;r&lt;/code&gt;. Same test, and you
+skip the square root. Small thing, but this shader ends up being mostly small
+things.&lt;/p&gt;
+&lt;p&gt;At this point you have a black circle that does absolutely nothing when you orbit.
+It&#39;s a sticker. It&#39;s also, structurally, already finished: every remaining line in
+this post is about what to put inside that &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_1.png&quot; alt=&quot;A checkered quad floating above a dark grid, with a solid black ellipse punched out of its middle.&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The &lt;code&gt;if&lt;/code&gt; fires, nothing fills it. A sticker on a quad: orbit the camera and the black moves with the surface.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;the-handoff&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The handoff &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Here&#39;s the part worth the post.&lt;/p&gt;
+&lt;p&gt;Instead of shading that circle, you take the point where the ray hit it and treat
+it as a &lt;strong&gt;new ray origin&lt;/strong&gt;. Same direction, new starting point. The surface catches
+the ray and lets it keep travelling into a volume that only exists in the shader.&lt;/p&gt;
+&lt;p&gt;What it travels into is an infinite cylinder, solved in XY only, because Z is
+unconstrained down a straight bore:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(d.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;d.xy)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;d.xy)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sqrt&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;(r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;p.xy)))))&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(s&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;e&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;6&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            q&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;p&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;d&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;d.z&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Textbook quadratic. The only thing to be careful about is which root you take:
+you&#39;re starting &lt;em&gt;inside&lt;/em&gt; the cylinder, so one root is ahead of you and one is
+behind. Flip that &lt;code&gt;+sqrt&lt;/code&gt; to &lt;code&gt;-sqrt&lt;/code&gt; and the whole image turns itself inside out,
+which is a good sanity check and also fun to watch.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;z&lt;/code&gt; is then just how far down the bore you landed, and that single number does all
+the remaining work.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;max(s,1e-6)&lt;/code&gt; matters more than it looks like it does. Rays aimed straight down
+the axis have &lt;code&gt;d.xy&lt;/code&gt; near zero (the vanishing point, dead centre of the screen),
+and without the guard you get a NaN pixel sitting right where everyone&#39;s looking.&lt;/p&gt;
+&lt;p&gt;Texture it by angle and depth and you&#39;ve got a tunnel that parallaxes properly:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            c&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;mix&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.06&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.065&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.08&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.85&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.88&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.94&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;                  ck&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec2&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;atan&lt;/span&gt;&lt;span&gt;(q.y&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.x)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.1416&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;8.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.&lt;/span&gt;&lt;span&gt;)))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;two-problems-one-variable&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Two problems, one variable &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;That version looks wrong in two specific ways.&lt;/p&gt;
+&lt;p&gt;First, the checker cells shrink as they run toward infinity, and once they&#39;re
+smaller than a pixel the centre turns into shimmering garbage. No mipmaps here to
+save you. It&#39;s procedural. So fade the pattern out before it gets that small:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;                  mix&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;ck&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec2&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;atan&lt;/span&gt;&lt;span&gt;(q.y&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.x)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.1416&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;8.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.5&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;                      smoothstep&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;5.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z))&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Past a depth of about five it just becomes flat grey. Hand-rolled mip level,
+basically, and the noise is gone.&lt;/p&gt;
+&lt;p&gt;Second, and this is the one that actually sells it: nothing gets darker. The
+tunnel is lit uniformly forever, which reads as wallpaper rather than distance.
+One division fixes it:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;             /&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;exp&lt;/span&gt;&lt;span&gt;(z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.25&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That&#39;s it. That&#39;s the infinity. Set the &lt;code&gt;.25&lt;/code&gt; to zero and you&#39;re staring at a flat
+grey disc again; put it back and depth snaps into place. Of everything in this
+shader, that&#39;s the line doing the heaviest lifting per character.&lt;/p&gt;
+&lt;p&gt;It&#39;s also, if you squint, the same trick as the &lt;code&gt;col = col*r&lt;/code&gt; at the end of
+&lt;a rel=&quot;external&quot; href=&quot;https://iquilezles.org/articles/tunnel&quot;&gt;IQ&#39;s classic tunnel&lt;/a&gt;: his radius and my
+depth are reciprocals of each other, so darkening by one is darkening by the other.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_2.png&quot; alt=&quot;The checkered quad seen at an angle, the disc filled with a checkered surface curving away from the viewer.&quot; /&gt;&lt;/th&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_3.png&quot; alt=&quot;The same quad seen head-on, the disc now concentric checkered rings converging to a fine point at the centre.&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Off-axis, you&#39;re looking at the near wall of the bore.&lt;/em&gt;&lt;/td&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Head-on, you&#39;re looking straight down it. Same code, same quad. Only the camera moved.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;light-comes-from-the-mouth&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Light comes from the mouth &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Last thing. A directional light is wrong for a bore: it splits the tube down the
+middle, half lit and half dead, with a hard seam. Real holes are lit by whatever
+is outside them. So put the lamp at the opening and fall off with distance:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            n&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;normalize&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(q.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.45&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.8&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;q&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;length&lt;/span&gt;&lt;span&gt;(i)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/=&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;then&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;             *&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.05&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.9&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;X&lt;/span&gt;&lt;span&gt;(n&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;i)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.55&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.55&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.4&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;+.55&lt;/code&gt; there is a wrap term, so the far side of the tube never goes fully
+black and the shading stays soft. Slightly off-axis lamp position keeps a hint of
+direction in it rather than looking perfectly symmetric.&lt;/p&gt;
+&lt;h2 id=&quot;using-it-on-something-real&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Using it on something real &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Nothing above is ShaderToy specific. On an actual mesh you rotate the view
+direction into the surface&#39;s own frame and the intersection code is identical, the
+plane just becomes the UV plane. Any flat face works (windows, vents, shafts), and
+it&#39;s still one draw call no matter how many faces you point it at. Cost is one
+quadratic per pixel, and it doesn&#39;t care whether the tunnel is one unit deep or a
+thousand, which is the part that makes it worth knowing.&lt;/p&gt;
+&lt;p&gt;The same three lines work on anything you can hang behind a plane. Here&#39;s the
+tunnel swapped for a &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/NfVSRy&quot;&gt;tank of water&lt;/a&gt;:
+one &lt;code&gt;refract()&lt;/code&gt; before the intersection, a box instead of a cylinder, and the
+caustics fall out of the refraction Jacobian rather than a scrolling texture.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;water pool: interior mapping&quot;&gt;
+  &lt;source src=&quot;/videos/blue.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;I put it in a game, so here&#39;s what actually changed.&lt;/p&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster&lt;/a&gt; is a grid roguelike, and its swamp rooms have pools cut
+into the floor. The pit is real geometry, brick sides, 0.85 units deep. The water
+isn&#39;t. The water is one tile:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;pit_water_mesh&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span&gt; meshes&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;add&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Cuboid&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;new&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;005&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;)),&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Five thousandths of a unit. Same joke as &lt;code&gt;W vec3(1.3,1.3,.02)&lt;/code&gt; at the top of this
+post, four times flatter.&lt;/p&gt;
+&lt;p&gt;Everything you see through that tile is the slab test. The silt bed, the stones,
+the submerged walls running away from you. The real pit floor is down there
+somewhere but the water is opaque, so nobody has ever seen it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/top.png&quot; alt=&quot;The pool from a low angle&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that&#39;s modelled.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;The ray gets refracted before the intersection runs, which the demo never bothers
+with. One &lt;code&gt;refract()&lt;/code&gt;, costs nothing, and it ties the depth to the wave normal, so
+the bed swims a little as ripples cross it. That&#39;s most of what makes it read as
+liquid instead of a tinted sheet.&lt;/p&gt;
+&lt;p&gt;The parallax is a lie too. The camera is locked near top-down, and looking
+straight down, honest refraction barely displaces anything at all, so the effect
+is invisible at the only angle anyone plays from. So I cheat:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;const&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4.0&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; normalize&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;x &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN, rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;y, rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;z &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN));&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Horizontal components times four, before the slab test. Physically nonsense, and
+the difference between a hole and a green rectangle.&lt;/p&gt;
+&lt;p&gt;Then the part I didn&#39;t see coming. Pools aren&#39;t rectangles.&lt;/p&gt;
+&lt;p&gt;The demo has one quad, so the box is just the box. A pool is a lot of tiles,
+sometimes L-shaped, and every tile runs its own slab test. They all have to agree
+about where the walls are, or you get a wall drawn through open water.&lt;/p&gt;
+&lt;p&gt;Giving every tile one box covering the whole pool looks obvious and is wrong. For
+an L that box is the bounding rectangle, so each arm&#39;s inner side sits deep inside
+it and never gets a wall. Shrinking the box to one tile is wrong the other way:
+with the gain above the ray is shallow enough that a wall&#39;s footprint is wider
+than a tile, so any tile touching stone goes solid.&lt;/p&gt;
+&lt;p&gt;So each tile stores four distances instead, found by walking the grid until the
+water stops. A slab test only ever asks how far the wall is along X and along Z,
+and that&#39;s the answer to exactly that question, whatever shape the pool is.&lt;/p&gt;
+&lt;p&gt;Which is right about the banks and still wrong as a surface. Neighbouring tiles
+now march into different boxes, so the depth, the wall fade and the floor/wall
+split all step at the tile boundary, and an L reads as a hard seam across open
+water. A per tile box cannot describe a non convex pool consistently; that isn&#39;t
+tuning, it&#39;s the representation.&lt;/p&gt;
+&lt;p&gt;So the march went back to one box per pool, the option I&#39;d just called obvious and
+wrong, because a notch that the stone bank mostly stands in front of beats a seam
+that&#39;s visible from every angle. The four distances didn&#39;t go away, though. They
+turned out to be answering a different question: not &quot;what box do I march&quot; but
+&quot;how far is the stone&quot;??, which is what the shore gradient, the shallow lip and the
+waterline foam are all keyed off. Two values, because they were never one.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/direct.png&quot; alt=&quot;Looking down into the pool&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Straight down into it. Caustics, waves and silt are separate layers on top; the depth under them is the slab test.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;A painted texture would survive most frames in this post. It wouldn&#39;t survive that
+one. The wall and floor junctions slide against each other at different rates as
+the camera moves, because they&#39;re being intersected rather than drawn.&lt;/p&gt;
+&lt;p&gt;Then drop the camera to the waterline and the mesh gives itself away.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/thin.png&quot; alt=&quot;The water plane seen almost edge on&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Almost edge on. That plate is the entire mesh.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Everything behind it is still solving. Still one quadratic per pixel, in a frame
+where you can see exactly how little geometry is doing the work.&lt;/p&gt;
+&lt;p&gt;Two limits worth being honest about. It&#39;s per-face, so only the face you mapped
+has the hole, and the depth is fake, so nothing intersects or occludes it correctly
+unless you write depth out yourself. Neither is hard to work around, but you should
+know about both before you put it in something.&lt;/p&gt;
+&lt;p&gt;And of course the whole thing collapses if the camera goes edge-on. That&#39;s not a
+bug, that&#39;s the same limitation billboards have always had, except here you got
+real parallax for free right up until the moment you didn&#39;t.&lt;/p&gt;
+&lt;p&gt;For the pool that never comes up, and not because I planned it that way. The
+camera is locked overhead because it&#39;s a grid game. It would have been locked
+there whether or not the water needed it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Water surface in a grid game, rendered with the same interior mapping trick and viewed from a fixed overhead camera.&quot;&gt;
+  &lt;source src=&quot;/videos/water.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;&lt;em&gt;The pool with different angles.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+&lt;p&gt;Source is on &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/Ncy3W1&quot;&gt;ShaderToy&lt;/a&gt;, fork it and
+break it. Original inspiration from a clip by
+&lt;a rel=&quot;external&quot; href=&quot;https://x.com/cmzw_/status/2082071045113299155&quot;&gt;@cmzw_&lt;/a&gt;.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>How to render fire as real geometry on the GPU</title>
+        <published>2026-07-28T00:00:00+00:00</published>
+        <updated>2026-07-28T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/flame/"/>
+        <id>https://altunenes.github.io/posts/flame/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/flame/">&lt;p&gt;There are a lot of ways to put fire in a game, and almost all of them are a trick
+in a fragment shader. You take a flat quad, point it at the camera, and colour the
+pixels so they look like flames. The geometry is just a billboard, the fire only
+lives in the pixels. That&#39;s what ships in
+&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster&lt;/a&gt; and it works
+fine.&lt;/p&gt;
+&lt;p&gt;This post is about a different one I don&#39;t really see people do: growing the fire
+out of &lt;strong&gt;real mesh&lt;/strong&gt;, on the GPU, at runtime. It looks different, it happens to be
+cheaper to run, and the pipeline behind it is the actual reason I built any of it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Side by side comparison of the same brazier in Willcaster. On the left, the shipped raymarch flame: soft, red, slightly transparent. On the right, the compute-generated mesh flame: brighter, sharper, made of extruded ribbons of geometry.&quot;&gt;
+  &lt;source src=&quot;/videos/fire.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;&lt;em&gt;Same brazier, both techniques. Left: the raymarch flame that ships in the game. Right: the same fire grown as real mesh on the GPU.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;the-normal-way-and-what-it-actually-costs&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The normal way, and what it actually costs &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;My brazier fire is a small raymarch. For every pixel the flame covers, the shader
+walks 8 steps up through an imaginary column of fire, and at each step it samples
+some noise to decide how thick the flame is there. That&#39;s a few hundred little
+calculations per pixel, and it happens every frame, for every pixel of fire on
+screen.&lt;/p&gt;
+&lt;p&gt;That last part is the important bit. Walk the camera closer so the fire fills more
+of the screen and it gets more expensive, even though nothing about the fire
+changed. You pay by the pixel, forever.&lt;/p&gt;
+&lt;p&gt;It&#39;s cheap enough here (the braziers are small on screen), so I never worried
+about it. But it set up the contrast that made the other approach interesting.&lt;/p&gt;
+&lt;h2 id=&quot;why-i-built-this-in-the-first-place&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why I built this in the first place &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The grass in Willcaster grows on the GPU. A compute shader fills a buffer with one
+entry per blade, a vertex shader reads that buffer and builds the actual bent
+geometry for each one, and nothing touches the CPU after setup.&lt;/p&gt;
+&lt;p&gt;The bezier part isn&#39;t my idea. Back in the spring I wrote a little ShaderToy,
+&lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/7fSSRc&quot;&gt;&lt;em&gt;Cubic Bezier Grass&lt;/em&gt;&lt;/a&gt;, messing with the
+math from Sucker Punch&#39;s &lt;a rel=&quot;external&quot; href=&quot;https://www.youtube.com/watch?v=Ibe1JBF5i5Y&quot;&gt;&lt;em&gt;Procedural Grass in Ghost of
+Tsushima&lt;/em&gt;&lt;/a&gt; talk: each blade is a
+cubic bezier spine, you take the derivative to get the tangent, and use that to
+extrude a tapered width so the blade has volume and catches light. ShaderToy has
+no vertex stage, so to even see it I had to raymarch the geometry per pixel, which
+is wildly expensive and was never the point. It was just where I got the math
+right before moving it onto the GPU properly.&lt;/p&gt;
+&lt;p&gt;But grass is just decoration here, a bit of green on the border tiles. It isn&#39;t
+why I wrote any of this. Willcaster is a game about casting spells, and I don&#39;t
+want those spells to be flat sprites stuck to the camera. I want them to be real
+geometry sitting in the world: ice that catches a highlight, gold that actually
+looks like metal, fire that has a shape when you walk around it. That&#39;s the payoff
+of doing it this way. Because the result is ordinary mesh, it drops onto the
+engine&#39;s normal lighting, depth and shadows for free, the same PBR every other
+object gets. A billboard fakes all of that and falls apart the moment the camera
+moves. Grass was just the cheapest thing to prove the pipeline on. Fire is the
+second, and the spells are where it&#39;s actually headed.&lt;/p&gt;
+&lt;p&gt;The shape of it is small. Bevy lets you add your own passes to its render graph,
+so there&#39;s a compute pass that fills a plain GPU buffer, and then that same buffer
+is handed to an ordinary material as a read-only input, so Bevy&#39;s normal mesh
+drawing reads it in the vertex shader. No custom renderer, no custom draw calls, no
+extra crates. I fill a buffer, Bevy draws a mesh, and the vertex shader reads the
+buffer to decide where each vertex goes.&lt;/p&gt;
+&lt;p&gt;The whole trick is really just this one struct. The compute pass writes into the
+buffer, and the material holds it as a normal read only binding the vertex shader
+can read:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;#[derive(&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Asset&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; TypePath&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; AsBindGroup&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Clone&lt;/span&gt;&lt;span&gt;)]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;pub struct&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; FlameMaterial&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    #[storage(0, read_only, visibility(vertex))]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Handle&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderBuffer&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That &lt;code&gt;visibility(vertex)&lt;/code&gt; is the important part. It says the buffer is readable
+from the vertex stage, which is what lets an ordinary material grow geometry from
+compute output without me writing any draw code at all.&lt;/p&gt;
+&lt;h2 id=&quot;flames-as-ribbons&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Flames as ribbons &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The compute pass does the same job as it does for grass, except each entry is now
+a &quot;tongue&quot; of flame instead of a blade:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;struct&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Tongue&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    pos_height: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;  // where it sits on the base + how tall&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    params: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;      // facing, curl, a flicker offset, a random seed&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;};&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;@&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;compute&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; @&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;workgroup_size&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;64&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;@&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;builtin&lt;/span&gt;&lt;span&gt;(global_invocation_id) id: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;u32&lt;/span&gt;&lt;span&gt;&amp;gt;) {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; id&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;x;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;/span&gt;&lt;span&gt; (i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;gt;=&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; COUNT&lt;/span&gt;&lt;span&gt;) {&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; return&lt;/span&gt;&lt;span&gt;; }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;    // scatter the tongues in a disc, packed toward the middle&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; ang&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 3u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1u&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; TAU&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; rad&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; pow&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 3u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 2u&lt;/span&gt;&lt;span&gt;),&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.55&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; DISC_RADIUS;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; cos&lt;/span&gt;&lt;span&gt;(ang)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; rad;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sin&lt;/span&gt;&lt;span&gt;(ang)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; rad;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;    // tallest in the centre, short around the rim -&amp;gt; a rounded flame shape&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1.0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&lt;/span&gt;&lt;span&gt; rad&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; /&lt;/span&gt;&lt;span&gt; DISC_RADIUS;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; height&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.34&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.72&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 7u&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.22&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues[i]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;pos_height &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(x,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.0&lt;/span&gt;&lt;span&gt;, z, height);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues[i]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;params &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(facing, curl, phase, seed);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That&#39;s the entire &quot;simulation&quot;. A few dozen tongues, placed once.&lt;/p&gt;
+&lt;p&gt;Then the vertex shader turns each tongue into a ribbon: a curve that starts at the
+base, rises, leans over, and lashes side to side at the tip, so it looks like it&#39;s
+licking upward instead of standing still.&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// a curve up from the root that leans forward and whips at the top&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p1&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.33&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p2&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.66&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;. +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; sway;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p3&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;        +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;. +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; sway;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; center&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; bezier&lt;/span&gt;&lt;span&gt;(p0, p1, p2, p3, t);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// widen it into a ribbon, wobble the edge with noise so it isn&amp;#39;t a clean blade&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;out&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;local_pos &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt; center&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; (side&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; width);&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The flicker, the licking, the wobble are all just &lt;code&gt;time&lt;/code&gt; fed into that curve. The
+tongues themselves never change after they&#39;re placed. The colour is a warm
+gradient, white-hot at the base, cooling to orange and then red as it climbs.&lt;/p&gt;
+&lt;p&gt;The shaders were the easy half, honestly. The hard half was the Rust holding them
+up: getting a buffer the GPU writes into to line up with a material the GPU also
+reads from, on Bevy&#39;s render graph, without the two disagreeing about when things
+exist. That took a few rewrites and one bug that only turned up on some frames,
+and I&#39;ll spare you the exact shape of it here. If you&#39;re building something
+similar and hit the same wall, come find me, I&#39;m happy to compare notes.&lt;/p&gt;
+&lt;p&gt;The result is a flame you can turn on wireframe and see is genuinely made of
+triangles. It&#39;s the one on the right in the clip up top.&lt;/p&gt;
+&lt;h2 id=&quot;back-to-the-cost&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Back to the cost &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Now the comparison pays off. The compute pass that places the tongues runs for a
+handful of frames when the room loads, and then switches itself off, because the
+tongues never move after that. From then on the fire is just a few dozen ribbons
+drawn like any other model, plus a very cheap pixel shader. It doesn&#39;t care how
+close the camera gets. The heavy lifting happened once, at the start, and never
+again.&lt;/p&gt;
+&lt;p&gt;So the raymarch, the &quot;simpler looking&quot; one, pays for itself every frame per pixel.
+The mesh fire, the &quot;fancier&quot; one, pays once and coasts.&lt;/p&gt;
+&lt;p&gt;The one thing the mesh version loses is softness. Real geometry has hard edges,
+and no amount of noise fully hides that a flame is made of triangles, so it reads
+a bit more stylised. Willcaster isn&#39;t a stylised game, so the soft raymarch is
+what&#39;s on the braziers. But the mesh flame stays in the project as a toggle,
+because I think it&#39;s a neat idea more people should play with, and because the
+same pipeline will drive things like a wall of fire later, where hard directional
+geometry is exactly what you want.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Flame wall in Willcaster made with the same compute gen mesh tech.&quot;&gt;
+  &lt;source src=&quot;/videos/des.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+Flame wall in Willcaster made with the same compute gen mesh tech.
+*THIS IS FINE.*
+&lt;/div&gt;
+&lt;h2 id=&quot;why-bother&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why bother &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The game didn&#39;t need any of this. The first flame was fine. But the grass pipeline
+turned out to be a general tool rather than a grass thing, and pointing it at fire
+cost me an afternoon and taught me more about where GPU time actually goes than
+any amount of reading would have.&lt;/p&gt;
+&lt;p&gt;That&#39;s most of what these posts are going to be: small detours where I tried the
+weird version of something and wrote down what happened.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster is on Steam&lt;/a&gt;&lt;/strong&gt;
+if you want to see where all of this ends up. Wishlists genuinely help a small
+game like this a lot.&lt;/p&gt;
+&lt;p&gt;More soon.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Why Shaders Turn Black: negatives in pow() and sqrt()</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/forbidden/"/>
+        <id>https://altunenes.github.io/posts/forbidden/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/forbidden/">&lt;h2 id=&quot;why-shaders-turn-black-negatives-in-pow-and-sqrt&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Why Shaders Turn Black: negatives in pow() and sqrt()&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Black pixels appearing in a shader often trace back to a mathematical domain error. The most common sources are the &lt;code&gt;sqrt()&lt;/code&gt; and &lt;code&gt;pow()&lt;/code&gt; functions when they receive invalid inputs.&lt;/p&gt;
+&lt;p&gt;In GLSL, &lt;code&gt;sqrt(x)&lt;/code&gt; is undefined if &lt;code&gt;x&lt;/code&gt; is negative. Similarly, &lt;code&gt;pow(x, y)&lt;/code&gt; is undefined if &lt;code&gt;x&lt;/code&gt; is negative and &lt;code&gt;y&lt;/code&gt; is not an integer. When asked to perform an undefined operation, most GPUs return &lt;code&gt;NaN&lt;/code&gt; (Not a Number). Any further math involving this &lt;code&gt;NaN&lt;/code&gt; also results in &lt;code&gt;NaN&lt;/code&gt;, and the renderer typically draws these pixels as black. To make matters worse, compilers often won&#39;t warn you about this potential problem, making the bug difficult to trace in a complex shader.&lt;/p&gt;
+&lt;h3 id=&quot;visualizing-the-error-and-the-fix&quot;&gt;Visualizing the Error and the Fix&lt;/h3&gt;
+&lt;p&gt;The following demos show the problem in action. The left side (red) performs the math naively. The right side (green) uses &lt;code&gt;abs()&lt;/code&gt; to prevent errors.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. The &lt;code&gt;sqrt()&lt;/code&gt; Domain Error&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = sqrt(sin(x))&lt;/code&gt;. The gaps on the left show where &lt;code&gt;sin(x)&lt;/code&gt; is negative and the math fails.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/W3yXWc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;2. The &lt;code&gt;pow()&lt;/code&gt; Domain Error&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = pow(sin(x), 2.5)&lt;/code&gt;. The same issue occurs, breaking the function where the base is negative.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/33GSDc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;br&gt;
+*&lt;small&gt;Note: If a shader appears broken, try refreshing the page as Shadertoy can sometimes be unstable.&lt;/small&gt;*
+&lt;p&gt;This variance across platforms, which can depend on the GPU hardware or its drivers, is a key reason to handle these edge cases proactively with &lt;code&gt;abs()&lt;/code&gt; or other methods, as the output is not guaranteed. For example, while most desktop GPUs produce clean gaps, some GPUs (like on an iPhone 6s in the example below) handle the error differently. Notice how the &lt;code&gt;sqrt()&lt;/code&gt; error is avoided entirely, but the &lt;code&gt;pow()&lt;/code&gt; error still renders artifacts—not as empty gaps, but this time as large black columns!&lt;/p&gt;
+&lt;div align=&quot;center&quot; style=&quot;display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;&quot;&gt;
+    &lt;img src=&quot;/images/iphone6s_1.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of sqrt shader without gaps&quot;&gt;
+    &lt;img src=&quot;/images/iphone6s_2.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of pow shader with black columns&quot;&gt;
+&lt;/div&gt;
+&lt;center&gt;
+*&lt;small&gt;Screenshot from an iPhone 6s: in contrast to modern desktop GPUs, this older mobile hardware appears to fill the gaps in the `sqrt` example, yet produces distinct vertical artifacts for the `pow` function.&lt;/small&gt;*
+&lt;/center&gt;
+&lt;h3 id=&quot;the-technical-reality-behind-the-error&quot;&gt;The Technical Reality Behind the Error&lt;/h3&gt;
+&lt;p&gt;Using &lt;code&gt;abs()&lt;/code&gt; fixes the black pixels, but it&#39;s crucial to understand &lt;em&gt;why&lt;/em&gt; the failure occurs to write better code.&lt;/p&gt;
+&lt;p&gt;GPUs don&#39;t calculate powers through repeated multiplication. For performance, they use the mathematical identity: &lt;strong&gt;&lt;code&gt;pow(x, y) = exp2(y * log2(x))&lt;/code&gt;&lt;/strong&gt;(see ref). The failure point is &lt;code&gt;log2(x)&lt;/code&gt;. The logarithm of a negative number is undefined in the real number system. Therefore, any negative &lt;code&gt;x&lt;/code&gt; passed to &lt;code&gt;pow()&lt;/code&gt; causes the internal calculation to fail and produce a &lt;code&gt;NaN&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;While &lt;code&gt;abs()&lt;/code&gt; prevents &lt;code&gt;NaN&lt;/code&gt;s, it can introduce silent mathematical bugs. Consider &lt;code&gt;(-2)³&lt;/code&gt;, which should be &lt;code&gt;-8&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pow(-2.0, 3.0)&lt;/code&gt; might fail due to the &lt;code&gt;log/exp&lt;/code&gt; implementation.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pow(abs(-2.0), 3.0)&lt;/code&gt; will incorrectly return &lt;code&gt;8&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This error can invert lighting or break procedural patterns. When you need to preserve the sign for odd integer powers, the correct pattern is:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;/span&gt;&lt;span&gt; result &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; pow&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(x)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; y)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; sign&lt;/span&gt;&lt;span&gt;(x)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A conditional check like &lt;code&gt;if (x &amp;gt;= 0.0)&lt;/code&gt; might seem safe, but it&#39;s a performance trap. Branches cause &#39;thread divergence&#39; on GPUs, hurting the parallelism that makes them fast. Branchless functions like &lt;code&gt;abs()&lt;/code&gt;, &lt;code&gt;max()&lt;/code&gt;, and &lt;code&gt;sign()&lt;/code&gt; are far more efficient  (see: &lt;a rel=&quot;external&quot; href=&quot;https://theorangeduck.com/page/avoiding-shader-conditionals&quot;&gt;theorangeduck&lt;/a&gt;, See: &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/download/GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;3&lt;/a&gt;).
+Writing robust shader code means handling these cases smartly. For integer powers, explicit multiplication like &lt;code&gt;x*x&lt;/code&gt; is always better than &lt;code&gt;pow(x, 2.0)&lt;/code&gt; [1,2]. It&#39;s faster and avoids the log/exp path entirely. To prevent floating-point errors from creating negative inputs later, proactively clamp values with &lt;code&gt;max(value, 0.0)&lt;/code&gt; or &lt;code&gt;saturate(value)&lt;/code&gt;, especially after operations like &lt;code&gt;dot()&lt;/code&gt;.
+Finally, use &lt;code&gt;abs()&lt;/code&gt; with care. It&#39;s a tool for getting a magnitude, not a universal patch. If you need to preserve a negative sign with an odd power, the &lt;code&gt;sign(x) * pow(abs(x), y)&lt;/code&gt; pattern is the mathematically correct approach.&lt;/p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References&lt;/h3&gt;
+&lt;p&gt;[1] &lt;a rel=&quot;external&quot; href=&quot;https://community.khronos.org/t/pow-x-2-different-then-x-x/70839/3&quot;&gt;Khronos Forums Discussion: &quot;Pow(x, 2) different then x*x?&quot;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-register-pressure-readme/&quot;&gt;Register pressure in AMD CDNA2™ GPUs&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/download/GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;ADVANCED SHADER PROGRAMMING ON GCN&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - GPU</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/gpu/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-08-13T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/gpu/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Why Shaders Turn Black: negatives in pow() and sqrt()</title>
+        <published>2025-08-13T00:00:00+00:00</published>
+        <updated>2025-08-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/forbidden/"/>
+        <id>https://altunenes.github.io/posts/forbidden/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/forbidden/">&lt;h2 id=&quot;why-shaders-turn-black-negatives-in-pow-and-sqrt&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;Why Shaders Turn Black: negatives in pow() and sqrt()&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Black pixels appearing in a shader often trace back to a mathematical domain error. The most common sources are the &lt;code&gt;sqrt()&lt;/code&gt; and &lt;code&gt;pow()&lt;/code&gt; functions when they receive invalid inputs.&lt;/p&gt;
+&lt;p&gt;In GLSL, &lt;code&gt;sqrt(x)&lt;/code&gt; is undefined if &lt;code&gt;x&lt;/code&gt; is negative. Similarly, &lt;code&gt;pow(x, y)&lt;/code&gt; is undefined if &lt;code&gt;x&lt;/code&gt; is negative and &lt;code&gt;y&lt;/code&gt; is not an integer. When asked to perform an undefined operation, most GPUs return &lt;code&gt;NaN&lt;/code&gt; (Not a Number). Any further math involving this &lt;code&gt;NaN&lt;/code&gt; also results in &lt;code&gt;NaN&lt;/code&gt;, and the renderer typically draws these pixels as black. To make matters worse, compilers often won&#39;t warn you about this potential problem, making the bug difficult to trace in a complex shader.&lt;/p&gt;
+&lt;h3 id=&quot;visualizing-the-error-and-the-fix&quot;&gt;Visualizing the Error and the Fix&lt;/h3&gt;
+&lt;p&gt;The following demos show the problem in action. The left side (red) performs the math naively. The right side (green) uses &lt;code&gt;abs()&lt;/code&gt; to prevent errors.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. The &lt;code&gt;sqrt()&lt;/code&gt; Domain Error&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = sqrt(sin(x))&lt;/code&gt;. The gaps on the left show where &lt;code&gt;sin(x)&lt;/code&gt; is negative and the math fails.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/W3yXWc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;2. The &lt;code&gt;pow()&lt;/code&gt; Domain Error&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Graphing &lt;code&gt;y = pow(sin(x), 2.5)&lt;/code&gt;. The same issue occurs, breaking the function where the base is negative.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/33GSDc?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;br&gt;
+*&lt;small&gt;Note: If a shader appears broken, try refreshing the page as Shadertoy can sometimes be unstable.&lt;/small&gt;*
+&lt;p&gt;This variance across platforms, which can depend on the GPU hardware or its drivers, is a key reason to handle these edge cases proactively with &lt;code&gt;abs()&lt;/code&gt; or other methods, as the output is not guaranteed. For example, while most desktop GPUs produce clean gaps, some GPUs (like on an iPhone 6s in the example below) handle the error differently. Notice how the &lt;code&gt;sqrt()&lt;/code&gt; error is avoided entirely, but the &lt;code&gt;pow()&lt;/code&gt; error still renders artifacts—not as empty gaps, but this time as large black columns!&lt;/p&gt;
+&lt;div align=&quot;center&quot; style=&quot;display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;&quot;&gt;
+    &lt;img src=&quot;/images/iphone6s_1.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of sqrt shader without gaps&quot;&gt;
+    &lt;img src=&quot;/images/iphone6s_2.jpg&quot; width=&quot;48%&quot; alt=&quot;iPhone 6s screenshot of pow shader with black columns&quot;&gt;
+&lt;/div&gt;
+&lt;center&gt;
+*&lt;small&gt;Screenshot from an iPhone 6s: in contrast to modern desktop GPUs, this older mobile hardware appears to fill the gaps in the `sqrt` example, yet produces distinct vertical artifacts for the `pow` function.&lt;/small&gt;*
+&lt;/center&gt;
+&lt;h3 id=&quot;the-technical-reality-behind-the-error&quot;&gt;The Technical Reality Behind the Error&lt;/h3&gt;
+&lt;p&gt;Using &lt;code&gt;abs()&lt;/code&gt; fixes the black pixels, but it&#39;s crucial to understand &lt;em&gt;why&lt;/em&gt; the failure occurs to write better code.&lt;/p&gt;
+&lt;p&gt;GPUs don&#39;t calculate powers through repeated multiplication. For performance, they use the mathematical identity: &lt;strong&gt;&lt;code&gt;pow(x, y) = exp2(y * log2(x))&lt;/code&gt;&lt;/strong&gt;(see ref). The failure point is &lt;code&gt;log2(x)&lt;/code&gt;. The logarithm of a negative number is undefined in the real number system. Therefore, any negative &lt;code&gt;x&lt;/code&gt; passed to &lt;code&gt;pow()&lt;/code&gt; causes the internal calculation to fail and produce a &lt;code&gt;NaN&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;While &lt;code&gt;abs()&lt;/code&gt; prevents &lt;code&gt;NaN&lt;/code&gt;s, it can introduce silent mathematical bugs. Consider &lt;code&gt;(-2)³&lt;/code&gt;, which should be &lt;code&gt;-8&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pow(-2.0, 3.0)&lt;/code&gt; might fail due to the &lt;code&gt;log/exp&lt;/code&gt; implementation.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pow(abs(-2.0), 3.0)&lt;/code&gt; will incorrectly return &lt;code&gt;8&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This error can invert lighting or break procedural patterns. When you need to preserve the sign for odd integer powers, the correct pattern is:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;/span&gt;&lt;span&gt; result &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; pow&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(x)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; y)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt; sign&lt;/span&gt;&lt;span&gt;(x)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A conditional check like &lt;code&gt;if (x &amp;gt;= 0.0)&lt;/code&gt; might seem safe, but it&#39;s a performance trap. Branches cause &#39;thread divergence&#39; on GPUs, hurting the parallelism that makes them fast. Branchless functions like &lt;code&gt;abs()&lt;/code&gt;, &lt;code&gt;max()&lt;/code&gt;, and &lt;code&gt;sign()&lt;/code&gt; are far more efficient  (see: &lt;a rel=&quot;external&quot; href=&quot;https://theorangeduck.com/page/avoiding-shader-conditionals&quot;&gt;theorangeduck&lt;/a&gt;, See: &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/download/GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;3&lt;/a&gt;).
+Writing robust shader code means handling these cases smartly. For integer powers, explicit multiplication like &lt;code&gt;x*x&lt;/code&gt; is always better than &lt;code&gt;pow(x, 2.0)&lt;/code&gt; [1,2]. It&#39;s faster and avoids the log/exp path entirely. To prevent floating-point errors from creating negative inputs later, proactively clamp values with &lt;code&gt;max(value, 0.0)&lt;/code&gt; or &lt;code&gt;saturate(value)&lt;/code&gt;, especially after operations like &lt;code&gt;dot()&lt;/code&gt;.
+Finally, use &lt;code&gt;abs()&lt;/code&gt; with care. It&#39;s a tool for getting a magnitude, not a universal patch. If you need to preserve a negative sign with an odd power, the &lt;code&gt;sign(x) * pow(abs(x), y)&lt;/code&gt; pattern is the mathematically correct approach.&lt;/p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References&lt;/h3&gt;
+&lt;p&gt;[1] &lt;a rel=&quot;external&quot; href=&quot;https://community.khronos.org/t/pow-x-2-different-then-x-x/70839/3&quot;&gt;Khronos Forums Discussion: &quot;Pow(x, 2) different then x*x?&quot;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/learn/amd-lab-notes/amd-lab-notes-register-pressure-readme/&quot;&gt;Register pressure in AMD CDNA2™ GPUs&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a rel=&quot;external&quot; href=&quot;https://gpuopen.com/download/GDC2017-Advanced-Shader-Programming-On-GCN.pdf&quot;&gt;ADVANCED SHADER PROGRAMMING ON GCN&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Randomness: CPU &amp; GPU</title>
+        <published>2025-08-09T00:00:00+00:00</published>
+        <updated>2025-08-09T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/random/"/>
+        <id>https://altunenes.github.io/posts/random/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/random/">&lt;h4 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Traditional random number generation, common on CPUs in languages, often relies on a sequential process. A generator object holds an internal state, and each request for a number updates that state for the next call. This approach is fundamentally incompatible with the massively parallel nature of GPUs, where thousands of threads need to generate numbers independently and simultaneously. If all threads tried to access and update a single shared state, it would require complex synchronization that would effectively destroy the GPU&#39;s performance advantage.&lt;/p&gt;
+&lt;p&gt;GPUs &quot;solve&quot; this by adopting a &quot;stateless&quot; or functional approach. Instead of updating a state, each thread computes its random number directly by calling a function that scrambles its inputs. In GLSL shaders, a common technique is to use a hash function that takes a thread&#39;s unique coordinates (&lt;code&gt;gl_FragCoord.xy&lt;/code&gt;) and often the current time (&lt;code&gt;iTime&lt;/code&gt;: in shadertoy) as input. This ensures every pixel gets a different, independent number on every frame. A simple, widely-used hash function looks like this:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// A simple hash function that turns a 2D vector into a pseudo-random float.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// Adding a time input makes it dynamic for animations.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;/span&gt;&lt;span&gt;(vec2 &lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;p&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; float&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; t&lt;/span&gt;&lt;span&gt;) {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    vec2 p_with_time &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt; p &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;/span&gt;&lt;span&gt;(t)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    return&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; fract&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sin&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p_with_time&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; vec2&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;12.9898&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 78.233&lt;/span&gt;&lt;span&gt;)))&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 43758.5453&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// You would call it in your main shader code like this:&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// (iTime is a standard uniform in environments like Shadertoy)&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;float&lt;/span&gt;&lt;span&gt; randomValue &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash&lt;/span&gt;&lt;span&gt;(gl_FragCoord.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; iTime)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&quot;the-real-world-bottleneck&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;The Real-World Bottleneck&lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;This functional paradigm is a prime example of co-designing an algorithm for its hardware. However, the GPU is not always the faster choice. Performance studies show a clear &quot;crossover point&quot;: for small tasks that require fewer than roughly 10,000 numbers, a modern CPU is often faster due to the overhead of launching a GPU kernel (Askar et al., 2021).
+For larger tasks where the GPU&#39;s throughput dominates, a second, more surprising bottleneck emerges: data transfer. If the numbers are generated on the GPU but needed by the CPU, the transfer itself can cripple performance. One analysis found that copying the results back to the CPU took, on average, seven times longer than the computation itself (Gregg &amp;amp; Hazelwood, 2011). This highlights a fundamental rule: the highest performance is only achieved when random numbers are both generated and consumed on the same device.&lt;/p&gt;
+&lt;p&gt;While a simple hash is great for visual effects, this same &quot;stateless&quot; principle is the foundation of high-performance libraries. They use complex, cryptographically-inspired functions to generate statistically robust and uncorrelated random streams for demanding scientific simulations, an approach detailed in the landmark paper on parallel random numbers by Salmon et al..&lt;/p&gt;
+&lt;h4 id=&quot;references&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; References &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Askar, T., Shukirgaliyev, B., Lukac, M., &amp;amp; Abdikamalov, E. (2021). Evaluation of Pseudo-Random Number Generation on GPU Cards. Computation, 9(12), 142.&lt;/p&gt;
+&lt;p&gt;Salmon, J.K., Moraes, M.A., Dror, R.O., &amp;amp; Shaw, D.E. (2011). Parallel random numbers: As easy as 1, 2, 3. 2011 International Conference for High Performance Computing, Networking, Storage and Analysis (SC), 1-12.&lt;/p&gt;
+&lt;p&gt;Gregg, C., &amp;amp; Hazelwood, K.M. (2011). Where is the data? Why you cannot debate CPU vs. GPU performance without the answer. (IEEE ISPASS) IEEE INTERNATIONAL SYMPOSIUM ON PERFORMANCE ANALYSIS OF SYSTEMS AND SOFTWARE, 134-144.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>How I Implemented Hot Reloading for WGSL Shaders in Rust</title>
+        <published>2025-03-15T00:00:00+00:00</published>
+        <updated>2025-03-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/hotreload/"/>
+        <id>https://altunenes.github.io/posts/hotreload/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/hotreload/">&lt;p&gt;&lt;span style=&quot;color:orange;&quot;&gt;My solution&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;When developing WGSL shaders for my Rust-based graphics engine, I needed a solution to avoid constantly restarting the application to see changes. I built a hot reload system that watches shader files and automatically recompiles them when modifications are detected. The core of this approach uses Rust&#39;s notify crate to monitor file system events, combined with a debouncing mechanism to prevent multiple reloads during rapid file saves. When a change is detected, the engine creates new shader modules with &lt;code&gt;core.device.create_shader_module()&lt;/code&gt; and carefully rebuilds the render pipeline while maintaining the original bind group layouts.&lt;/p&gt;
+&lt;p&gt;Important struct:
+&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/cuneus/blob/b068041c7902df29d33c3100ea4b74a1a38164ff/src/hot.rs#L9-L231&quot;&gt;Source Code&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;pub struct&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; ShaderHotReload&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    pub&lt;/span&gt;&lt;span&gt; vs_module&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; wgpu&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderModule&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    pub&lt;/span&gt;&lt;span&gt; fs_module&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; wgpu&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderModule&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    device&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Arc&lt;/span&gt;&lt;span&gt;&amp;lt;wgpu&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Device&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    shader_paths&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Vec&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;PathBuf&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_vs_content&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_fs_content&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    #[allow(dead_code)]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    watcher&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; notify&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;RecommendedWatcher&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    rx&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Receiver&lt;/span&gt;&lt;span&gt;&amp;lt;notify&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Event&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    _watcher_tx&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; std&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;sync&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;mpsc&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Sender&lt;/span&gt;&lt;span&gt;&amp;lt;notify&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Event&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    last_update_times&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; HashMap&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;PathBuf&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Instant&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; //Keeps track of when each shader file was last updated.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    debounce_duration&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Duration&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; //Defines how long to wait before allowing another reload of the same file. The default is 100ms.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;My ShaderHotReload struct stores references to shader files, tracks the last update times for debouncing, and maintains the original shader content for comparison. When a file change is detected, it reads the new shader content, compares it to the previous version, and only triggers a reload if there&#39;s an actual change.&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>
