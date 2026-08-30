@@ -183,7 +183,7 @@ direction in it rather than looking perfectly symmetric.
 
 ## <span style="color:orange;"> Using it on something real </span>
 
-Nothing above is ShaderToy-specific. On an actual mesh you rotate the view
+Nothing above is ShaderToy specific. On an actual mesh you rotate the view
 direction into the surface's own frame and the intersection code is identical, the
 plane just becomes the UV plane. Any flat face works (windows, vents, shafts), and
 it's still one draw call no matter how many faces you point it at. Cost is one
