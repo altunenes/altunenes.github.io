@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - audio</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/audio/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-10-20T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/audio/atom.xml</id>
+    <entry xml:lang="en">
+        <title>I forced a speech model onto the GPU for months. The CPU was faster.</title>
+        <published>2026-10-20T00:00:00+00:00</published>
+        <updated>2026-10-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/reuse/"/>
+        <id>https://altunenes.github.io/posts/reuse/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/reuse/">&lt;p&gt;Back in March I wanted to clean noisy speech live, from a microphone, in Rust. NVIDIA has
+&lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/nvidia/Real-time_RE-USE&quot;&gt;Real-time RE-USE&lt;/a&gt;: a streaming Mamba
+model that takes one 20 ms frame of audio at a time. Small, causal, made for exactly this.&lt;/p&gt;
+&lt;p&gt;I was sure it had to run on the GPU. Neural network, real time, GPU. Because that&#39;s just how it goes,
+right? So I exported it to ONNX and ran it through &lt;a rel=&quot;external&quot; href=&quot;https://github.com/pykeio/ort&quot;&gt;&lt;code&gt;ort&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This post is how that went, and why the thing I ended up shipping,
+&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/re-use-rs&quot;&gt;reuse-rs&lt;/a&gt;, is plain Rust on the CPU.&lt;/p&gt;
+&lt;p&gt;Before the story, here&#39;s what it does: the same recording, clean original, noisy, and cleaned by
+reuse-rs (from &lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/datasets/JacobLinCool/VoiceBank-DEMAND-16k&quot;&gt;VoiceBank-DEMAND&lt;/a&gt;).
+The spectrogram fills in as the audio plays.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;Original (clean)&lt;/th&gt;&lt;th style=&quot;text-align: center&quot;&gt;Noisy&lt;/th&gt;&lt;th style=&quot;text-align: center&quot;&gt;reuse-rs, 8 layers&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;video width=&quot;100%&quot; controls playsinline&gt;&lt;source src=&quot;/videos/reuse/vb_original.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/td&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;video width=&quot;100%&quot; controls playsinline&gt;&lt;source src=&quot;/videos/reuse/vb_noisy.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/td&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;video width=&quot;100%&quot; controls playsinline&gt;&lt;source src=&quot;/videos/reuse/vb_8layers.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;the-onnx-road&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The ONNX road &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Mamba&#39;s core is a selective scan: a small state per channel that gets decayed and updated every
+step. ONNX has no op for that. The closest thing is &lt;code&gt;com.microsoft.LinearAttention&lt;/code&gt;, a contrib
+op in ONNX Runtime, so I mapped the scans onto it.&lt;/p&gt;
+&lt;p&gt;It worked. Sort of. I ran into problems inside ONNX Runtime on the way and reported what I found
+(&lt;a rel=&quot;external&quot; href=&quot;https://github.com/microsoft/onnxruntime/issues/27796&quot;&gt;onnxruntime#27796&lt;/a&gt;,
+&lt;a rel=&quot;external&quot; href=&quot;https://github.com/microsoft/onnxruntime/pull/27996&quot;&gt;#27996&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Then the numbers, per 20 ms frame on my M3:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;WebGPU:&lt;/strong&gt; 16.9 ms with 4 layers, 20.6 ms with 8. That&#39;s at the edge: anything over 20 ms
+means you fall behind the microphone.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CPU (ONNX Runtime):&lt;/strong&gt; about 70 ms.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CoreML:&lt;/strong&gt; the graph got split, fell back to CPU, 168–198 ms.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I also tried NVIDIA&#39;s bigger offline model (30 bidirectional layers, their best quality). 0.19–0.33×
+real time on WebGPU, 3.3–3.9 GB of memory. At one point I ran several backends in the same
+process to compare them and watched it eat 26 GB of RAM. Lesson learned.&lt;/p&gt;
+&lt;h2 id=&quot;what-if-i-just-don-t&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; What if I just... don&#39;t &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;I never considered writing the model myself. It felt like the &quot;serious&quot; path was the GPU and
+the runtime. But the more I looked at it, the less sense it made: every step is &lt;strong&gt;one&lt;/strong&gt; frame.
+321 frequency bins. You can&#39;t batch the future, because a live mic hasn&#39;t produced it yet, and
+the model needs the state from the previous frame anyway.&lt;/p&gt;
+&lt;p&gt;So for each tiny frame, the GPU has to launch kernels, run a bit of math, and sync back. My
+suspicion was that the launching and syncing was most of the bill.&lt;/p&gt;
+&lt;p&gt;The WebGPU numbers already said so, I just hadn&#39;t read them that way: going from 4 to 8 layers
+only added 3.7 ms. Double the work, almost the same time. Most of those ~17 ms were fixed
+per-frame overhead, not the model.&lt;/p&gt;
+&lt;p&gt;So I wrote it in plain Rust. The convolutions are im2col plus one matrix multiply (Accelerate on
+macOS, the &lt;a rel=&quot;external&quot; href=&quot;https://crates.io/crates/matrixmultiply&quot;&gt;&lt;code&gt;matrixmultiply&lt;/code&gt;&lt;/a&gt; crate elsewhere). The scan
+is the interesting part. RE-USE uses a state size of 16 everywhere, so the state is a fixed
+&lt;code&gt;[f32; 16]&lt;/code&gt; and the update is three tiny loops the compiler can vectorize:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; scan16&lt;/span&gt;&lt;span&gt;(s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;mut&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;], a&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span&gt;[&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;], delta&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; f32&lt;/span&gt;&lt;span&gt;, dx&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; f32&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;          b&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span&gt;[&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;], c&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span&gt;[&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;])&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; f32&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let mut&lt;/span&gt;&lt;span&gt; decay&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    for&lt;/span&gt;&lt;span&gt; n&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; in&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;16&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        decay[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; fast_exp&lt;/span&gt;&lt;span&gt;(delta&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; a[n]);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let mut&lt;/span&gt;&lt;span&gt; out&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16&lt;/span&gt;&lt;span&gt;];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    for&lt;/span&gt;&lt;span&gt; n&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; in&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;16&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        s[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; decay[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; s[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; dx&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; b[n];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        out[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; s[n]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; c[n];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let mut&lt;/span&gt;&lt;span&gt; acc&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4&lt;/span&gt;&lt;span&gt;];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    for&lt;/span&gt;&lt;span&gt; n&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; in&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;16&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        acc[n&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; %&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4&lt;/span&gt;&lt;span&gt;]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +=&lt;/span&gt;&lt;span&gt; out[n];&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    (acc[&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; acc[&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1&lt;/span&gt;&lt;span&gt;])&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; (acc[&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;2&lt;/span&gt;&lt;span&gt;]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; acc[&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3&lt;/span&gt;&lt;span&gt;])&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;fast_exp&lt;/code&gt; is a polynomial &lt;code&gt;exp&lt;/code&gt; (about 1 ulp) written so it vectorizes too, because &lt;code&gt;f32::exp&lt;/code&gt;
+in that loop stops the compiler. The scans for different channels are independent, so they run
+in parallel with &lt;code&gt;rayon&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;is-it-actually-right&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Is it actually right? &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;A denoiser that &quot;sounds fine&quot; can still be wrong in ways you don&#39;t hear. So I compared every
+output against a &lt;strong&gt;float64&lt;/strong&gt; PyTorch reference.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Difference from the float64 reference&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;reuse-rs&lt;/td&gt;&lt;td&gt;&lt;strong&gt;1.5e-6&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;ONNX export through &lt;code&gt;ort&lt;/code&gt;&lt;/td&gt;&lt;td&gt;2.4e-3&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;1.5e-6 is about as close as PyTorch&#39;s own float32 run gets.&lt;/p&gt;
+&lt;h2 id=&quot;the-numbers&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The numbers &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Same M3 (8 cores, 16 GB), idle, time per 20 ms frame:&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Layers&lt;/th&gt;&lt;th&gt;reuse-rs (CPU)&lt;/th&gt;&lt;th&gt;ONNX Runtime (WebGPU)&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;&lt;strong&gt;8.4 ms&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;16.9 ms&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;&lt;strong&gt;11.5 ms&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;17.4 ms&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;&lt;strong&gt;14.7 ms&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;20.6 ms&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Memory went from about 420 MB to about 150 MB. And the CPU numbers grow with the work (+6.3 ms
+from 4 to 8 layers), which is what you want: the time goes into the model, not around it.&lt;/p&gt;
+&lt;p&gt;Without Accelerate (the &lt;code&gt;matrixmultiply&lt;/code&gt; path) 8 layers takes 21.4 ms on the same machine, so
+on other platforms 4–6 layers is the safer pick. And the machine has to be reasonably free: when
+I ran it next to a game, frame times went up.&lt;/p&gt;
+&lt;h2 id=&quot;fewer-layers&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Fewer layers? &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The model was trained so you can stop after any of 3 to 12 layers, each with its own decoders.
+I couldn&#39;t hear a difference between 4 and 8, so I measured it on the same VoiceBank-DEMAND clip,
+against the clean original (SI-SDR, higher is better):&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;SI-SDR&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Noisy&lt;/td&gt;&lt;td&gt;4.5 dB&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;4 layers&lt;/td&gt;&lt;td&gt;16.4 dB&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;6 layers&lt;/td&gt;&lt;td&gt;16.6 dB&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;8 layers&lt;/td&gt;&lt;td&gt;16.7 dB&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;0.3 dB between 4 and 8, for 1.75× the speed. That&#39;s one clip, but it matches my ears.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;4 layers&lt;/th&gt;&lt;th style=&quot;text-align: center&quot;&gt;6 layers&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;video width=&quot;100%&quot; controls playsinline&gt;&lt;source src=&quot;/videos/reuse/vb_4layers.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/td&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;video width=&quot;100%&quot; controls playsinline&gt;&lt;source src=&quot;/videos/reuse/vb_6layers.mp4&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;using-it&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Using it &lt;/span&gt;&lt;/h2&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;use&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; reuse_rs&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Denoiser&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let mut&lt;/span&gt;&lt;span&gt; denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;load&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;realtime_reuse/model.safetensors&amp;quot;&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// 16 kHz mono samples, in whatever chunks they arrive.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; clean&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;process&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span&gt;noisy_chunk)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// At the end of the stream:&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; rest&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;flush&lt;/span&gt;&lt;span&gt;()&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Output is delayed by exactly one frame (20 ms). Other sample rates (8 to 48 kHz) and look-ahead
+(the model waits for up to 2 future frames, 20 ms each) are set with &lt;code&gt;Config&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;use&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; reuse_rs&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span&gt;{&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Config&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Denoiser&lt;/span&gt;&lt;span&gt;};&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; config&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Config&lt;/span&gt;&lt;span&gt; { layers&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4&lt;/span&gt;&lt;span&gt;, sample_rate&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 48000&lt;/span&gt;&lt;span&gt;, look_ahead&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt; };&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let mut&lt;/span&gt;&lt;span&gt; denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Denoiser&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;with_config&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;realtime_reuse/model.safetensors&amp;quot;&lt;/span&gt;&lt;span&gt;, config)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;On the VoiceBank-DEMAND clip above, look-ahead gained only about 0.1 dB SI-SDR, so for a live mic
+I leave it at 0.&lt;/p&gt;
+&lt;p&gt;I&#39;m also adding it to GStreamer as a
+&lt;code&gt;reusedenoise&lt;/code&gt; element, so it can sit in any pipeline.&lt;/p&gt;
+&lt;h2 id=&quot;where-it-falls-short&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Where it falls short &lt;/span&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;When the background noise is &lt;strong&gt;other people talking&lt;/strong&gt;, it struggles. Which makes sense: from
+the model&#39;s point of view, that noise is speech too. More examples are in the
+&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/re-use-rs&quot;&gt;README&lt;/a&gt;. If you don&#39;t need real time, NVIDIA&#39;s offline
+model does better, and &lt;a rel=&quot;external&quot; href=&quot;https://github.com/faraday/SpeechLens&quot;&gt;SpeechLens&lt;/a&gt; runs it on Apple
+Silicon.&lt;/li&gt;
+&lt;li&gt;All speed numbers here are 16 kHz. Every frame at 48 kHz is about 3 times the work, so my rough
+estimate for 4 layers on the M3 is about 25 ms per frame: too slow for a live stream. For live
+audio, resampling to 16 kHz is the fast option.&lt;/li&gt;
+&lt;li&gt;The code is MIT/Apache-2.0, but the weights are NVIDIA&#39;s, under a &lt;strong&gt;non-commercial&lt;/strong&gt; license.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The thing I keep thinking about: the GPU wasn&#39;t wrong, it was just the wrong shape for the job.
+For one stream of tiny frames, the CPU was sitting right there the whole time.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/re-use-rs&quot;&gt;altunenes/re-use-rs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;crates.io: &lt;a rel=&quot;external&quot; href=&quot;https://crates.io/crates/reuse-rs&quot;&gt;reuse-rs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        
+    </entry>
+</feed>

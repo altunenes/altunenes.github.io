@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - lifetimes</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/lifetimes/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-03-29T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/lifetimes/atom.xml</id>
+    <entry xml:lang="en">
+        <title>You&#39;ll Finally Understand Lifetimes in Rust After Read This</title>
+        <published>2025-03-29T00:00:00+00:00</published>
+        <updated>2025-03-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/lifetimes/"/>
+        <id>https://altunenes.github.io/posts/lifetimes/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/lifetimes/">&lt;p&gt;Lifetimes in Rust are often one of the most confusing topics for beginners. In fact, learning about lifetimes is actually same as learning why Rust is forcing you to write them. I&#39;ll try to keep this post as very simple and short, so if you are already familiar with Rust and lifetimes, this post definitely not for you.&lt;/p&gt;
+&lt;h4 id=&quot;what-are-lifetimes-and-why-do-we-need-them&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; What Are Lifetimes and Why Do We Need Them? &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Lifetimes help the Rust compiler understand how long references (borrowed data) are valid. Imagine you have two pieces of paper borrowed from friends. You need to know how long you can safely use each piece before one of your friends asks for it back. Without knowing this, you might accidentally rely on a note that’s no longer available. That’s what lifetimes prevent in your code—they ensure references never outlive the data they point to.&lt;/p&gt;
+&lt;h4 id=&quot;a-broken-example-when-lifetimes-are-missing&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; A Broken Example: When Lifetimes Are Missing &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Consider this function:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// This function doesn&amp;#39;t compile because Rust doesn&amp;#39;t know how long the returned reference should be valid.&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;/span&gt;&lt;span&gt;(x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;/span&gt;&lt;span&gt;, y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt; &amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;str&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;/span&gt;&lt;span&gt; x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;/span&gt;&lt;span&gt;() &amp;gt; y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;/span&gt;&lt;span&gt;() {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        x&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; else&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        y&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;/span&gt;&lt;span&gt;() {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; string1&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;&lt;span&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; string2&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;World&amp;quot;&lt;/span&gt;&lt;span&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; result&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span&gt;string1,&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;amp;&lt;/span&gt;&lt;span&gt;string2);&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; // Compiler error: missing lifetime annotations&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The longest string is {}&amp;quot;&lt;/span&gt;&lt;span&gt;, result);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Output:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;error[E0106]: missing lifetime specifier&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt; --&amp;gt; src/main.rs:1:33&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;1 | fn longest(x: &amp;amp;str, y: &amp;amp;str) -&amp;gt; &amp;amp;str {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |               ----     ----     ^ expected named lifetime parameter&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  |&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  = help: this function&amp;#39;s return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, What’s the problem? The compiler is confused. It doesn’t know whether the returned reference is tied to &lt;code&gt;string1&lt;/code&gt; or &lt;code&gt;string2&lt;/code&gt;, or how long that &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;/span&gt;  should remain valid. Without this information, Rust can’t guarantee that the &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;/span&gt; won’t point to data that no longer exists.&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;// The Compiler&amp;#39;s View&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                                                  &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string1 ──┐                 &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;           ├─▶ longest() ──▶ returns &amp;amp;str from... where?&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string2 ──┘                 &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;// Rust can&amp;#39;t tell if the returned reference will outlive its source!&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now let&#39;s simply fix this by adding lifetimes:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;/span&gt;&lt;span&gt;&amp;lt;&amp;#39;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a&lt;/span&gt;&lt;span&gt;&amp;gt;(x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span&gt;&amp;#39;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;/span&gt;&lt;span&gt;, y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;: &amp;amp;&lt;/span&gt;&lt;span&gt;&amp;#39;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt; &amp;amp;&lt;/span&gt;&lt;span&gt;&amp;#39;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;a str&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;/span&gt;&lt;span&gt; x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;/span&gt;&lt;span&gt;() &amp;gt; y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;len&lt;/span&gt;&lt;span&gt;() {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        x&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; else&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        y&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;/span&gt;&lt;span&gt;() {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; string1&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;&lt;span&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; string2&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; String&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;World&amp;quot;&lt;/span&gt;&lt;span&gt;);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; result&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; longest&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span&gt;string1,&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;amp;&lt;/span&gt;&lt;span&gt;string2);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The longest string is {}&amp;quot;&lt;/span&gt;&lt;span&gt;, result);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use string1: {}&amp;quot;&lt;/span&gt;&lt;span&gt;, string1);&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt; // Still valid! thanks to lifetimes!!&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string1 (&amp;#39;a) ──┐                 &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                ├─▶ longest&amp;lt;&amp;#39;a&amp;gt;() ──▶ returns &amp;amp;&amp;#39;a str &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;amp;string2 (&amp;#39;a) ──┘                 &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;// Now Rust knows the returned reference lives as long as both inputs!&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;We added a lifetime parameter &lt;code&gt;&#39;a&lt;/code&gt; to the function signature.&lt;/li&gt;
+&lt;li&gt;We used this lifetime parameter to specify that the returned reference will live as long as the references passed in as arguments.&lt;/li&gt;
+&lt;li&gt;Now, the compiler knows how long the returned reference should be valid, and the code compiles successfully.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;when-do-you-need-lifetimes&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; When Do You Need Lifetimes? &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;I think this is the most important question to understand lifetimes. Generally, lifetimes are only necessary when you work with references. If you write a function that takes ownership of values, like a simple subtraction or sum, lifetimes aren’t needed. For example:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sum&lt;/span&gt;&lt;span&gt;(x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;/span&gt;&lt;span&gt;, y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&amp;gt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; i32&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; y&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span&gt; main () {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 5&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; y&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 10&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; result&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sum&lt;/span&gt;&lt;span&gt;(x, y);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;The sum is {}&amp;quot;&lt;/span&gt;&lt;span&gt;, result);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use x: {}&amp;quot;&lt;/span&gt;&lt;span&gt;, x); &lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here, no lifetimes are required because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No references (&lt;code&gt;&amp;amp;x&lt;/code&gt; or &lt;code&gt;&amp;amp;y&lt;/code&gt;): The function simple takes ownership of &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Returns a new value: The result &lt;code&gt;x + y&lt;/code&gt; is a brand-new &lt;code&gt;i32&lt;/code&gt;, not a &lt;span style=&quot;color:orange;&quot;&gt;reference&lt;/span&gt;.&lt;/li&gt;
+&lt;li&gt;Nothing borrowed: Rust doesn&#39;t need to track how long &lt;code&gt;x&lt;/code&gt; or &lt;code&gt;y&lt;/code&gt; live because the values are already copied.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span style=&quot;color:orange;&quot;&gt;  Extra note: &lt;/span&gt;
+You might ask why this still works:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;We can still use x: {}&amp;quot;&lt;/span&gt;&lt;span&gt;, x); &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The reason &lt;code&gt;x&lt;/code&gt; is still usable after calling &lt;code&gt;sum&lt;/code&gt; is that integers are &quot;&lt;code&gt;Copy&lt;/code&gt;&quot; types in Rust. When you pass them to a function, they get copied, not moved. This is because integers are small, simple values that are cheap to duplicate.&lt;/p&gt;
+&lt;h4 id=&quot;the-lifetime-elision-rules&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The Lifetime Elision Rules &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Good thing is when you program in Rust in real-world projects, you don&#39;t need to write lifetimes all the time. Rust has smart defaults that often let you skip writing lifetimes explicitly. These are called &quot;lifetime elision rules.&quot; You can read more about them in the &lt;a rel=&quot;external&quot; href=&quot;https://doc.rust-lang.org/nomicon/lifetime-elision.html&quot;&gt;official Rust book&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;But still, since I think that understanding the concept of lifetimes is an important cornerstone in understanding the overall paradigm of the Rust programming language, if I were to start Rust again, I would refer to and experiment with lifetimes even where I don&#39;t need to.&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>

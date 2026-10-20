@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - asahi</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/asahi/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-09-30T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/asahi/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Asahi illusion on the Fractal!</title>
+        <published>2023-09-30T00:00:00+00:00</published>
+        <updated>2023-09-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/asahi/"/>
+        <id>https://altunenes.github.io/posts/asahi/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/asahi/">&lt;h2 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;While experimenting with shader code, I stumbled upon a fascinating visual phenomenon. When focusing on the center of a particular design, surrounded by colorful petals, the center appears brighter than it actually is.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/DsfyRX?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;Dr. Bruno Laeng&#39;s study unveiled that our brain is deceived into triggering a pupillary light reflex, causing our pupils to constrict as if protecting our eyes from intense light, like the sun&#39;s rays.&lt;/p&gt;
+&lt;p&gt;The Asahi illusion&#39;s effect on the pupil isn&#39;t instantaneous. In humans, there&#39;s a notable delay between the onset of the illusion and the pupillary response. This delay might be attributed to the time required for the brain&#39;s processing mechanisms to influence the pupillary light reflex.&lt;/p&gt;
+&lt;p&gt;Interestingly, the Visual Cortex (V1) seems to play a pivotal role. The V1 response to the Asahi illusion precedes the pupil constriction, suggesting its potential involvement in modulating the Autonomic Nervous System (ANS). However, the exact pathways, be it direct projections or intricate subcortical synapses, remain a topic of ongoing &lt;a rel=&quot;external&quot; href=&quot;https://academic.oup.com/cercor/article/33/12/7952/7084649?login=false&quot;&gt;research&lt;/a&gt; .&lt;/p&gt;
+&lt;p&gt;here is another one I coded after the above one.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/MX23Wz?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; src=&quot;https://www.shadertoy.com/embed/43SGDh?gui=true&amp;t=10&amp;paused=true&amp;muted=false&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;Note, you can download the asahi illusion demos with using interactive GUI I implemented (easy to change the parameters like colors etc) on here: (I compiled them with Rust :-) &lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art&quot;&gt;Source code:&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;asahi-demo-downloads&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Asahi Demo Downloads &lt;/span&gt;&lt;/h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Software Version&lt;/th&gt;&lt;th&gt;Operating System&lt;/th&gt;&lt;th&gt;Download Link&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;macOS&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi-macos-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;Ubuntu&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi-ubuntu-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;Windows&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi-windows-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;strong&gt;Asahi2&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;macOS&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi2-macos-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;Ubuntu&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi2-ubuntu-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;Windows&lt;/td&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/rusty_art/releases/download/v1.0.4/asahi2-windows-latest.zip&quot;&gt;Download&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+</content>
+        
+    </entry>
+</feed>
