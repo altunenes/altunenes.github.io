@@ -156,7 +156,20 @@ let clean = denoiser.process(&noisy_chunk)?;
 let rest = denoiser.flush()?;
 ```
 
-Output is delayed by exactly one frame (20 ms). I'm also adding it to GStreamer as a
+Output is delayed by exactly one frame (20 ms). Other sample rates (8 to 48 kHz) and look-ahead
+(the model waits for up to 2 future frames, 20 ms each) are set with `Config`:
+
+```rust
+use reuse_rs::{Config, Denoiser};
+
+let config = Config { layers: 4, sample_rate: 48000, look_ahead: 1 };
+let mut denoiser = Denoiser::with_config("realtime_reuse/model.safetensors", config)?;
+```
+
+On the VoiceBank-DEMAND clip above, look-ahead gained only about 0.1 dB SI-SDR, so for a live mic
+I leave it at 0.
+
+I'm also adding it to GStreamer as a
 `reusedenoise` element, so it can sit in any pipeline.
 
 ## <span style="color:orange;"> Where it falls short </span>
@@ -166,7 +179,9 @@ Output is delayed by exactly one frame (20 ms). I'm also adding it to GStreamer 
   [README](https://github.com/altunenes/re-use-rs). If you don't need real time, NVIDIA's offline
   model does better, and [SpeechLens](https://github.com/faraday/SpeechLens) runs it on Apple
   Silicon.
-- Only 16 kHz and no look ahead are tested.
+- All speed numbers here are 16 kHz. Every frame at 48 kHz is about 3 times the work, so my rough
+  estimate for 4 layers on the M3 is about 25 ms per frame: too slow for a live stream. For live
+  audio, resampling to 16 kHz is the fast option.
 - The code is MIT/Apache-2.0, but the weights are NVIDIA's, under a **non-commercial** license.
 
 The thing I keep thinking about: the GPU wasn't wrong, it was just the wrong shape for the job.
