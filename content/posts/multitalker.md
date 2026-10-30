@@ -17,9 +17,11 @@ person is lost.
 
 NVIDIA has a model for exactly this, the
 [multitalker Parakeet](https://huggingface.co/nvidia/multitalker-parakeet-streaming-0.6b-v1), but
-it is English only. I wanted the same thing on
-[parakeet-tdt-0.6b-v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3), which knows 25
-European languages.
+it is English only and made for streaming: it hears small pieces of audio at a time, which is
+great for live captions. Most of what I transcribe is recordings, and there an offline model that
+hears the whole sentence is usually more accurate. So I wanted the same thing on
+[parakeet-tdt-0.6b-v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3), my favorite offline
+model, which also knows 25 European languages.
 
 ## <span style="color:orange;"> The idea </span>
 
