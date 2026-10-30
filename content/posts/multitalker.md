@@ -130,7 +130,7 @@ AMI left a small accent too. Some English output now writes numbers as words ("e
 uses British spelling like "diarisation".
 
 I measured 7 of the 25 languages. The others should follow the base TDT quality, but I haven't
-tested them.
+tested them. 
 
 - GitHub: [altunenes/parakeet-rs](https://github.com/altunenes/parakeet-rs)
 - Model: [multitalker-tdt-0.6b-v3](https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-tdt-0.6b-v3)
