@@ -65,7 +65,7 @@ in the [Nemotron 3.5 Transcribe report](https://huggingface.co/blog/nvidia/nemot
 | 2 | 36.7% | 7.20% | **4.4%** |
 | 3 | 47.3% | 12.94% | **7.8%** |
 
-This comparison is not perfectly fair. NVIDIA's model is streaming, mine is offline and sees 20 s
+note that this comparison is not perfectly fair. NVIDIA's model is streaming, "mine" is offline and sees 20 s
 at a time. Also, I ran 300 of the 2,620 mixtures per set, because I'm "proudly" GPU poor :-P the full
 set kept running into free Colab's limits, so this one ran on Colab's CPU instead.
 
