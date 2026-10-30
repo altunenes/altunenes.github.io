@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - perception</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/perception/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-08-18T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/perception/atom.xml</id>
+    <entry xml:lang="en">
+        <title>A hole that isn&#39;t there: faking infinite depth on a flat quad</title>
+        <published>2026-08-18T00:00:00+00:00</published>
+        <updated>2026-08-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/parallax/"/>
+        <id>https://altunenes.github.io/posts/parallax/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/parallax/">&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https://x.com/cmzw_/status/2082071045113299155&quot;&gt;celestialmaze&lt;/a&gt; posted a clip of a
+Unity scene: a checkered plane with a sphere sunk into it, and when the camera
+swung round to the side, the whole thing folded up into nothing. Flat quad. No
+sphere. I wanted to know exactly how much code that took, so I rebuilt it in
+ShaderToy and then kept going until it was a tunnel instead of a ball.&lt;/p&gt;
+&lt;p&gt;The finished thing is &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/Ncy3W1&quot;&gt;here&lt;/a&gt;, and there&#39;s a
+video walkthrough if you&#39;d rather watch me type it but I realized I&#39;m very bad at video editing/voiceover stuff so the blogged version is easier to extract information from.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/RuKsBPs2FNM?si=yM8P_pof-YM3AfWR&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; referrerpolicy=&quot;strict-origin-when-cross-origin&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;The technique has a name, interior mapping, and it&#39;s old. People use it for
+building windows: one quad on a facade, and behind every window there&#39;s a room
+that doesn&#39;t exist. The version here is the same idea pointed at a hole.&lt;/p&gt;
+&lt;h2 id=&quot;the-quad-is-a-box&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The quad is a box &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Everything in the scene is one box intersection. Here&#39;s the half-size:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;#define&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; W vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.02&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That Z is the whole thingiy. Two hundredths of a unit. Set it to &lt;code&gt;1.&lt;/code&gt; and you get an
+actual cube, orbiting like a normal object, and it becomes obvious that nothing
+clever is happening to the geometry at any point. It&#39;s a box. We squashed it.&lt;/p&gt;
+&lt;p&gt;The intersection is the standard slab test, which packs down to three lines
+because you can do both slabs at once:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;d)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;W&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span&gt;o&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;d&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; q&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;i&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(q.x&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.y)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.z)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;min&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;min&lt;/span&gt;&lt;span&gt;((j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).x&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;(j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).y)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;(j&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;i).z)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;s&lt;/code&gt; is the near hit, &lt;code&gt;h&lt;/code&gt; is the far one. And the face normal falls out of the same
+values without a branch anywhere:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    n&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;sign&lt;/span&gt;&lt;span&gt;(d)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;step&lt;/span&gt;&lt;span&gt;(q.yzx&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;step&lt;/span&gt;&lt;span&gt;(q.zxy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Whichever axis won that &lt;code&gt;max&lt;/code&gt; is the axis you hit. &lt;code&gt;sign&lt;/code&gt; gives you which side of
+it. Two &lt;code&gt;step&lt;/code&gt;s and a multiply, no &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;punching-the-hole&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Punching the hole &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Front face, inside a radius, paint it black:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;        if&lt;/span&gt;&lt;span&gt;(n.z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.5&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;p.xy)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span&gt;r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;r)&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            c&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note the &lt;code&gt;dot&lt;/code&gt; against itself rather than &lt;code&gt;length&lt;/code&gt; under &lt;code&gt;r&lt;/code&gt;. Same test, and you
+skip the square root. Small thing, but this shader ends up being mostly small
+things.&lt;/p&gt;
+&lt;p&gt;At this point you have a black circle that does absolutely nothing when you orbit.
+It&#39;s a sticker. It&#39;s also, structurally, already finished: every remaining line in
+this post is about what to put inside that &lt;code&gt;if&lt;/code&gt;.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_1.png&quot; alt=&quot;A checkered quad floating above a dark grid, with a solid black ellipse punched out of its middle.&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The &lt;code&gt;if&lt;/code&gt; fires, nothing fills it. A sticker on a quad: orbit the camera and the black moves with the surface.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;the-handoff&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The handoff &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Here&#39;s the part worth the post.&lt;/p&gt;
+&lt;p&gt;Instead of shading that circle, you take the point where the ray hit it and treat
+it as a &lt;strong&gt;new ray origin&lt;/strong&gt;. Same direction, new starting point. The surface catches
+the ray and lets it keep travelling into a volume that only exists in the shader.&lt;/p&gt;
+&lt;p&gt;What it travels into is an infinite cylinder, solved in XY only, because Z is
+unconstrained down a straight bore:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(d.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;d.xy)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;d.xy)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;sqrt&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;abs&lt;/span&gt;&lt;span&gt;(h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;(r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;r&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;dot&lt;/span&gt;&lt;span&gt;(p.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;p.xy)))))&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;max&lt;/span&gt;&lt;span&gt;(s&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;e&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;6&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            q&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt;p&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;d&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span&gt;s&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;d.z&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Textbook quadratic. The only thing to be careful about is which root you take:
+you&#39;re starting &lt;em&gt;inside&lt;/em&gt; the cylinder, so one root is ahead of you and one is
+behind. Flip that &lt;code&gt;+sqrt&lt;/code&gt; to &lt;code&gt;-sqrt&lt;/code&gt; and the whole image turns itself inside out,
+which is a good sanity check and also fun to watch.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;z&lt;/code&gt; is then just how far down the bore you landed, and that single number does all
+the remaining work.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;max(s,1e-6)&lt;/code&gt; matters more than it looks like it does. Rays aimed straight down
+the axis have &lt;code&gt;d.xy&lt;/code&gt; near zero (the vanishing point, dead centre of the screen),
+and without the guard you get a NaN pixel sitting right where everyone&#39;s looking.&lt;/p&gt;
+&lt;p&gt;Texture it by angle and depth and you&#39;ve got a tunnel that parallaxes properly:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            c&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;mix&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.06&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.065&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.08&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.85&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.88&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.94&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;                  ck&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec2&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;atan&lt;/span&gt;&lt;span&gt;(q.y&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.x)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.1416&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;8.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.&lt;/span&gt;&lt;span&gt;)))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;two-problems-one-variable&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Two problems, one variable &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;That version looks wrong in two specific ways.&lt;/p&gt;
+&lt;p&gt;First, the checker cells shrink as they run toward infinity, and once they&#39;re
+smaller than a pixel the centre turns into shimmering garbage. No mipmaps here to
+save you. It&#39;s procedural. So fade the pattern out before it gets that small:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;                  mix&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;ck&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec2&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;atan&lt;/span&gt;&lt;span&gt;(q.y&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;q.x)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.1416&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;8.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;3.&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.5&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;                      smoothstep&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;5.&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;z))&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Past a depth of about five it just becomes flat grey. Hand-rolled mip level,
+basically, and the noise is gone.&lt;/p&gt;
+&lt;p&gt;Second, and this is the one that actually sells it: nothing gets darker. The
+tunnel is lit uniformly forever, which reads as wallpaper rather than distance.
+One division fixes it:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;             /&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;exp&lt;/span&gt;&lt;span&gt;(z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.25&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That&#39;s it. That&#39;s the infinity. Set the &lt;code&gt;.25&lt;/code&gt; to zero and you&#39;re staring at a flat
+grey disc again; put it back and depth snaps into place. Of everything in this
+shader, that&#39;s the line doing the heaviest lifting per character.&lt;/p&gt;
+&lt;p&gt;It&#39;s also, if you squint, the same trick as the &lt;code&gt;col = col*r&lt;/code&gt; at the end of
+&lt;a rel=&quot;external&quot; href=&quot;https://iquilezles.org/articles/tunnel&quot;&gt;IQ&#39;s classic tunnel&lt;/a&gt;: his radius and my
+depth are reciprocals of each other, so darkening by one is darkening by the other.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_2.png&quot; alt=&quot;The checkered quad seen at an angle, the disc filled with a checkered surface curving away from the viewer.&quot; /&gt;&lt;/th&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/parallax_3.png&quot; alt=&quot;The same quad seen head-on, the disc now concentric checkered rings converging to a fine point at the centre.&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Off-axis, you&#39;re looking at the near wall of the bore.&lt;/em&gt;&lt;/td&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Head-on, you&#39;re looking straight down it. Same code, same quad. Only the camera moved.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;light-comes-from-the-mouth&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Light comes from the mouth &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Last thing. A directional light is wrong for a bore: it splits the tube down the
+middle, half lit and half dead, with a hard seam. Real holes are lit by whatever
+is outside them. So put the lamp at the opening and fall off with distance:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            n&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=-&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;normalize&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(q.xy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.3&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.45&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.8&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;-&lt;/span&gt;&lt;span&gt;q&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #F07178;&quot;&gt;length&lt;/span&gt;&lt;span&gt;(i)&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/=&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;then&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;glsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;             *&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.05&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.9&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;X&lt;/span&gt;&lt;span&gt;(n&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt;i)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;.55&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.55&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;/&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;+&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt;h&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1.4&lt;/span&gt;&lt;span&gt;))&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;+.55&lt;/code&gt; there is a wrap term, so the far side of the tube never goes fully
+black and the shading stays soft. Slightly off-axis lamp position keeps a hint of
+direction in it rather than looking perfectly symmetric.&lt;/p&gt;
+&lt;h2 id=&quot;using-it-on-something-real&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Using it on something real &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Nothing above is ShaderToy specific. On an actual mesh you rotate the view
+direction into the surface&#39;s own frame and the intersection code is identical, the
+plane just becomes the UV plane. Any flat face works (windows, vents, shafts), and
+it&#39;s still one draw call no matter how many faces you point it at. Cost is one
+quadratic per pixel, and it doesn&#39;t care whether the tunnel is one unit deep or a
+thousand, which is the part that makes it worth knowing.&lt;/p&gt;
+&lt;p&gt;The same three lines work on anything you can hang behind a plane. Here&#39;s the
+tunnel swapped for a &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/NfVSRy&quot;&gt;tank of water&lt;/a&gt;:
+one &lt;code&gt;refract()&lt;/code&gt; before the intersection, a box instead of a cylinder, and the
+caustics fall out of the refraction Jacobian rather than a scrolling texture.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;water pool: interior mapping&quot;&gt;
+  &lt;source src=&quot;/videos/blue.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;I put it in a game, so here&#39;s what actually changed.&lt;/p&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster&lt;/a&gt; is a grid roguelike, and its swamp rooms have pools cut
+into the floor. The pit is real geometry, brick sides, 0.85 units deep. The water
+isn&#39;t. The water is one tile:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;pit_water_mesh&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span&gt; meshes&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;add&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Cuboid&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;new&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;005&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;0&lt;/span&gt;&lt;span&gt;)),&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Five thousandths of a unit. Same joke as &lt;code&gt;W vec3(1.3,1.3,.02)&lt;/code&gt; at the top of this
+post, four times flatter.&lt;/p&gt;
+&lt;p&gt;Everything you see through that tile is the slab test. The silt bed, the stones,
+the submerged walls running away from you. The real pit floor is down there
+somewhere but the water is opaque, so nobody has ever seen it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/top.png&quot; alt=&quot;The pool from a low angle&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The bed and the walls receding toward the far end are the same three lines from the top of this post. The brick above the waterline is the only part that&#39;s modelled.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;The ray gets refracted before the intersection runs, which the demo never bothers
+with. One &lt;code&gt;refract()&lt;/code&gt;, costs nothing, and it ties the depth to the wave normal, so
+the bed swims a little as ripples cross it. That&#39;s most of what makes it read as
+liquid instead of a tinted sheet.&lt;/p&gt;
+&lt;p&gt;The parallax is a lie too. The camera is locked near top-down, and looking
+straight down, honest refraction barely displaces anything at all, so the effect
+is invisible at the only angle anyone plays from. So I cheat:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;const&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 4.0&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; normalize&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;x &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN, rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;y, rd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;z &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;*&lt;/span&gt;&lt;span&gt; PARALLAX_GAIN));&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Horizontal components times four, before the slab test. Physically nonsense, and
+the difference between a hole and a green rectangle.&lt;/p&gt;
+&lt;p&gt;Then the part I didn&#39;t see coming. Pools aren&#39;t rectangles.&lt;/p&gt;
+&lt;p&gt;The demo has one quad, so the box is just the box. A pool is a lot of tiles,
+sometimes L-shaped, and every tile runs its own slab test. They all have to agree
+about where the walls are, or you get a wall drawn through open water.&lt;/p&gt;
+&lt;p&gt;Giving every tile one box covering the whole pool looks obvious and is wrong. For
+an L that box is the bounding rectangle, so each arm&#39;s inner side sits deep inside
+it and never gets a wall. Shrinking the box to one tile is wrong the other way:
+with the gain above the ray is shallow enough that a wall&#39;s footprint is wider
+than a tile, so any tile touching stone goes solid.&lt;/p&gt;
+&lt;p&gt;So each tile stores four distances instead, found by walking the grid until the
+water stops. A slab test only ever asks how far the wall is along X and along Z,
+and that&#39;s the answer to exactly that question, whatever shape the pool is.&lt;/p&gt;
+&lt;p&gt;Which is right about the banks and still wrong as a surface. Neighbouring tiles
+now march into different boxes, so the depth, the wall fade and the floor/wall
+split all step at the tile boundary, and an L reads as a hard seam across open
+water. A per tile box cannot describe a non convex pool consistently; that isn&#39;t
+tuning, it&#39;s the representation.&lt;/p&gt;
+&lt;p&gt;So the march went back to one box per pool, the option I&#39;d just called obvious and
+wrong, because a notch that the stone bank mostly stands in front of beats a seam
+that&#39;s visible from every angle. The four distances didn&#39;t go away, though. They
+turned out to be answering a different question: not &quot;what box do I march&quot; but
+&quot;how far is the stone&quot;??, which is what the shore gradient, the shallow lip and the
+waterline foam are all keyed off. Two values, because they were never one.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/direct.png&quot; alt=&quot;Looking down into the pool&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Straight down into it. Caustics, waves and silt are separate layers on top; the depth under them is the slab test.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;A painted texture would survive most frames in this post. It wouldn&#39;t survive that
+one. The wall and floor junctions slide against each other at different rates as
+the camera moves, because they&#39;re being intersected rather than drawn.&lt;/p&gt;
+&lt;p&gt;Then drop the camera to the waterline and the mesh gives itself away.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/thin.png&quot; alt=&quot;The water plane seen almost edge on&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Almost edge on. That plate is the entire mesh.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Everything behind it is still solving. Still one quadratic per pixel, in a frame
+where you can see exactly how little geometry is doing the work.&lt;/p&gt;
+&lt;p&gt;Two limits worth being honest about. It&#39;s per-face, so only the face you mapped
+has the hole, and the depth is fake, so nothing intersects or occludes it correctly
+unless you write depth out yourself. Neither is hard to work around, but you should
+know about both before you put it in something.&lt;/p&gt;
+&lt;p&gt;And of course the whole thing collapses if the camera goes edge-on. That&#39;s not a
+bug, that&#39;s the same limitation billboards have always had, except here you got
+real parallax for free right up until the moment you didn&#39;t.&lt;/p&gt;
+&lt;p&gt;For the pool that never comes up, and not because I planned it that way. The
+camera is locked overhead because it&#39;s a grid game. It would have been locked
+there whether or not the water needed it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Water surface in a grid game, rendered with the same interior mapping trick and viewed from a fixed overhead camera.&quot;&gt;
+  &lt;source src=&quot;/videos/water.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;&lt;em&gt;The pool with different angles.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+&lt;p&gt;Source is on &lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/Ncy3W1&quot;&gt;ShaderToy&lt;/a&gt;, fork it and
+break it. Original inspiration from a clip by
+&lt;a rel=&quot;external&quot; href=&quot;https://x.com/cmzw_/status/2082071045113299155&quot;&gt;@cmzw_&lt;/a&gt;.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>How LLMs See Illusory Faces</title>
+        <published>2025-06-22T00:00:00+00:00</published>
+        <updated>2025-06-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/pareidolia/"/>
+        <id>https://altunenes.github.io/posts/pareidolia/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/pareidolia/">&lt;h4 id=&quot;background&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Background &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Seeing faces in inanimate objects —a phenomenon called pareidolia— is a common human experience. With today&#39;s powerful Vision-Language Models (VLMs), a simple question arises: do they see these illusory faces too? Probing their &quot;vision&quot; this way isn&#39;t just a fun experiment. It&#39;s a practical way to understand their inner workings, challenge our assumptions when building with them, and explore the gap between artificial and biological sight.&lt;/p&gt;
+&lt;p&gt;This question grew out of my master&#39;s research, where I used EEG to study how the human brain processes these very illusions, which led to an &lt;a rel=&quot;external&quot; href=&quot;https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4341900&quot;&gt;ERP paper&lt;/a&gt; on the topic.&lt;/p&gt;
+&lt;h4 id=&quot;what-is-spatial-frequency-and-coarse-to-fine-theory&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; What is Spatial Frequency and Coarse-to-Fine Theory? &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;So, how do you fairly test an AI&#39;s perception? My plan was to see if it falls for the same visual shortcuts our brains do.&lt;/p&gt;
+&lt;p&gt;This is based on a key idea in human vision called the &lt;strong&gt;Coarse-to-Fine&lt;/strong&gt; theory. In short, human brain processes the blurry, general, coarse, &quot;gist&quot; of something first, and then uses that initial guess to figure out the finer details more quickly. The technical way to separate the &quot;gist&quot; from the &quot;details&quot; is with &lt;strong&gt;spatial frequencies&lt;/strong&gt;, which can be isolated using techniques like 2D Fourier filtering.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Low Spatial Frequencies (LSF)&lt;/strong&gt; are the blurry, large-scale shapes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;High Spatial Frequencies (HSF)&lt;/strong&gt; are the sharp edges and fine textures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You experience this all the time. Think about recognizing someone from across the street—you see their overall shape long before you see their eyes. While not about spatial frequency directly, a study on hierarchical processing shows a similar &quot;general first&quot; principle: people can spot an &lt;em&gt;animal&lt;/em&gt; in an image in just 120ms, but need longer to identify it as a &lt;em&gt;dog&lt;/em&gt; (&lt;a rel=&quot;external&quot; href=&quot;https://pubmed.ncbi.nlm.nih.gov/25208739/&quot;&gt;Wu et al., 2014&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;My whole experiment was designed around this: would the AI also see a face in the blur, but get confused by the sharp details? To test this, I needed to isolate these frequencies.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/sf.png&quot; alt=&quot;SF&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Visualizing the Coarse-to-Fine theory. The left shows an image broken into coarse (Low Frequency) and fine (High Frequency) information. The right shows how the brain processes the coarse &#39;gist&#39; first to guide perception.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;To do this, I used a Butterworth filter from my own Rust tool, which you can try out here: &lt;a rel=&quot;external&quot; href=&quot;https://altunenes.github.io/butter2d/&quot;&gt;butter2d&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&quot;how-llms-see-illusions&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; How LLMs see illusions &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Research shows that modern VLMs are not objective, infallible observers; they can be &quot;fooled&quot; by classic visual illusions, and their susceptibility often increases with model scale &lt;a rel=&quot;external&quot; href=&quot;https://arxiv.org/abs/2311.00047&quot;&gt;Shen et al., 2023&lt;/a&gt; . This suggests they are learning statistical heuristics from their training data that mimic human perception, rather than developing a deep, structural understanding of the world.&lt;/p&gt;
+&lt;p&gt;This makes pareidolia a particularly interesting test. It&#39;s not a geometric trick, but an illusion driven by a powerful, top-down, and likely evolutionary bias to find faces in our environment.&lt;/p&gt;
+&lt;h3 id=&quot;the-experiment&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The Experiment &lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;To test how Gemini handles pareidolia, I took several images and created three versions of each (using butterworth filter): the original &lt;strong&gt;Broadband (BB)&lt;/strong&gt;, a blurry &lt;strong&gt;Low Spatial Frequency (LSF)&lt;/strong&gt; version, and a sharp-edged &lt;strong&gt;High Spatial Frequency (HSF)&lt;/strong&gt; version. I then fed them to the model with a simple prompt. To avoid any &quot;memory&quot; or context-priming effects, each images was processed in a completely separate session.&lt;/p&gt;
+&lt;p&gt;Here was the prompt:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&quot;What are the three most prominent objects you see in this image? Respond in a JSON format where each object has a &#39;name&#39; and a &#39;confidence_score&#39;.&quot;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here are the results.&lt;/p&gt;
+&lt;h4 id=&quot;test-1-the-wire-face&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Test 1: The Wire Face &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;This image of server cables, which I found on X (formerly Twitter), has an uncanny facial structure. As hypothesized, the LLM completely missed the face in the broadband and HSF versions, describing only the literal content. However, when presented with the LSF version, where only the coarse, global shape remains, it immediately and confidently identified a &lt;strong&gt;&quot;Face&quot;&lt;/strong&gt;. So the fine HSF details of the wires and components seem to break the illusion for the model, while the blurry LSF version provides the ideal template for a face.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/W.png&quot; alt=&quot;W&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;LSF (left), Broadband (middle), HSF (right) versions of the &#39;Wire Face&#39;.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h4 id=&quot;test-2-the-church-face&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Test 2: The Church Face &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Next, I used one of the most famous pareidolia images on the internet. My rationale was that if the model&#39;s perception is purely a function of its training data, it would have surely seen this image and would recognize the face (or illusory face). Once again, it failed to see the face in the BB and HSF versions, focusing only on the architecture. But in the LSF version, it correctly identified a &lt;strong&gt;&quot;Face (Pareidolia)&quot;&lt;/strong&gt;. This suggests the model&#39;s failure isn&#39;t just about a lack of training data. The high-frequency details of the building&#39;s facade actively mask the illusion for the AI, even for a classic example.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/C.png&quot; alt=&quot;C&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The famous &#39;Church Face&#39; pareidolia.&lt;/em&gt;&lt;br&gt;&lt;em&gt;Note that the model only sees a &quot;Face (Pareidolia)&quot; in the LSF version, describing only architectural elements in the others.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h4 id=&quot;test-3-the-oval-hypothesis&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Test 3: The Oval Hypothesis &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;The previous results sparked a new idea: perhaps the LLM&#39;s internal &quot;face template&quot; is strongly biased towards the oval, rounded shapes of human faces? The &quot;Wire Face&quot; is very angular. To test this, I selected two images with a more circular structure.&lt;/p&gt;
+&lt;p&gt;The first, an electrical component, followed the now-established pattern. A &lt;strong&gt;&quot;Illusory Face&quot;&lt;/strong&gt; was detected in the LSF version, but the BB and HSF versions were seen only as literal machine parts.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/E.png&quot; alt=&quot;E&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;An illusory face in an electrical component.&lt;/em&gt;&lt;br&gt;&lt;em&gt;The LSF version triggered a &quot;Pareidolia Face&quot; detection, while the detailed versions only yielded descriptions of machine parts.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;The second image, however, gave a breakthrough result. This time, the LLM saw a face in &lt;strong&gt;all three versions!&lt;/strong&gt; It identified a &quot;Face&quot; in both LSF and BB, and even a &lt;strong&gt;&quot;Illusory Face&quot;&lt;/strong&gt; in the sharp HSF image. This is a brilliant finding. It suggests that when an object&#39;s structure is a strong enough match for the AI&#39;s internal face template (a round shape, two distinct &quot;eyes,&quot; a &quot;mouth&quot;), it can overcome the distracting HSF noise. This is also highly consistent with human vision, where HSF information is vital for analyzing the fine features &lt;em&gt;of a face&lt;/em&gt; once it has been detected.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/M.png&quot; alt=&quot;M&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;A illusory face on a can or clock mechanism that the LLM saw in all versions.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h4 id=&quot;test-4-the-illusory-robot&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Test 4: The Illusory Robot &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;This next test uses a common object that happens to have face-like features: a set of viewpoint binoculars. The results show another interesting form of interpretation by the model. In the LSF version, the blurry shape with two prominent circles triggers an anthropomorphic classification: &lt;strong&gt;&quot;robot&quot;&lt;/strong&gt;. The model defaults to a familiar humanoid template. However, once the HSF details are available in the broadband and sharp versions, the model corrects its initial &quot;guess&quot; and accurately identifies the object as &lt;strong&gt;&quot;viewpoint binoculars&quot;&lt;/strong&gt;.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/R.png&quot; alt=&quot;R&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;An LSF-induced &quot;robot&quot; is corrected into binoculars with more detail.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h4 id=&quot;test-5-the-holistic-face-paintings&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Test 5: The Holistic Face Paintings &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Finally, I moved from pure pareidolia to a different kind of illusion: composite portraits, famously painted by artists like Giuseppe Arcimboldo. In these images, the face is &lt;strong&gt;intentionally&lt;/strong&gt; constructed from other objects. These aren&#39;t really pareidolia in the same way; they are deliberate artistic constructions where recognizing the face requires &lt;strong&gt;holistic processing&lt;/strong&gt;—seeing the overall arrangement rather than just the sum of the individual parts. How would the LLM fare?&lt;/p&gt;
+&lt;p&gt;The first painting is a face constructed from a landscape. Interestingly, the model identified a &lt;strong&gt;&quot;large face&quot;&lt;/strong&gt; in both the broadband and high-frequency versions. This is a departure from the earlier pareidolia examples. Here, the individual components (trees, rocks) don&#39;t look like facial features on their own, but their careful arrangement creates a powerful holistic impression that the model was able to perceive, even with all the fine details present.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/P.png&quot; alt=&quot;P&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;A composite face, testing holistic perception.&lt;/em&gt;&lt;br&gt;&lt;em&gt;Notably, the model identified the face in all three versions, even describing it as an &#39;optical illusion&#39; in the BB.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;I tried a second, similar painting of a shepherd in a landscape forming a face. The results were just as intriguing. In the full-detail versions, the model successfully identified both the whole (&lt;strong&gt;&quot;Face&quot;&lt;/strong&gt;) and the parts (&lt;strong&gt;&quot;Sheep&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;Shepherd&quot;&lt;/strong&gt;). It seemed to parse the image on multiple levels simultaneously.&lt;/p&gt;
+&lt;p&gt;However, an interesting twist occurred in the LSF version. The blur, which helped reveal faces in the pareidolia examples, seemed to &lt;em&gt;weaken&lt;/em&gt; the illusion here. The model&#39;s top guess for the LSF version was &lt;strong&gt;&quot;Tree&quot;&lt;/strong&gt;, not &quot;Face&quot;. This might suggest that for these complex, deliberately constructed images, the precise arrangement and HSF details are actually &lt;em&gt;critical&lt;/em&gt; for the holistic face to emerge, and blurring them can break the carefully crafted composition. It&#39;s a fascinating case where the general rule (LSF reveals faces) is reversed, highlighting the complexity of both human and machine perception.&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/P2.png&quot; alt=&quot;P2&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Another composite face, where blur seemed to hinder, rather than help, perception.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h3 id=&quot;conclusion-and-final-thoughts&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Conclusion and Final Thoughts &lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;For anyone working with or building on top of these AI systems, I believe understanding these kinds of behaviors is important. An AI&#39;s failure to see a pattern that is obvious to us—or its tendency to see one only under specific conditions like blurring—highlights the inherent differences in how they process visual information.&lt;/p&gt;
+&lt;p&gt;This method of probing with spatial frequencies and illusions could serve as a simple, fun, intuitive benchmark for tracking the progress of future vision models. As new architectures are developed, seeing how they handle these edge cases can tell us a lot about whether they are developing more robust, human-like perception or simply becoming better at pattern-matching their training data.&lt;/p&gt;
+&lt;p&gt;Of course, there are clear limitations here. I only used one model, Gemini 2.5 Pro, primarily because company I work provides free access to it. Other powerful models from OpenAI, Anthropic, or elsewhere might react to these images in completely different ways. The number of images was also small.&lt;/p&gt;
+&lt;p&gt;Also you might be realized that model&#39;s own distinction between a &quot;Face&quot; and a &quot;Pareidolia Face&quot;. What is the difference? When the model uses the simple &quot;Face&quot; label, does it believe it&#39;s seeing a real person or animal? Is the &quot;Pareidolia&quot; tag an admission that it recognizes the illusion?&lt;/p&gt;
+&lt;p&gt;Perhaps the most important takeaway is the value of using novel stimuli. The real test for these models isn&#39;t showing them the famous &quot;Church Face&quot; again, but presenting them with the new, illusory faces we discover in our daily lives—a pattern in a coffee stain, the front of a new car, or a strangely-shaped vegetable. These &quot;wild&quot; pareidolia images, which the AI could not have been trained on, are the truest test of whether they are learning to &lt;em&gt;see&lt;/em&gt; or just to &lt;em&gt;recognize&lt;/em&gt;. And for me, that&#39;s an experiment that never gets old.&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>

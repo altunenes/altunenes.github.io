@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - ASR</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/asr/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-10-31T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/asr/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Overlapping speakers with Parakeet TDT</title>
+        <published>2026-10-31T00:00:00+00:00</published>
+        <updated>2026-10-31T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/multitalker/"/>
+        <id>https://altunenes.github.io/posts/multitalker/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/multitalker/">&lt;p&gt;When two people talk at the same time, speech recognition models write one sentence out of both,
+or one of them just disappears.&lt;/p&gt;
+&lt;p&gt;In &lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/parakeet-rs&quot;&gt;parakeet-rs&lt;/a&gt; the usual way to get speakers is
+diarization. &lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/nvidia/Nemotron-3-Diarization&quot;&gt;Nemotron-3 Diarization&lt;/a&gt; says
+who speaks when, and every word goes to whoever was speaking at its timestamp. This works fine
+until people talk over each other. Then a sentence gets cut between two speakers and the quieter
+person is lost.&lt;/p&gt;
+&lt;p&gt;NVIDIA has a model for exactly this, the
+&lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/nvidia/multitalker-parakeet-streaming-0.6b-v1&quot;&gt;multitalker Parakeet&lt;/a&gt;, but
+it is English only and made for streaming: it hears small pieces of audio at a time, which is
+great for live captions. Most of what I transcribe is recordings, and there an offline model that
+hears the whole sentence is usually more accurate. So I wanted the same thing on
+&lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3&quot;&gt;parakeet-tdt-0.6b-v3&lt;/a&gt;, my favorite offline
+model, which also knows 25 European languages.&lt;/p&gt;
+&lt;h2 id=&quot;the-idea&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The idea &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;I used NVIDIA&#39;s design. The diarization output for one speaker (is this person talking in this
+80 ms frame or not) goes into the encoder through a few extra layers, called speaker kernels. Then
+the model runs once per speaker, and each time it writes down only that person, even when someone
+else is talking at the same time.&lt;/p&gt;
+&lt;p&gt;I froze the whole TDT model and trained only the speaker kernels plus small adapters in its 24
+encoder layers. That is 7.4M parameters out of 634M. The original model never changes, so one
+person talking alone should come out as good as before.&lt;/p&gt;
+&lt;h2 id=&quot;training&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Training &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Everything trained on a free Colab T4, around 30k steps per round.&lt;/p&gt;
+&lt;p&gt;The first rounds used &lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/datasets/google/fleurs&quot;&gt;FLEURS&lt;/a&gt; clips from all 25
+languages, mixed on top of each other with 1 to 4 speakers. The model learned to separate voices,
+but on real meetings it was worse than plain TDT (31.4% vs 24.7% on AMI). It caught the first
+sentence of a speaker and dropped the later ones. Which makes sense: in a mixed clip every person
+says one sentence. In a real conversation people speak again and again.&lt;/p&gt;
+&lt;p&gt;So in round 3 I added real conversations: dialogues built from
+&lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/datasets/facebook/voxpopuli&quot;&gt;VoxPopuli&lt;/a&gt; speeches, and the AMI training
+meetings. As labels I used TDT&#39;s own transcripts wherever they agreed with the human ones, so the
+model keeps TDT&#39;s writing style.&lt;/p&gt;
+&lt;p&gt;That fixed it. On the AMI test meetings round 3 got 15.5%, plain TDT 26.5%.&lt;/p&gt;
+&lt;h2 id=&quot;the-numbers&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The numbers &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;All scores are cpWER: word error rate where each real speaker is matched with the best output
+speaker, lower is better. Both systems get the same Nemotron-3 Diarization output. &quot;Plain TDT&quot; is
+what parakeet-rs users run today, words given to speakers by their timestamps.&lt;/p&gt;
+&lt;p&gt;English, &lt;a rel=&quot;external&quot; href=&quot;https://github.com/NaoyukiKanda/LibriSpeechMix&quot;&gt;LibriSpeechMix&lt;/a&gt;, the standard test set
+for overlapping speech. NVIDIA reports their multitalker Parakeet with the same diarization model
+in the &lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/blog/nvidia/nemotron-transcribe-granary&quot;&gt;Nemotron 3.5 Transcribe report&lt;/a&gt;:&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Speakers&lt;/th&gt;&lt;th&gt;Plain TDT&lt;/th&gt;&lt;th&gt;NVIDIA multitalker (reported)&lt;/th&gt;&lt;th&gt;Multitalker TDT&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;1.9%&lt;/td&gt;&lt;td&gt;2.77%&lt;/td&gt;&lt;td&gt;2.0%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;36.7%&lt;/td&gt;&lt;td&gt;7.20%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;4.4%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;47.3%&lt;/td&gt;&lt;td&gt;12.94%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;7.8%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;note that this comparison is not perfectly fair. NVIDIA&#39;s model is streaming, &quot;mine&quot; is offline and sees 20 s
+at a time. Also, I ran 300 of the 2,620 mixtures per set, because I&#39;m &quot;proudly&quot; GPU poor :-P the full
+set kept running into free Colab&#39;s limits, so this one ran on Colab&#39;s CPU instead.&lt;/p&gt;
+&lt;p&gt;Six other languages, 900 mixtures from the
+&lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/datasets/facebook/multilingual_librispeech&quot;&gt;Multilingual LibriSpeech&lt;/a&gt; test
+set (not used in training), 1 to 3 different speakers of the same language talking over each other:&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Plain TDT&lt;/th&gt;&lt;th&gt;Multitalker TDT&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;1 speaker&lt;/td&gt;&lt;td&gt;6.8%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;5.7%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;2 speakers&lt;/td&gt;&lt;td&gt;39.0%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;10.7%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;3 speakers&lt;/td&gt;&lt;td&gt;53.7%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;16.7%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Per language, with 2 or 3 speakers:&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Plain TDT&lt;/th&gt;&lt;th&gt;Multitalker TDT&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;German&lt;/td&gt;&lt;td&gt;44.8%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;12.5%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;French&lt;/td&gt;&lt;td&gt;59.5%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;12.9%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Spanish&lt;/td&gt;&lt;td&gt;48.0%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;9.0%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Italian&lt;/td&gt;&lt;td&gt;43.6%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;17.4%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Polish&lt;/td&gt;&lt;td&gt;47.1%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;14.3%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Portuguese&lt;/td&gt;&lt;td&gt;45.3%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;19.7%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Real meetings, &lt;a rel=&quot;external&quot; href=&quot;https://groups.inf.ed.ac.uk/ami/corpus/&quot;&gt;AMI&lt;/a&gt; test set, 32 windows of one minute:&lt;/p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Plain TDT&lt;/th&gt;&lt;th&gt;Multitalker TDT&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;all&lt;/td&gt;&lt;td&gt;26.5%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;15.5%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;overlap &amp;lt; 10%&lt;/td&gt;&lt;td&gt;15.3%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;9.6%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;overlap ≥ 25%&lt;/td&gt;&lt;td&gt;42.9%&lt;/td&gt;&lt;td&gt;&lt;strong&gt;25.1%&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;h2 id=&quot;in-rust&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; In Rust &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The encoder is exported to ONNX with two extra inputs: the speaker&#39;s activity and everyone else&#39;s.
+parakeet-rs runs the diarization, cuts the audio into chunks of about 20 s at pauses, and runs TDT
+once per speaker in each chunk. A 106 s recording of two people takes 13.6 s on my M3 Air, CPU only.&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;use&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; parakeet_rs&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;MultitalkerTDT&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let mut&lt;/span&gt;&lt;span&gt; model&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; MultitalkerTDT&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;::&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;from_pretrained&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;    &amp;quot;multitalker-tdt-0.6b-v3&amp;quot;&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;    &amp;quot;nemotron3_diar_v3.onnx&amp;quot;&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;    Some&lt;/span&gt;&lt;span&gt;(config),&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;for&lt;/span&gt;&lt;span&gt; u&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; in&lt;/span&gt;&lt;span&gt; model&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;transcribe&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span&gt;audio,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 16000&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;?&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;    println!&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;[{:.2} - {:.2}] speaker_{}: {}&amp;quot;&lt;/span&gt;&lt;span&gt;, u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;start, u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;end, u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;speaker_id, u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;text);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;where-it-falls-short&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Where it falls short &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Two or four people at once is fine, eight at once comes out as fragments. It is also only as good
+as the diarization: if Nemotron misses a speaker, so does this. And since it runs once per speaker,
+it gets slower than plain TDT when many people talk.&lt;/p&gt;
+&lt;p&gt;It is offline. It needs the whole chunk, so for live captions NVIDIA&#39;s streaming model is the
+right one.&lt;/p&gt;
+&lt;p&gt;AMI left a small accent too. Some English output now writes numbers as words (&quot;eighty two&quot;) and
+uses British spelling like &quot;diarisation&quot;.&lt;/p&gt;
+&lt;p&gt;I measured 7 of the 25 languages. The others should follow the base TDT quality, but I haven&#39;t
+tested them.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a rel=&quot;external&quot; href=&quot;https://github.com/altunenes/parakeet-rs&quot;&gt;altunenes/parakeet-rs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Model: &lt;a rel=&quot;external&quot; href=&quot;https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-tdt-0.6b-v3&quot;&gt;multitalker-tdt-0.6b-v3&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - bevy</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/bevy/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-07-28T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/bevy/atom.xml</id>
+    <entry xml:lang="en">
+        <title>How to render fire as real geometry on the GPU</title>
+        <published>2026-07-28T00:00:00+00:00</published>
+        <updated>2026-07-28T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/flame/"/>
+        <id>https://altunenes.github.io/posts/flame/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/flame/">&lt;p&gt;There are a lot of ways to put fire in a game, and almost all of them are a trick
+in a fragment shader. You take a flat quad, point it at the camera, and colour the
+pixels so they look like flames. The geometry is just a billboard, the fire only
+lives in the pixels. That&#39;s what ships in
+&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster&lt;/a&gt; and it works
+fine.&lt;/p&gt;
+&lt;p&gt;This post is about a different one I don&#39;t really see people do: growing the fire
+out of &lt;strong&gt;real mesh&lt;/strong&gt;, on the GPU, at runtime. It looks different, it happens to be
+cheaper to run, and the pipeline behind it is the actual reason I built any of it.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Side by side comparison of the same brazier in Willcaster. On the left, the shipped raymarch flame: soft, red, slightly transparent. On the right, the compute-generated mesh flame: brighter, sharper, made of extruded ribbons of geometry.&quot;&gt;
+  &lt;source src=&quot;/videos/fire.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;&lt;em&gt;Same brazier, both techniques. Left: the raymarch flame that ships in the game. Right: the same fire grown as real mesh on the GPU.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;the-normal-way-and-what-it-actually-costs&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The normal way, and what it actually costs &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;My brazier fire is a small raymarch. For every pixel the flame covers, the shader
+walks 8 steps up through an imaginary column of fire, and at each step it samples
+some noise to decide how thick the flame is there. That&#39;s a few hundred little
+calculations per pixel, and it happens every frame, for every pixel of fire on
+screen.&lt;/p&gt;
+&lt;p&gt;That last part is the important bit. Walk the camera closer so the fire fills more
+of the screen and it gets more expensive, even though nothing about the fire
+changed. You pay by the pixel, forever.&lt;/p&gt;
+&lt;p&gt;It&#39;s cheap enough here (the braziers are small on screen), so I never worried
+about it. But it set up the contrast that made the other approach interesting.&lt;/p&gt;
+&lt;h2 id=&quot;why-i-built-this-in-the-first-place&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why I built this in the first place &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The grass in Willcaster grows on the GPU. A compute shader fills a buffer with one
+entry per blade, a vertex shader reads that buffer and builds the actual bent
+geometry for each one, and nothing touches the CPU after setup.&lt;/p&gt;
+&lt;p&gt;The bezier part isn&#39;t my idea. Back in the spring I wrote a little ShaderToy,
+&lt;a rel=&quot;external&quot; href=&quot;https://www.shadertoy.com/view/7fSSRc&quot;&gt;&lt;em&gt;Cubic Bezier Grass&lt;/em&gt;&lt;/a&gt;, messing with the
+math from Sucker Punch&#39;s &lt;a rel=&quot;external&quot; href=&quot;https://www.youtube.com/watch?v=Ibe1JBF5i5Y&quot;&gt;&lt;em&gt;Procedural Grass in Ghost of
+Tsushima&lt;/em&gt;&lt;/a&gt; talk: each blade is a
+cubic bezier spine, you take the derivative to get the tangent, and use that to
+extrude a tapered width so the blade has volume and catches light. ShaderToy has
+no vertex stage, so to even see it I had to raymarch the geometry per pixel, which
+is wildly expensive and was never the point. It was just where I got the math
+right before moving it onto the GPU properly.&lt;/p&gt;
+&lt;p&gt;But grass is just decoration here, a bit of green on the border tiles. It isn&#39;t
+why I wrote any of this. Willcaster is a game about casting spells, and I don&#39;t
+want those spells to be flat sprites stuck to the camera. I want them to be real
+geometry sitting in the world: ice that catches a highlight, gold that actually
+looks like metal, fire that has a shape when you walk around it. That&#39;s the payoff
+of doing it this way. Because the result is ordinary mesh, it drops onto the
+engine&#39;s normal lighting, depth and shadows for free, the same PBR every other
+object gets. A billboard fakes all of that and falls apart the moment the camera
+moves. Grass was just the cheapest thing to prove the pipeline on. Fire is the
+second, and the spells are where it&#39;s actually headed.&lt;/p&gt;
+&lt;p&gt;The shape of it is small. Bevy lets you add your own passes to its render graph,
+so there&#39;s a compute pass that fills a plain GPU buffer, and then that same buffer
+is handed to an ordinary material as a read-only input, so Bevy&#39;s normal mesh
+drawing reads it in the vertex shader. No custom renderer, no custom draw calls, no
+extra crates. I fill a buffer, Bevy draws a mesh, and the vertex shader reads the
+buffer to decide where each vertex goes.&lt;/p&gt;
+&lt;p&gt;The whole trick is really just this one struct. The compute pass writes into the
+buffer, and the material holds it as a normal read only binding the vertex shader
+can read:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;#[derive(&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;Asset&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; TypePath&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; AsBindGroup&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Clone&lt;/span&gt;&lt;span&gt;)]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;pub struct&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; FlameMaterial&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    #[storage(0, read_only, visibility(vertex))]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;:&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Handle&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;ShaderBuffer&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That &lt;code&gt;visibility(vertex)&lt;/code&gt; is the important part. It says the buffer is readable
+from the vertex stage, which is what lets an ordinary material grow geometry from
+compute output without me writing any draw code at all.&lt;/p&gt;
+&lt;h2 id=&quot;flames-as-ribbons&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Flames as ribbons &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The compute pass does the same job as it does for grass, except each entry is now
+a &quot;tongue&quot; of flame instead of a blade:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;struct&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; Tongue&lt;/span&gt;&lt;span&gt; {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    pos_height: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;  // where it sits on the base + how tall&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    params: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;,&lt;/span&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;      // facing, curl, a flicker offset, a random seed&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;};&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;@&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;compute&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; @&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;workgroup_size&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt;64&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt;,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;fn&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; main&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;@&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;builtin&lt;/span&gt;&lt;span&gt;(global_invocation_id) id: &lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;vec3&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;u32&lt;/span&gt;&lt;span&gt;&amp;gt;) {&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; id&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;x;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    if&lt;/span&gt;&lt;span&gt; (i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; &amp;gt;=&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; COUNT&lt;/span&gt;&lt;span&gt;) {&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; return&lt;/span&gt;&lt;span&gt;; }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;    // scatter the tongues in a disc, packed toward the middle&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; ang&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 3u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1u&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; TAU&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; rad&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; pow&lt;/span&gt;&lt;span&gt;(&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt;hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 3u&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 2u&lt;/span&gt;&lt;span&gt;),&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.55&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; DISC_RADIUS;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; x&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; cos&lt;/span&gt;&lt;span&gt;(ang)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; rad;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; z&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; sin&lt;/span&gt;&lt;span&gt;(ang)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; rad;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;    // tallest in the centre, short around the rim -&amp;gt; a rounded flame shape&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 1.0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; -&lt;/span&gt;&lt;span&gt; rad&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; /&lt;/span&gt;&lt;span&gt; DISC_RADIUS;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;    let&lt;/span&gt;&lt;span&gt; height&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.34&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; center_bias&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.72&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; hash1&lt;/span&gt;&lt;span&gt;(i&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 7u&lt;/span&gt;&lt;span&gt;)&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.22&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues[i]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;pos_height &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(x,&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.0&lt;/span&gt;&lt;span&gt;, z, height);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    tongues[i]&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;params &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt; vec4&lt;/span&gt;&lt;span&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;f32&lt;/span&gt;&lt;span&gt;&amp;gt;(facing, curl, phase, seed);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That&#39;s the entire &quot;simulation&quot;. A few dozen tongues, placed once.&lt;/p&gt;
+&lt;p&gt;Then the vertex shader turns each tongue into a ribbon: a curve that starts at the
+base, rises, leans over, and lashes side to side at the tip, so it looks like it&#39;s
+licking upward instead of standing still.&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;wgsl&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// a curve up from the root that leans forward and whips at the top&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p0&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p1&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.33&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p2&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #D2A6FF;&quot;&gt; 0.66&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;. +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; sway;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; p3&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span&gt; root&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; up&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt; H&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;        +&lt;/span&gt;&lt;span&gt; fwd&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; curl&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; ..&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;. +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; sway;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #FF8F40;&quot;&gt;let&lt;/span&gt;&lt;span&gt; center&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #FFB454;&quot;&gt; bezier&lt;/span&gt;&lt;span&gt;(p0, p1, p2, p3, t);&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #5A6673;font-style: italic;&quot;&gt;// widen it into a ribbon, wobble the edge with noise so it isn&amp;#39;t a clean blade&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;out&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;.&lt;/span&gt;&lt;span&gt;local_pos &lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt;=&lt;/span&gt;&lt;span&gt; center&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; +&lt;/span&gt;&lt;span&gt; perp&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; (side&lt;/span&gt;&lt;span style=&quot;color: #F29668;&quot;&gt; *&lt;/span&gt;&lt;span&gt; width);&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The flicker, the licking, the wobble are all just &lt;code&gt;time&lt;/code&gt; fed into that curve. The
+tongues themselves never change after they&#39;re placed. The colour is a warm
+gradient, white-hot at the base, cooling to orange and then red as it climbs.&lt;/p&gt;
+&lt;p&gt;The shaders were the easy half, honestly. The hard half was the Rust holding them
+up: getting a buffer the GPU writes into to line up with a material the GPU also
+reads from, on Bevy&#39;s render graph, without the two disagreeing about when things
+exist. That took a few rewrites and one bug that only turned up on some frames,
+and I&#39;ll spare you the exact shape of it here. If you&#39;re building something
+similar and hit the same wall, come find me, I&#39;m happy to compare notes.&lt;/p&gt;
+&lt;p&gt;The result is a flame you can turn on wireframe and see is genuinely made of
+triangles. It&#39;s the one on the right in the clip up top.&lt;/p&gt;
+&lt;h2 id=&quot;back-to-the-cost&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Back to the cost &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;Now the comparison pays off. The compute pass that places the tongues runs for a
+handful of frames when the room loads, and then switches itself off, because the
+tongues never move after that. From then on the fire is just a few dozen ribbons
+drawn like any other model, plus a very cheap pixel shader. It doesn&#39;t care how
+close the camera gets. The heavy lifting happened once, at the start, and never
+again.&lt;/p&gt;
+&lt;p&gt;So the raymarch, the &quot;simpler looking&quot; one, pays for itself every frame per pixel.
+The mesh fire, the &quot;fancier&quot; one, pays once and coasts.&lt;/p&gt;
+&lt;p&gt;The one thing the mesh version loses is softness. Real geometry has hard edges,
+and no amount of noise fully hides that a flame is made of triangles, so it reads
+a bit more stylised. Willcaster isn&#39;t a stylised game, so the soft raymarch is
+what&#39;s on the braziers. But the mesh flame stays in the project as a toggle,
+because I think it&#39;s a neat idea more people should play with, and because the
+same pipeline will drive things like a wall of fire later, where hard directional
+geometry is exactly what you want.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;video width=&quot;100%&quot; controls loop playsinline aria-label=&quot;Flame wall in Willcaster made with the same compute gen mesh tech.&quot;&gt;
+  &lt;source src=&quot;/videos/des.mp4&quot; type=&quot;video/mp4&quot;&gt;
+  Your browser does not support the video tag.
+&lt;/video&gt;
+Flame wall in Willcaster made with the same compute gen mesh tech.
+*THIS IS FINE.*
+&lt;/div&gt;
+&lt;h2 id=&quot;why-bother&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Why bother &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The game didn&#39;t need any of this. The first flame was fine. But the grass pipeline
+turned out to be a general tool rather than a grass thing, and pointing it at fire
+cost me an afternoon and taught me more about where GPU time actually goes than
+any amount of reading would have.&lt;/p&gt;
+&lt;p&gt;That&#39;s most of what these posts are going to be: small detours where I tried the
+weird version of something and wrote down what happened.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster/&quot;&gt;Willcaster is on Steam&lt;/a&gt;&lt;/strong&gt;
+if you want to see where all of this ends up. Wishlists genuinely help a small
+game like this a lot.&lt;/p&gt;
+&lt;p&gt;More soon.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Willcaster: four years of building a game about a frog who argues with you</title>
+        <published>2026-07-22T00:00:00+00:00</published>
+        <updated>2026-07-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/willcaster/"/>
+        <id>https://altunenes.github.io/posts/willcaster/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/willcaster/">&lt;div align=&quot;center&quot;&gt;
+&lt;p&gt;&lt;img src=&quot;/images/logo.png&quot; alt=&quot;Logo&quot; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;I put the Steam page up this week: https://store.steampowered.com/app/4953880/Willcaster/ , so it&#39;s finally time to write about the thing
+I&#39;ve been building in my free time for about four years: &lt;strong&gt;Willcaster&lt;/strong&gt;, a grid
+roguelike made in Rust with &lt;a rel=&quot;external&quot; href=&quot;https://bevy.org/&quot;&gt;Bevy&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;the-idea&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; The idea &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;You&#39;re a wizard, and you don&#39;t control the character.&lt;/p&gt;
+&lt;p&gt;You draw a path across the grid with your mouse, and a frog knight walks it.
+That&#39;s it, that&#39;s the input. You draw, he walks, he fights whatever he runs into
+on the way.&lt;/p&gt;
+&lt;p&gt;The catch is that he has opinions about your path. Before he walks, he tells you
+what he wants from the room: the gold you routed around, the food tile, or just
+to stay away from that elite over there. Whatever path you actually draw is your
+answer to him. Ignore him enough times and he starts adding his own detours,
+hesitating in fights, and eventually he just refuses to walk the path at all.&lt;/p&gt;
+&lt;p&gt;Pretty much everything else in the game grew out of that one idea.&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/willcaster.png&quot; alt=&quot;Willcaster current build&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;The board today.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;four-years-of-placeholders&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Four years of placeholders &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;It didn&#39;t look like that for most of its life. Here&#39;s the first playable
+version:&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/4.png&quot; alt=&quot;Early prototype&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Colored quads, &lt;code&gt;X&lt;/code&gt; for walls, two letter enemy codes. Everything here is a placeholder except the rules, and it was fully playable.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Two years later it was 3D and still almost entirely placeholders, capsules for
+enemies and a purple sky I never meant to keep:&lt;/p&gt;
+&lt;div align=&quot;center&quot;&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/images/2.png&quot; alt=&quot;Mid prototype&quot; /&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;&lt;em&gt;Better, sort of.&lt;/em&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;This is a nights and weekends project, so there were long stretches where
+nothing happened at all. The game isn&#39;t huge, it&#39;s just complicated, and there&#39;s
+one of me.&lt;/p&gt;
+&lt;h2 id=&quot;on-bevy&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; On Bevy &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;I&#39;ve been on Bevy for years now and I&#39;d pick it again.&lt;/p&gt;
+&lt;p&gt;The ECS is the main reason this design survived. The frog has traits, desires,
+stress, a trust level, a combat AI, and an opinion about your path, so there are
+a lot of systems that need to read each other&#39;s state. In a more classical
+engine I&#39;m fairly sure this would have turned into one giant &lt;code&gt;Character&lt;/code&gt; class
+that nobody wants to touch. Here it&#39;s a pile of small components and small
+systems instead, and adding something new usually means writing a new system
+rather than editing an old one. The whole disobedience layer came very late in
+development and it plugged in without me touching the walking code at all.&lt;/p&gt;
+&lt;p&gt;The other thing I like is how little I depend on. This is the entire dependency
+list for the game:&lt;/p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #BFBDB6; background-color: #0D1017;&quot; &gt;&lt;code data-lang=&quot;toml&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;[&lt;/span&gt;&lt;span style=&quot;color: #59C2FF;&quot;&gt;dependencies&lt;/span&gt;&lt;span&gt;]&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;bevy&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span&gt; { version&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;0.19.0&amp;quot;&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; features&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;jpeg&amp;quot;&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;ktx2&amp;quot;&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;basis-universal&amp;quot;&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;wav&amp;quot;&lt;/span&gt;&lt;span&gt;] }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;dirs&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;6&amp;quot;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;log&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;0.4.29&amp;quot;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;rand&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;0.9&amp;quot;&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;serde&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span&gt; { version&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;1&amp;quot;&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt;,&lt;/span&gt;&lt;span&gt; features&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span&gt; [&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt;&amp;quot;derive&amp;quot;&lt;/span&gt;&lt;span&gt;] }&lt;/span&gt;&lt;/span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;serde_json&lt;/span&gt;&lt;span style=&quot;color: #BFBDB6B3;&quot;&gt; =&lt;/span&gt;&lt;span style=&quot;color: #AAD94C;&quot;&gt; &amp;quot;1&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Bevy, a random number generator, JSON, and a crate that finds the save
+directory. That&#39;s on purpose. Almost everything you see on screen I wrote
+myself, and a surprising amount of it isn&#39;t art assets at all, it&#39;s shaders.
+The special tile runes, the path ribbon, the poison gas, the portals, the god
+rays, the grass, most of the spell effects: those are WGSL files, not models. I
+kept trying to solve those with props from asset stores and kept ending up
+writing a shader instead. I also created a specular anti aliasing pipeline specifically for this game,
+and I even opened a PR on Bevy in case it might be useful to others.
+see: https://github.com/bevyengine/bevy/pull/24427&lt;/p&gt;
+&lt;p&gt;The tax you pay is that Bevy moves fast. I&#39;ve migrated this project across a lot
+of versions and each one costs an afternoon or three of renaming things. It&#39;s
+never hard, it&#39;s just tedious, and honestly it&#39;s a fair price for an engine
+that&#39;s improving this quickly.&lt;/p&gt;
+&lt;h2 id=&quot;i-don-t-balance-this-game-by-feel&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; I don&#39;t balance this game by feel &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;This is the part I get asked about most, so it&#39;s worth explaining.&lt;/p&gt;
+&lt;p&gt;A frog who disobeys you 3% of the time and a frog who disobeys 12% of the time
+are completely different characters. One is a loyal companion who surprises you
+now and then, the other is an unreliable jerk. And I cannot tell those two apart
+by playing the game. Twenty runs is nowhere near enough samples. I&#39;d just be
+reacting to whatever happened to me last Tuesday.&lt;/p&gt;
+&lt;p&gt;So playtesting isn&#39;t how the numbers get decided here. Every system gets a
+design document in JSON, then a Monte Carlo simulator in Python, then thousands
+of simulated runs across several different player archetypes (the obedient one,
+the selfish one, the tyrant, the careless one), and only then do real numbers go
+into the Rust code. There are 25 of those design documents and 11 simulator
+scripts sitting in the repo right now.&lt;/p&gt;
+&lt;p&gt;It&#39;s saved me more than once. When I recently merged two of the game&#39;s meters
+into one, the first simulation run passed all six of its checks. Then I looked
+closer and realised three of the checks were measuring the wrong thing. One of
+them was supposed to prove a player could dig themselves out of a hole, except
+the archetype it tested never actually reached the bottom of the hole to begin
+with. After I fixed the checks, a passive income mechanic I&#39;d been quite pleased
+with turned out to make the endgame unlock basically free: the selfish playstyle
+was reaching it in 98% of runs.&lt;/p&gt;
+&lt;p&gt;There&#39;s no version of me that finds that by playing. A character whose whole
+appeal is that he might say no is a character defined by a frequency, and
+frequencies have to be measured.&lt;/p&gt;
+&lt;h2 id=&quot;where-it-is-now&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Where it is now &lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;The core systems are done. What&#39;s left is balance, polish, sound, and all the
+things that only show up once other people get their hands on it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a rel=&quot;external&quot; href=&quot;https://store.steampowered.com/app/4953880/Willcaster&quot;&gt;Willcaster on Steam&lt;/a&gt;&lt;/strong&gt;
+— wishlists genuinely matter a lot for a small game like this.&lt;/p&gt;
+&lt;p&gt;I&#39;ll write more focused posts as I go: the compute pipeline, the grass, and some shader tricks that I implemented on the game...&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>
