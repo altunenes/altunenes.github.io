@@ -1,7 +1,6 @@
 +++
 title = "Overlapping speakers with Parakeet TDT"
 date = "2026-10-31"
-draft = true
 
 [taxonomies]
 tags=["Rust","audio","ASR","ML"]
