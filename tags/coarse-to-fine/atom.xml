@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - coarse-to-fine</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/coarse-to-fine/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-11-07T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/coarse-to-fine/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Coarse to fine in language models</title>
+        <published>2026-11-07T00:00:00+00:00</published>
+        <updated>2026-11-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/coarsetofine/"/>
+        <id>https://altunenes.github.io/posts/coarsetofine/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/coarsetofine/">&lt;h4 id=&quot;coarse-to-fine-in-language-models&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt; Coarse to fine in language models &lt;/span&gt;&lt;/h4&gt;
+&lt;p&gt;Coarse to fine is an old theory of human vision. The brain first gets the blurry gist of a scene from low spatial frequencies, and uses it to guide the slower analysis of details from high spatial frequencies. The coarse version is cheap and fast, and once you have it, the details are easier. I explained it a bit more in my &lt;a href=&quot;/posts/pareidolia/&quot;&gt;earlier post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This week I read &lt;a rel=&quot;external&quot; href=&quot;https://arxiv.org/abs/2610.14162&quot;&gt;Next-Concept Modeling&lt;/a&gt; (Kumbong et al., 2026), which uses the same idea for text. The model does not write one word after another. First it compresses text into a few levels of codes. The first level is short and holds the rough, global structure, and each next level adds more detail. A transformer then generates one level at a time, and all codes inside a level in parallel. They report 10 to 31 times faster generation than the best diffusion language models at similar quality, and better results on Sudoku.&lt;/p&gt;
+&lt;p&gt;Image models already went this way. &lt;a rel=&quot;external&quot; href=&quot;https://arxiv.org/abs/2404.02905&quot;&gt;VAR&lt;/a&gt; does &quot;next scale prediction&quot;, starting from a tiny image and going up in resolution. And Sander Dieleman showed that diffusion models are a kind of &lt;a rel=&quot;external&quot; href=&quot;https://sander.ai/2024/09/02/spectral-autoregression.html&quot;&gt;spectral autoregression&lt;/a&gt;: they build the low spatial frequencies first and the high ones later. So now text is following too, for the same reason the theory gives for the brain: it is efficient.&lt;/p&gt;
+&lt;p&gt;What I find funny is that in my own work coarse to fine did not always hold. In the &lt;a href=&quot;/posts/pareidolia/&quot;&gt;earlier post&lt;/a&gt; Gemini saw illusory faces mostly in the blurry, coarse versions of the images. But in my &lt;a rel=&quot;external&quot; href=&quot;https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4341900&quot;&gt;EEG study&lt;/a&gt; (now under review), the human brain did not show a face response to illusory faces from the coarse version at all, only a weak one from fine details. Blur a socket and you get two dark blobs and a line, almost the definition of a face, and still the brain did not take it. So here the model followed the textbook, not us.&lt;/p&gt;
+&lt;p&gt;There is another way to read my Gemini result, though. A lot of text on the internet is people saying &quot;this looks like a face&quot; about sockets, cars and clouds, and the blurry versions look more like those typical pictures. So the model may be giving the answer it knows humans give, more than seeing a face. In EEG terms, it could be all behavioural report and no N170. And asking the model how it decided doesn&#39;t help much, because what a model says about its own processing is also just generated text.&lt;/p&gt;
+&lt;p&gt;My participants also said &quot;face&quot; almost every time. The interesting part was only in the EEG: when the face response came and from which frequencies. Coarse to fine models have explicit levels, so for once we could ask the same question to a machine: at which level does it decide there is a face?&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>

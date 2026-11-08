@@ -1,0 +1,92 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta content="IE=edge" http-equiv=X-UA-Compatible><meta content="width=device-width,initial-scale=1.0" name=viewport><script>window.siteIsCanonicalHost = location.hostname === "altunenes.github.io";
+        if (!window.siteIsCanonicalHost) {
+            // This is a copy, not the original: ask crawlers to index the canonical URL instead.
+            var robotsMeta = document.createElement('meta');
+            robotsMeta.name = 'robots';
+            robotsMeta.content = 'noindex, nofollow';
+            document.head.appendChild(robotsMeta);
+        }</script><link href=https://altunenes.github.io/posts/multitalker/ rel=canonical><title>
+         Overlapping speakers with Parakeet TDT
+        
+    </title><meta content="Overlapping speakers with Parakeet TDT" property=og:title><meta content="personal blog" property=og:description><meta content="personal blog" name=description><link href=/icon/favicon.png rel=icon type=image/png><link href=https://altunenes.github.io/fonts.css rel=stylesheet><link href=https://altunenes.github.io/atom.xml rel=alternate title=altunenes type=application/atom+xml><link href=https://altunenes.github.io/theme/light.css rel=stylesheet><link href=https://altunenes.github.io/theme/dark.css id=darkModeStyle rel=stylesheet><script src=https://altunenes.github.io/js/themetoggle.js></script><script>setTheme(getSavedTheme());</script><link href=https://altunenes.github.io/main.css media=screen rel=stylesheet><script>if (window.siteIsCanonicalHost) {
+                var cfBeacon = document.createElement('script');
+                cfBeacon.defer = true;
+                cfBeacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+                cfBeacon.setAttribute('data-cf-beacon', '{"token": "37a0f981a37240aea00b781e300bc6c0"}');
+                document.head.appendChild(cfBeacon);
+            }</script></head><script>// Function to set the theme
+        function setTheme(theme) {
+            document.documentElement.className = theme;
+            localStorage.setItem('theme', theme);
+        }
+
+        // Function to get the saved theme
+        function getSavedTheme() {
+            return localStorage.getItem('theme') || 'light';
+        }
+
+        // Set the theme on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTheme(getSavedTheme());
+        });</script><body><div class=content><header><div class=main><a href=https://altunenes.github.io/>altunenes</a><div class=socials><a class=social href=https://twitter.com/emportent rel=me> <img alt=x src=https://altunenes.github.io/social_icons/x.svg> </a><a class=social href=https://github.com/altunenes rel=me> <img alt=github src=https://altunenes.github.io/social_icons/github.svg> </a><a href="https://scholar.google.com/citations?user=_OtEw5oAAAAJ&hl" class=social rel=me> <img alt=scholar src=https://altunenes.github.io/social_icons/googlescholar.svg> </a><a class=social href=https://www.linkedin.com/in/enes-altun-0a3076167 rel=me> <img alt=linkedin src=https://altunenes.github.io/social_icons/linkedin.svg> </a><a class=social href=https://www.instagram.com/altunanes/ rel=me> <img alt=instagram src=https://altunenes.github.io/social_icons/instagram.svg> </a><a class=social href=https://orcid.org/0000-0002-6478-6909 rel=me> <img alt=orcid src=https://altunenes.github.io/social_icons/orcid.svg> </a><a class=social href=https://www.shadertoy.com/user/altunenes rel=me> <img alt=shadertoy src=https://altunenes.github.io/social_icons/shadertoy.svg> </a><a class=social href=https://bsky.app/profile/altunenes.bsky.social rel=me> <img alt=bluesky src=https://altunenes.github.io/social_icons/bluesky.svg> </a></div></div><nav><a href=https://altunenes.github.io/posts style=margin-left:.7em>/posts</a><a href=https://altunenes.github.io/projects style=margin-left:.7em>/projects</a><a href=https://altunenes.github.io/about style=margin-left:.7em>/about</a><a href=https://altunenes.github.io/tags style=margin-left:.7em>/tags</a><a href=https://altunenes.github.io/CV style=margin-left:.7em>/CV</a><button aria-label="Toggle dark mode" id=dark-mode-toggle onclick=toggleTheme();><img alt="Light mode" id=sun-icon src=https://altunenes.github.io/feather/sun.svg> <img alt="Dark mode" id=moon-icon src=https://altunenes.github.io/feather/moon.svg></button></nav></header><script>function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    html.classList.remove(currentTheme);
+    html.classList.add(newTheme);
+    
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcons();
+}
+
+function updateThemeToggleIcons() {
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    
+    sunIcon.style.display = isDarkMode ? 'none' : 'inline';
+    moonIcon.style.display = isDarkMode ? 'inline' : 'none';
+}
+
+// Set initial theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.add(savedTheme);
+updateThemeToggleIcons();</script><main><article><div class=title><div class=page-header>Overlapping speakers with Parakeet TDT<span class=primary-color style=font-size:1.6em>.</span></div><div class=meta>Posted on <time>2026-10-31</time></div></div><h1>Table of Contents</h1><ul><li><a href=https://altunenes.github.io/posts/multitalker/#the-idea> The idea </a><li><a href=https://altunenes.github.io/posts/multitalker/#training> Training </a><li><a href=https://altunenes.github.io/posts/multitalker/#the-numbers> The numbers </a><li><a href=https://altunenes.github.io/posts/multitalker/#in-rust> In Rust </a><li><a href=https://altunenes.github.io/posts/multitalker/#where-it-falls-short> Where it falls short </a></ul><section class=body><p>When two people talk at the same time, speech recognition models write one sentence out of both, or one of them just disappears.<p>In <a href=https://github.com/altunenes/parakeet-rs rel=external>parakeet-rs</a> the usual way to get speakers is diarization. <a href=https://huggingface.co/nvidia/Nemotron-3-Diarization rel=external>Nemotron-3 Diarization</a> says who speaks when, and every word goes to whoever was speaking at its timestamp. This works fine until people talk over each other. Then a sentence gets cut between two speakers and the quieter person is lost.<p>NVIDIA has a model for exactly this, the <a href=https://huggingface.co/nvidia/multitalker-parakeet-streaming-0.6b-v1 rel=external>multitalker Parakeet</a>, but it is English only and made for streaming: it hears small pieces of audio at a time, which is great for live captions. Most of what I transcribe is recordings, and there an offline model that hears the whole sentence is usually more accurate. So I wanted the same thing on <a href=https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3 rel=external>parakeet-tdt-0.6b-v3</a>, my favorite offline model, which also knows 25 European languages.<h2 id=the-idea><span style=color:orange> The idea </span></h2><p>I used NVIDIA's design. The diarization output for one speaker (is this person talking in this 80 ms frame or not) goes into the encoder through a few extra layers, called speaker kernels. Then the model runs once per speaker, and each time it writes down only that person, even when someone else is talking at the same time.<p>I froze the whole TDT model and trained only the speaker kernels plus small adapters in its 24 encoder layers. That is 7.4M parameters out of 634M. The original model never changes, so one person talking alone should come out as good as before.<h2 id=training><span style=color:orange> Training </span></h2><p>Everything trained on a free Colab T4, around 30k steps per round.<p>The first rounds used <a href=https://huggingface.co/datasets/google/fleurs rel=external>FLEURS</a> clips from all 25 languages, mixed on top of each other with 1 to 4 speakers. The model learned to separate voices, but on real meetings it was worse than plain TDT (31.4% vs 24.7% on AMI). It caught the first sentence of a speaker and dropped the later ones. Which makes sense: in a mixed clip every person says one sentence. In a real conversation people speak again and again.<p>So in round 3 I added real conversations: dialogues built from <a href=https://huggingface.co/datasets/facebook/voxpopuli rel=external>VoxPopuli</a> speeches, and the AMI training meetings. As labels I used TDT's own transcripts wherever they agreed with the human ones, so the model keeps TDT's writing style.<p>That fixed it. On the AMI test meetings round 3 got 15.5%, plain TDT 26.5%.<h2 id=the-numbers><span style=color:orange> The numbers </span></h2><p>All scores are cpWER: word error rate where each real speaker is matched with the best output speaker, lower is better. Both systems get the same Nemotron-3 Diarization output. "Plain TDT" is what parakeet-rs users run today, words given to speakers by their timestamps.<p>English, <a href=https://github.com/NaoyukiKanda/LibriSpeechMix rel=external>LibriSpeechMix</a>, the standard test set for overlapping speech. NVIDIA reports their multitalker Parakeet with the same diarization model in the <a href=https://huggingface.co/blog/nvidia/nemotron-transcribe-granary rel=external>Nemotron 3.5 Transcribe report</a>:<table><thead><tr><th>Speakers<th>Plain TDT<th>NVIDIA multitalker (reported)<th>Multitalker TDT<tbody><tr><td>1<td>1.9%<td>2.77%<td>2.0%<tr><td>2<td>36.7%<td>7.20%<td><strong>4.4%</strong><tr><td>3<td>47.3%<td>12.94%<td><strong>7.8%</strong></table><p>note that this comparison is not perfectly fair. NVIDIA's model is streaming, "mine" is offline and sees 20 s at a time. Also, I ran 300 of the 2,620 mixtures per set, because I'm "proudly" GPU poor :-P the full set kept running into free Colab's limits, so this one ran on Colab's CPU instead.<p>Six other languages, 900 mixtures from the <a href=https://huggingface.co/datasets/facebook/multilingual_librispeech rel=external>Multilingual LibriSpeech</a> test set (not used in training), 1 to 3 different speakers of the same language talking over each other:<table><thead><tr><th><th>Plain TDT<th>Multitalker TDT<tbody><tr><td>1 speaker<td>6.8%<td><strong>5.7%</strong><tr><td>2 speakers<td>39.0%<td><strong>10.7%</strong><tr><td>3 speakers<td>53.7%<td><strong>16.7%</strong></table><p>Per language, with 2 or 3 speakers:<table><thead><tr><th><th>Plain TDT<th>Multitalker TDT<tbody><tr><td>German<td>44.8%<td><strong>12.5%</strong><tr><td>French<td>59.5%<td><strong>12.9%</strong><tr><td>Spanish<td>48.0%<td><strong>9.0%</strong><tr><td>Italian<td>43.6%<td><strong>17.4%</strong><tr><td>Polish<td>47.1%<td><strong>14.3%</strong><tr><td>Portuguese<td>45.3%<td><strong>19.7%</strong></table><p>Real meetings, <a href=https://groups.inf.ed.ac.uk/ami/corpus/ rel=external>AMI</a> test set, 32 windows of one minute:<table><thead><tr><th><th>Plain TDT<th>Multitalker TDT<tbody><tr><td>all<td>26.5%<td><strong>15.5%</strong><tr><td>overlap &lt; 10%<td>15.3%<td><strong>9.6%</strong><tr><td>overlap ≥ 25%<td>42.9%<td><strong>25.1%</strong></table><h2 id=in-rust><span style=color:orange> In Rust </span></h2><p>The encoder is exported to ONNX with two extra inputs: the speaker's activity and everyone else's. parakeet-rs runs the diarization, cuts the audio into chunks of about 20 s at pauses, and runs TDT once per speaker in each chunk. A 106 s recording of two people takes 13.6 s on my M3 Air, CPU only.<pre class=giallo style=color:#bfbdb6;background-color:#0d1017><code data-lang=rust><span class=giallo-l><span style=color:#ff8f40>use</span><span style=color:#59c2ff> parakeet_rs</span><span style=color:#f29668>::</span><span style=color:#59c2ff>MultitalkerTDT</span><span>;</span></span>
+<span class=giallo-l></span>
+<span class=giallo-l><span style=color:#ff8f40>let mut</span><span> model</span><span style=color:#f29668> =</span><span style=color:#59c2ff> MultitalkerTDT</span><span style=color:#f29668>::</span><span style=color:#ffb454>from_pretrained</span><span>(</span></span>
+<span class=giallo-l><span style=color:#aad94c>    "multitalker-tdt-0.6b-v3"</span><span>,</span></span>
+<span class=giallo-l><span style=color:#aad94c>    "nemotron3_diar_v3.onnx"</span><span>,</span></span>
+<span class=giallo-l><span style=color:#59c2ff>    Some</span><span>(config),</span></span>
+<span class=giallo-l><span>)</span><span style=color:#f29668>?</span><span>;</span></span>
+<span class=giallo-l><span style=color:#ff8f40>for</span><span> u</span><span style=color:#ff8f40> in</span><span> model</span><span style=color:#f29668>.</span><span style=color:#ffb454>transcribe</span><span>(</span><span style=color:#f29668>&</span><span>audio,</span><span style=color:#d2a6ff> 16000</span><span>,</span><span style=color:#d2a6ff> 1</span><span>)</span><span style=color:#f29668>?</span><span> {</span></span>
+<span class=giallo-l><span style=color:#ffb454>    println!</span><span>(</span><span style=color:#aad94c>"[{:.2} - {:.2}] speaker_{}: {}"</span><span>, u</span><span style=color:#f29668>.</span><span>start, u</span><span style=color:#f29668>.</span><span>end, u</span><span style=color:#f29668>.</span><span>speaker_id, u</span><span style=color:#f29668>.</span><span>text);</span></span>
+<span class=giallo-l><span>}</span></span></code></pre><h2 id=where-it-falls-short><span style=color:orange> Where it falls short </span></h2><p>Two or four people at once is fine, eight at once comes out as fragments. It is also only as good as the diarization: if Nemotron misses a speaker, so does this. And since it runs once per speaker, it gets slower than plain TDT when many people talk.<p>It is offline. It needs the whole chunk, so for live captions NVIDIA's streaming model is the right one.<p>AMI left a small accent too. Some English output now writes numbers as words ("eighty two") and uses British spelling like "diarisation".<p>I measured 7 of the 25 languages. The others should follow the base TDT quality, but I haven't tested them.<ul><li>GitHub: <a href=https://github.com/altunenes/parakeet-rs rel=external>altunenes/parakeet-rs</a><li>Model: <a href=https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-tdt-0.6b-v3 rel=external>multitalker-tdt-0.6b-v3</a></ul></section><div class=post-tags><nav class="nav tags"><ul class=tags><li><a href=https://altunenes.github.io/tags/rust/>Rust</a><li><a href=https://altunenes.github.io/tags/audio/>audio</a><li><a href=https://altunenes.github.io/tags/asr/>ASR</a><li><a href=https://altunenes.github.io/tags/ml/>ML</a></ul></nav></div><hr><div class=citation style=color:var(--text-color-secondary);margin-top:2em;font-size:.8em><p style=margin-bottom:.6em;font-size:.9em;font-weight:700>Cite:<p style=margin-bottom:.5em>Altun, E. (2026, October 31). <em>Overlapping speakers with Parakeet TDT</em>. Retrieved from <a href=https://altunenes.github.io/posts/multitalker/>https://altunenes.github.io/posts/multitalker/</a><p><small><a href=http://creativecommons.org/licenses/by/4.0/ rel=license target=_blank>CC BY 4.0</a></small></div></article></main><div class=giscus></div><script>(function () {
+        var here = document.currentScript;
+        if (window.siteIsCanonicalHost === false) return;
+
+        var el = document.createElement('script');
+        el.src = 'https://giscus.app/client.js';
+        el.async = true;
+        el.crossOrigin = 'anonymous';
+
+        
+        
+        var attrs = {
+            'data-repo': "altunenes/altunenes.github.io",
+            'data-repo-id': "R_kgDOL5NyoQ",
+            'data-category': "General",
+            'data-category-id': "DIC_kwDOL5Nyoc4CfU7n",
+            'data-mapping': "pathname",
+            'data-strict': "0",
+            'data-reactions-enabled': "1",
+            'data-emit-metadata': "0",
+            'data-input-position': "bottom",
+            'data-theme': "preferred_color_scheme",
+            'data-lang': "en"
+        };
+        Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+
+        var parent = (here && here.parentNode) || document.querySelector('.giscus') || document.body;
+        parent.appendChild(el);
+    })();</script></div>
