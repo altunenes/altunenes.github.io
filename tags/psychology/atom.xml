@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - psychology</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/psychology/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-02-03T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/psychology/atom.xml</id>
+    <entry xml:lang="en">
+        <title>the difference between reality and dream</title>
+        <published>2025-02-03T00:00:00+00:00</published>
+        <updated>2025-02-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/dream/"/>
+        <id>https://altunenes.github.io/posts/dream/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/dream/">&lt;h2 id=&quot;what-s-real&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;What&#39;s real?&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Reality&lt;/strong&gt; is experienced in real-time—imagine living at &quot;60 fps&quot;. Every movement and thought flows continuously, with our consciousness reacting instantly to the world around us while drawing on past experiences to shape future plans. This process even tackles complex challenges like &lt;a rel=&quot;external&quot; href=&quot;https://en.wikipedia.org/wiki/Feature_integration_theory&quot;&gt;feature binding&lt;/a&gt; &lt;em&gt;(in our context, it&#39;s the brain’s method for uniting various sensory inputs in real-time)&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Dreams&lt;/strong&gt;, however, are not bound by real-time. Instead, they are constructed within a context, simulating scenarios (like escaping from a bear) that don’t occur in the moment. During sleep, the &lt;a rel=&quot;external&quot; href=&quot;https://en.wikipedia.org/wiki/Cholinergic_system&quot;&gt;cholinergic system&lt;/a&gt; &lt;em&gt;(here, I refer to the neural activations that spark random activity, which the brain later organizes into coherent dream narratives)&lt;/em&gt; becomes active. Amidst this neural chaos, the brain pieces together a handful of seemingly random &quot;scripts&quot; to create the dream experience.&lt;/p&gt;
+&lt;p&gt;This contrast highlights the distinct nature of our waking reality and the imaginative, context-driven world of dreams.&lt;/p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>5 main root causes of psychological disorders</title>
+        <published>2023-09-07T00:00:00+00:00</published>
+        <updated>2023-09-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/disorders/"/>
+        <id>https://altunenes.github.io/posts/disorders/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/disorders/">&lt;h2 id=&quot;5-causes-of-psychiatric-illness&quot;&gt;&lt;span style=&quot;color:orange;&quot;&gt;5 Causes of Psychiatric Illness&lt;/span&gt;&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:orange;&quot;&gt;Existence of Society&lt;/span&gt;&lt;/strong&gt;&lt;br /&gt;
+Society provides the framework against which behavior is judged, allowing us to label actions as normal or abnormal. Without a community to compare against, it becomes challenging to define deviations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:orange;&quot;&gt;Existence of Culture&lt;/span&gt;&lt;/strong&gt;&lt;br /&gt;
+Culture, with its own set of rules and traditions, shapes our understanding of mental health and acceptable behavior. Deviations from these norms can lead to an increase in psychiatric diagnoses.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:orange;&quot;&gt;Mathematical Concept of &quot;Normality&quot;&lt;/span&gt;&lt;/strong&gt;&lt;br /&gt;
+Normality is inherently statistical, requiring a baseline to identify deviations as abnormal. This concept underpins how psychiatric disorders are classified as variations from societal norms.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:orange;&quot;&gt;Existence of an Educational System&lt;/span&gt;&lt;/strong&gt;&lt;br /&gt;
+Structured academic environments often uncover conditions like ADHD through systematic evaluation. In settings without formal testing, such conditions might not be recognized at all.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:orange;&quot;&gt;Presence of High-Level Intelligence and Cognition&lt;/span&gt;&lt;/strong&gt;&lt;br /&gt;
+Advanced cognitive abilities can sometimes be accompanied by psychological challenges, with schizophrenia being an extreme example. This may be seen as a genetic side effect of heightened intelligence and creativity.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>altunenes - creativity</title>
+    <subtitle>personal blog</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://altunenes.github.io/tags/creativity/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://altunenes.github.io/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-11-13T00:00:00+00:00</updated>
+    <id>https://altunenes.github.io/tags/creativity/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Reading brushstrokes, reading code</title>
+        <published>2026-11-13T00:00:00+00:00</published>
+        <updated>2026-11-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>Unknown</name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://altunenes.github.io/posts/codeandart/"/>
+        <id>https://altunenes.github.io/posts/codeandart/</id>
+        
+        <content type="html" xml:base="https://altunenes.github.io/posts/codeandart/">&lt;p&gt;People often treat AI assisted coding as welcome relief from routine labor, while treating AI generated images or text as a threat to creativity. Technically, both rely on the same kind of probabilistic models. Modern AI debuggers and code assistants do not run deterministic rules; they predict tokens from learned distributions, much like image models predict pixels. The difference in how we judge them comes down to perception, not mechanics.&lt;/p&gt;
+&lt;p&gt;Writing code is closer to painting than most non programmers assume. You start with a rough idea, hit constraints, rework your abstractions, and slowly shape the result, much like the revised limbs visible under &quot;X rays&quot; of old paintings &lt;em&gt;(&lt;a rel=&quot;external&quot; href=&quot;https://paulgraham.com/hp.html&quot;&gt;Graham, 2003&lt;/a&gt;)&lt;/em&gt;. The finished works, however, hit the brain differently. Visual perception groups thousands of brushstrokes into a single image almost effortlessly. Code offers no such shortcut. Reading it barely engages the brain&#39;s language network and instead taxes the fronto parietal Multiple demand system used for working memory and formal reasoning &lt;em&gt;(&lt;a rel=&quot;external&quot; href=&quot;https://doi.org/10.7554/eLife.58906&quot;&gt;Ivanova et al., 2020&lt;/a&gt;)&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;because reading code is tiring and requires fluency, people outside the craft rarely see the decisions inside it. End users only interact with the surface interface, never the source text. Art history has seen similar blind spots, from early critics calling photography a mechanical copy of nature to galleries rejecting Duchamp&#39;s &lt;em&gt;Fountain&lt;/em&gt; as plain plumbing. When you cannot read a medium, the work behind it looks purely mechanical.&lt;/p&gt;
+&lt;p&gt;Peter Naur wrote that a program is not its text, but the mental theory of how a rea world problem maps onto formal rules &lt;em&gt;(&lt;a rel=&quot;external&quot; href=&quot;https://doi.org/10.1016/0165-6074(85)90032-8&quot;&gt;Naur, 1985&lt;/a&gt;)&lt;/em&gt;. That is why offloading the entire process to an LLM feels hollow, something I wrote about in an &lt;a href=&quot;/posts/aianddopamine/&quot;&gt;earlier post&lt;/a&gt;. In both painting and programming, the hard part is building that mental model and deciding what belongs. Code only looks mundane because the craft is hidden from the people looking at the screen.&lt;/p&gt;
+</content>
+        
+    </entry>
+</feed>
