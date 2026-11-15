@@ -1,6 +1,7 @@
 +++
 title = "Overlapping speakers with Parakeet TDT"
 date = "2026-10-31"
+updated = "2026-11-15"
 
 [taxonomies]
 tags=["Rust","audio","ASR","ML"]
@@ -100,17 +101,52 @@ Real meetings, [AMI](https://groups.inf.ed.ac.uk/ami/corpus/) test set, 32 windo
 | overlap < 10% | 15.3% | **9.6%** |
 | overlap ≥ 25% | 42.9% | **25.1%** |
 
+## <span style="color:orange;"> Update: on Parakeet Ultra </span>
+
+Moondream released [Parakeet Ultra](https://huggingface.co/moondream/parakeet-ultra), a post
+trained TDT v3 with lower error rates than the original. So I trained the speaker parts again on
+top of it, with the same data recipe plus AMI's headset recordings for cleaner meeting labels.
+
+While testing it on [FLEURS](https://huggingface.co/datasets/google/fleurs) in all 25 languages I
+found something I had missed: the speaker parts are not completely harmless. Even with one person
+talking alone, they change the encoder a little. In English you can't see it, but in languages
+where the base model is already weaker (Latvian, Maltese, Greek, Slovenian, Lithuanian) the error
+went up by 2 to 4 points. Perfect speaker masks gave the same drop, so it was not the diarization.
+I tried one more training round with extra data in those languages. It helped a bit there and hurt
+the overlap results, so I dropped it.
+
+I added a simple fix.  exported model now has a switch. When only one person speaks in a chunk, the
+speaker parts are turned off and the model is exactly plain Ultra, the same output word for word.
+When two or more people speak, they are on. I'm thinking of using this in production along with a ifelse and sortformer. If there's a single speaker, then turn it off... That's it :-P
+
+With that, FLEURS mixtures in all 25 languages went from 11.9% to 10.9%, the same as plain Ultra
+(10.8%). The overlap results did not change:
+
+| | Plain Ultra | Multitalker Ultra |
+|---|---|---|
+| AMI, 16 full test meetings | 23.2% | **15.6%** |
+| MLS mixtures, 1 to 3 speakers | 34.5% | **12.5%** |
+| LibriSpeechMix, 2 speakers | 27.0% | **4.4%** |
+| LibriSpeechMix, 3 speakers | 38.0% | **8.6%** |
+
+The AMI number is per whole meeting now, not one minute windows. For comparison, plain Ultra
+without any speakers gets 19.8% there, so the multitalker is better even before you count who said
+what.
+
+I also exported the TDT v3 version again with the same switch, so both models behave the same way.
+
 ## <span style="color:orange;"> In Rust </span>
 
-The encoder is exported to ONNX with two extra inputs: the speaker's activity and everyone else's.
-parakeet-rs runs the diarization, cuts the audio into chunks of about 20 s at pauses, and runs TDT
-once per speaker in each chunk. A 106 s recording of two people takes 13.6 s on my M3 Air, CPU only.
+The encoder is exported to ONNX with three extra inputs: the speaker's activity, everyone else's,
+and the switch. parakeet-rs runs the diarization, cuts the audio into chunks of about 20 s at
+pauses, and runs TDT once per speaker in each chunk, or once as plain TDT when only one person
+speaks there. A 106 s recording of two people takes 13.6 s on my M3 Air, CPU only.
 
 ```rust
 use parakeet_rs::MultitalkerTDT;
 
 let mut model = MultitalkerTDT::from_pretrained(
-    "multitalker-tdt-0.6b-v3",
+    "multitalker-parakeet-ultra", // or "multitalker-tdt-0.6b-v3"
     "nemotron3_diar_v3.onnx",
     Some(config),
 )?;
@@ -131,8 +167,9 @@ right one.
 AMI left a small accent too. Some English output now writes numbers as words ("eighty two") and
 uses British spelling like "diarisation".
 
-I measured 7 of the 25 languages. The others should follow the base TDT quality, but I haven't
-tested them. 
+Single speaker parts now come out as plain TDT or Ultra, but with overlap the quality still
+follows the base model: languages it is weaker in are weaker here too.
 
 - GitHub: [altunenes/parakeet-rs](https://github.com/altunenes/parakeet-rs)
-- Model: [multitalker-tdt-0.6b-v3](https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-tdt-0.6b-v3)
+- Models: [multitalker-parakeet-ultra](https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-parakeet-ultra),
+  [multitalker-tdt-0.6b-v3](https://huggingface.co/altunenes/parakeet-rs/tree/main/multitalker-tdt-0.6b-v3)
